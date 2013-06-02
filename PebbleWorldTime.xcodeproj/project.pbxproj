@@ -23,6 +23,13 @@
 		F600CD40175BA75A00D2CABC /* second.png in Resources */ = {isa = PBXBuildFile; fileRef = F600CD3F175BA75A00D2CABC /* second.png */; };
 		F600CD42175BA75A00D2CABC /* second@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F600CD41175BA75A00D2CABC /* second@2x.png */; };
 		F600CD4D175C020200D2CABC /* PWTimeTZController.m in Sources */ = {isa = PBXBuildFile; fileRef = F600CD4C175C020200D2CABC /* PWTimeTZController.m */; };
+		F6727B7F175C0BD300452635 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6727B7E175C0BD300452635 /* MessageUI.framework */; };
+		F6727B81175C0BE000452635 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6727B80175C0BE000452635 /* CoreBluetooth.framework */; };
+		F6727B83175C0BF500452635 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F6727B82175C0BF500452635 /* libz.dylib */; };
+		F6727B85175C0C4300452635 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6727B84175C0C4300452635 /* ExternalAccessory.framework */; };
+		F6727B87175C0C8200452635 /* PebbleKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6727B86175C0C8200452635 /* PebbleKit.framework */; };
+		F6727B89175C0C9600452635 /* PebbleVendor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6727B88175C0C9600452635 /* PebbleVendor.framework */; };
+		F6727B8B175C0D5A00452635 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6727B8A175C0D5A00452635 /* CoreMotion.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +55,13 @@
 		F600CD41175BA75A00D2CABC /* second@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "second@2x.png"; sourceTree = "<group>"; };
 		F600CD4B175C020200D2CABC /* PWTimeTZController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWTimeTZController.h; sourceTree = "<group>"; };
 		F600CD4C175C020200D2CABC /* PWTimeTZController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWTimeTZController.m; sourceTree = "<group>"; };
+		F6727B7E175C0BD300452635 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		F6727B80175C0BE000452635 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		F6727B82175C0BF500452635 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		F6727B84175C0C4300452635 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
+		F6727B86175C0C8200452635 /* PebbleKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PebbleKit.framework; path = "../../../../pebble-dev/PebbleKit-v1/iOS/PebbleKit.framework"; sourceTree = "<group>"; };
+		F6727B88175C0C9600452635 /* PebbleVendor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PebbleVendor.framework; path = "../../../../pebble-dev/PebbleKit-v1/iOS/PebbleVendor.framework"; sourceTree = "<group>"; };
+		F6727B8A175C0D5A00452635 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +69,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6727B8B175C0D5A00452635 /* CoreMotion.framework in Frameworks */,
+				F6727B89175C0C9600452635 /* PebbleVendor.framework in Frameworks */,
+				F6727B87175C0C8200452635 /* PebbleKit.framework in Frameworks */,
+				F6727B85175C0C4300452635 /* ExternalAccessory.framework in Frameworks */,
+				F6727B83175C0BF500452635 /* libz.dylib in Frameworks */,
+				F6727B81175C0BE000452635 /* CoreBluetooth.framework in Frameworks */,
+				F6727B7F175C0BD300452635 /* MessageUI.framework in Frameworks */,
 				F600CD1B175BA75900D2CABC /* UIKit.framework in Frameworks */,
 				F600CD1D175BA75900D2CABC /* Foundation.framework in Frameworks */,
 				F600CD1F175BA75900D2CABC /* CoreGraphics.framework in Frameworks */,
@@ -84,9 +105,16 @@
 		F600CD19175BA75900D2CABC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				F600CD1A175BA75900D2CABC /* UIKit.framework */,
-				F600CD1C175BA75900D2CABC /* Foundation.framework */,
+				F6727B80175C0BE000452635 /* CoreBluetooth.framework */,
 				F600CD1E175BA75900D2CABC /* CoreGraphics.framework */,
+				F6727B8A175C0D5A00452635 /* CoreMotion.framework */,
+				F6727B84175C0C4300452635 /* ExternalAccessory.framework */,
+				F600CD1C175BA75900D2CABC /* Foundation.framework */,
+				F6727B82175C0BF500452635 /* libz.dylib */,
+				F6727B7E175C0BD300452635 /* MessageUI.framework */,
+				F6727B86175C0C8200452635 /* PebbleKit.framework */,
+				F6727B88175C0C9600452635 /* PebbleVendor.framework */,
+				F600CD1A175BA75900D2CABC /* UIKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -283,9 +311,14 @@
 		F600CD46175BA75A00D2CABC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../../pebble-dev/PebbleKit-v1/iOS\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PebbleWorldTime/PebbleWorldTime-Prefix.pch";
 				INFOPLIST_FILE = "PebbleWorldTime/PebbleWorldTime-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -294,9 +327,14 @@
 		F600CD47175BA75A00D2CABC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../../pebble-dev/PebbleKit-v1/iOS\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PebbleWorldTime/PebbleWorldTime-Prefix.pch";
 				INFOPLIST_FILE = "PebbleWorldTime/PebbleWorldTime-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -321,6 +359,7 @@
 				F600CD47175BA75A00D2CABC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

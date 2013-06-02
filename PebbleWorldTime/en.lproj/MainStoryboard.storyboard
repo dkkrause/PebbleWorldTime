@@ -144,7 +144,7 @@
                             <constraint firstItem="26T-FK-vWX" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="u5D-0n-ovx"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="First" image="first" id="7"/>
+                    <tabBarItem key="tabBarItem" title="TZ1" id="7"/>
                     <connections>
                         <outlet property="clockBackgroundSegmentControl" destination="0N7-nz-WGg" id="cBD-hF-iWB"/>
                         <outlet property="clockEnabledSwitch" destination="c0h-fq-YDK" id="xKM-fb-pIT"/>
@@ -328,7 +328,7 @@
                             <constraint firstAttribute="trailing" secondItem="lTU-Tw-GLf" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="zPt-Tu-CXQ"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Second" image="second" id="6"/>
+                    <tabBarItem key="tabBarItem" title="TZ2" id="6"/>
                     <connections>
                         <outlet property="clockBackgroundSegmentControl" destination="BvB-Ta-ran" id="uQv-Mv-veD"/>
                         <outlet property="clockEnabledSwitch" destination="dfF-xs-qyE" id="AJF-C8-7Kf"/>
@@ -363,10 +363,6 @@
             <point key="canvasLocation" x="114" y="180"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="first" width="16" height="16"/>
-        <image name="second" width="16" height="16"/>
-    </resources>
     <classes>
         <class className="NSLayoutConstraint" superclassName="NSObject">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
