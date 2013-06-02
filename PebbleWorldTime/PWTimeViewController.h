@@ -1,0 +1,20 @@
+//
+//  PWTimeFirstViewController.h
+//  PebbleWorldTime
+//
+//  Created by Don Krause on 6/2/13.
+//  Copyright (c) 2013 Don Krause. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+#define KEY_DOMAIN @"com.dkkrause.PWTime"
+#define CLOCK_ENABLED_KEY @"clockEnabled"
+#define CLOCK_BACKGROUND_KEY @"clockBackground"
+#define CLOCK_TZ_KEY @"clockTZ"
+
+@interface PWTimeViewController : UIViewController
+
+- (void)setClockTZ:(NSString *)clockTZ;
+
+@end
