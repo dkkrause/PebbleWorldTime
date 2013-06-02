@@ -17,12 +17,12 @@
 		F600CD2F175BA75A00D2CABC /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F600CD2E175BA75A00D2CABC /* Default@2x.png */; };
 		F600CD31175BA75A00D2CABC /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F600CD30175BA75A00D2CABC /* Default-568h@2x.png */; };
 		F600CD34175BA75A00D2CABC /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F600CD32175BA75A00D2CABC /* MainStoryboard.storyboard */; };
-		F600CD37175BA75A00D2CABC /* PWTimeFirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F600CD36175BA75A00D2CABC /* PWTimeFirstViewController.m */; };
+		F600CD37175BA75A00D2CABC /* PWTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F600CD36175BA75A00D2CABC /* PWTimeViewController.m */; };
 		F600CD39175BA75A00D2CABC /* first.png in Resources */ = {isa = PBXBuildFile; fileRef = F600CD38175BA75A00D2CABC /* first.png */; };
 		F600CD3B175BA75A00D2CABC /* first@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F600CD3A175BA75A00D2CABC /* first@2x.png */; };
-		F600CD3E175BA75A00D2CABC /* PWTimeSecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F600CD3D175BA75A00D2CABC /* PWTimeSecondViewController.m */; };
 		F600CD40175BA75A00D2CABC /* second.png in Resources */ = {isa = PBXBuildFile; fileRef = F600CD3F175BA75A00D2CABC /* second.png */; };
 		F600CD42175BA75A00D2CABC /* second@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F600CD41175BA75A00D2CABC /* second@2x.png */; };
+		F600CD4D175C020200D2CABC /* PWTimeTZController.m in Sources */ = {isa = PBXBuildFile; fileRef = F600CD4C175C020200D2CABC /* PWTimeTZController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,14 +40,14 @@
 		F600CD2E175BA75A00D2CABC /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		F600CD30175BA75A00D2CABC /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		F600CD33175BA75A00D2CABC /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
-		F600CD35175BA75A00D2CABC /* PWTimeFirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PWTimeFirstViewController.h; sourceTree = "<group>"; };
-		F600CD36175BA75A00D2CABC /* PWTimeFirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PWTimeFirstViewController.m; sourceTree = "<group>"; };
+		F600CD35175BA75A00D2CABC /* PWTimeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PWTimeViewController.h; sourceTree = "<group>"; };
+		F600CD36175BA75A00D2CABC /* PWTimeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PWTimeViewController.m; sourceTree = "<group>"; };
 		F600CD38175BA75A00D2CABC /* first.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = first.png; sourceTree = "<group>"; };
 		F600CD3A175BA75A00D2CABC /* first@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "first@2x.png"; sourceTree = "<group>"; };
-		F600CD3C175BA75A00D2CABC /* PWTimeSecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PWTimeSecondViewController.h; sourceTree = "<group>"; };
-		F600CD3D175BA75A00D2CABC /* PWTimeSecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PWTimeSecondViewController.m; sourceTree = "<group>"; };
 		F600CD3F175BA75A00D2CABC /* second.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = second.png; sourceTree = "<group>"; };
 		F600CD41175BA75A00D2CABC /* second@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "second@2x.png"; sourceTree = "<group>"; };
+		F600CD4B175C020200D2CABC /* PWTimeTZController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWTimeTZController.h; sourceTree = "<group>"; };
+		F600CD4C175C020200D2CABC /* PWTimeTZController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWTimeTZController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,12 +97,12 @@
 				F600CD29175BA75A00D2CABC /* PWTimeAppDelegate.h */,
 				F600CD2A175BA75A00D2CABC /* PWTimeAppDelegate.m */,
 				F600CD32175BA75A00D2CABC /* MainStoryboard.storyboard */,
-				F600CD35175BA75A00D2CABC /* PWTimeFirstViewController.h */,
-				F600CD36175BA75A00D2CABC /* PWTimeFirstViewController.m */,
+				F600CD35175BA75A00D2CABC /* PWTimeViewController.h */,
+				F600CD36175BA75A00D2CABC /* PWTimeViewController.m */,
+				F600CD4B175C020200D2CABC /* PWTimeTZController.h */,
+				F600CD4C175C020200D2CABC /* PWTimeTZController.m */,
 				F600CD38175BA75A00D2CABC /* first.png */,
 				F600CD3A175BA75A00D2CABC /* first@2x.png */,
-				F600CD3C175BA75A00D2CABC /* PWTimeSecondViewController.h */,
-				F600CD3D175BA75A00D2CABC /* PWTimeSecondViewController.m */,
 				F600CD3F175BA75A00D2CABC /* second.png */,
 				F600CD41175BA75A00D2CABC /* second@2x.png */,
 				F600CD21175BA75A00D2CABC /* Supporting Files */,
@@ -197,8 +197,8 @@
 			files = (
 				F600CD27175BA75A00D2CABC /* main.m in Sources */,
 				F600CD2B175BA75A00D2CABC /* PWTimeAppDelegate.m in Sources */,
-				F600CD37175BA75A00D2CABC /* PWTimeFirstViewController.m in Sources */,
-				F600CD3E175BA75A00D2CABC /* PWTimeSecondViewController.m in Sources */,
+				F600CD37175BA75A00D2CABC /* PWTimeViewController.m in Sources */,
+				F600CD4D175C020200D2CABC /* PWTimeTZController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
