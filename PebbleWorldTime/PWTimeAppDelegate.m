@@ -7,8 +7,17 @@
 //
 
 #import "PWTimeAppDelegate.h"
+#import <PebbleKit/PebbleKit.h>
+
+@interface PWTimeAppDelegate ()
+
+@property (strong, nonatomic) PBWatch *targetWatch;
+
+@end
 
 @implementation PWTimeAppDelegate
+
+@synthesize targetWatch = _targetWatch;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {

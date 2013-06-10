@@ -1,89 +1,68 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12D78" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="4">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12E55" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
     <scenes>
-        <!--Time View Controller - First-->
+        <!--Time View Controller - TZ1-->
         <scene sceneID="11">
             <objects>
-                <viewController title="First" id="2" customClass="PWTimeViewController" sceneMemberID="viewController">
+                <viewController id="2" customClass="PWTimeViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="16">
-                        <rect key="frame" x="0.0" y="20" width="320" height="499"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Pebble Time Zone 1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wov-89-X3E">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="4NJ-ta-ECe"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="TZ 1 Enabled" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PFV-0h-ISM">
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="TZ 1 Background" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5vg-wb-lCJ">
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="154" id="Y7J-1x-HGC"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c0h-fq-YDK">
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="77" id="R3J-Fe-JKy"/>
-                                </constraints>
+                            <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="c0h-fq-YDK">
                                 <connections>
-                                    <action selector="clockEnabledSwitchChanged:" destination="2" eventType="valueChanged" id="v34-ds-7VG"/>
+                                    <action selector="clockEnabledSwitchChanged:" destination="2" eventType="valueChanged" id="LMI-hx-akr"/>
                                 </connections>
                             </switch>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="0N7-nz-WGg">
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="137" id="NMB-wu-zBQ"/>
-                                </constraints>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bordered" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="uI8-nx-acB">
                                 <segments>
                                     <segment title="Dark"/>
                                     <segment title="Light"/>
+                                    <segment title="AM/PM"/>
                                 </segments>
                                 <connections>
-                                    <action selector="clockBackgroundSegmentSelected:" destination="2" eventType="valueChanged" id="Seq-pQ-tkw"/>
+                                    <action selector="clockBackgroundSegmentSelected:" destination="2" eventType="valueChanged" id="hUh-fW-whH"/>
                                 </connections>
                             </segmentedControl>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Local Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="97p-Ih-qjp">
-                                <color key="backgroundColor" red="0.042341905079999999" green="0.5543478261" blue="0.11011573080000001" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="TZ Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Ms-ac-7WA">
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="26T-FK-vWX">
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PLK-02-Mrl">
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="41" type="user" id="O4r-l8-FiN"/>
+                                    <constraint firstAttribute="width" constant="254" id="QNE-Rr-ROx"/>
+                                    <constraint firstAttribute="height" constant="30" id="jKe-sd-Y73"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eqO-hz-GSd">
-                                <color key="backgroundColor" red="0.042341905079999999" green="0.5543478261" blue="0.11011573080000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="41" id="WKh-24-6JI"/>
+                                    <constraint firstAttribute="height" constant="30" id="hno-rA-KvH"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gfM-hF-aed">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3nS-Aw-x6F">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="yyS-sa-ufN"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ApT-jg-eLM">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="220" id="KOX-pM-gpG"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="Watch"/>
+                                    <segment title="12-hour"/>
+                                    <segment title="24-hour"/>
+                                </segments>
+                                <connections>
+                                    <action selector="timeDisplayChanged:" destination="2" eventType="valueChanged" id="Q08-uG-Jqj"/>
+                                </connections>
+                            </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QfD-2L-WH1">
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -93,78 +72,83 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="fgm-ez-BqI" kind="modal" identifier="toTZ" modalTransitionStyle="flipHorizontal" id="l1W-Vn-vjs"/>
+                                    <segue destination="fgm-ez-BqI" kind="modal" identifier="toTZ" modalTransitionStyle="coverVertical" id="0Lw-lT-pL5"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Select Time Zone" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D5B-lw-Q0X">
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="TZ1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MdB-Jm-RPE">
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="80N-Gh-CYL">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="43" id="oqm-QO-3G3"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="Digital"/>
+                                    <segment title="Analog"/>
+                                </segments>
+                                <connections>
+                                    <action selector="watchFaceChanged:" destination="2" eventType="valueChanged" id="4p4-hm-H14"/>
+                                </connections>
+                            </segmentedControl>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="I4z-H9-XDd">
+                                <segments>
+                                    <segment title="Local"/>
+                                    <segment title="TZ1"/>
+                                    <segment title="TZ2"/>
+                                </segments>
+                                <connections>
+                                    <action selector="clockSelected:" destination="2" eventType="valueChanged" id="BKa-l4-5iz"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="eqO-hz-GSd" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="0kb-b8-GPo"/>
-                            <constraint firstItem="eqO-hz-GSd" firstAttribute="top" secondItem="16" secondAttribute="top" constant="193" id="2TQ-bf-n59"/>
-                            <constraint firstItem="c0h-fq-YDK" firstAttribute="centerY" secondItem="PFV-0h-ISM" secondAttribute="centerY" type="default" id="3Fc-fm-Rw5"/>
-                            <constraint firstItem="5Ms-ac-7WA" firstAttribute="top" secondItem="16" secondAttribute="top" constant="250" type="user" id="B6Q-g5-QYT"/>
-                            <constraint firstAttribute="trailing" secondItem="D5B-lw-Q0X" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="D6A-MF-2nC"/>
-                            <constraint firstItem="gfM-hF-aed" firstAttribute="top" secondItem="D5B-lw-Q0X" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="EG0-Ci-6JN"/>
-                            <constraint firstItem="97p-Ih-qjp" firstAttribute="top" secondItem="16" secondAttribute="top" constant="175" id="FlJ-Fq-9g9"/>
-                            <constraint firstItem="gfM-hF-aed" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="H2v-AO-TIV"/>
-                            <constraint firstItem="5Ms-ac-7WA" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="His-4K-nku"/>
-                            <constraint firstAttribute="trailing" secondItem="eqO-hz-GSd" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="Jdy-VT-Ji8"/>
-                            <constraint firstAttribute="trailing" secondItem="Wov-89-X3E" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="KKf-Vc-VVe"/>
-                            <constraint firstItem="5vg-wb-lCJ" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="Ouq-0a-2Bl"/>
-                            <constraint firstItem="26T-FK-vWX" firstAttribute="top" secondItem="16" secondAttribute="top" constant="269" type="user" id="QmH-7J-E7o"/>
-                            <constraint firstItem="Wov-89-X3E" firstAttribute="top" secondItem="16" secondAttribute="top" constant="20" type="user" id="RXt-GF-9If"/>
-                            <constraint firstAttribute="trailing" secondItem="c0h-fq-YDK" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="SYv-RX-BDR"/>
-                            <constraint firstItem="c0h-fq-YDK" firstAttribute="leading" secondItem="PFV-0h-ISM" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="TaX-r1-VLQ"/>
-                            <constraint firstItem="MdB-Jm-RPE" firstAttribute="top" secondItem="gfM-hF-aed" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="Tuy-A0-KdM"/>
-                            <constraint firstAttribute="trailing" secondItem="97p-Ih-qjp" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="Wau-PP-RSZ"/>
-                            <constraint firstItem="5vg-wb-lCJ" firstAttribute="baseline" secondItem="0N7-nz-WGg" secondAttribute="baseline" type="default" id="Woh-6i-a7G"/>
-                            <constraint firstAttribute="trailing" secondItem="26T-FK-vWX" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="YTT-gb-2ac"/>
-                            <constraint firstItem="97p-Ih-qjp" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="aCJ-CH-u3p"/>
-                            <constraint firstItem="MdB-Jm-RPE" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="ecm-KX-XFO"/>
-                            <constraint firstItem="gfM-hF-aed" firstAttribute="top" secondItem="16" secondAttribute="top" constant="355" type="user" id="fUw-27-zh4"/>
-                            <constraint firstItem="D5B-lw-Q0X" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="gFZ-H3-1ca"/>
-                            <constraint firstItem="0N7-nz-WGg" firstAttribute="top" secondItem="16" secondAttribute="top" constant="115" id="gIa-oe-lhQ"/>
-                            <constraint firstItem="PFV-0h-ISM" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="gko-Yf-Ds8"/>
-                            <constraint firstItem="c0h-fq-YDK" firstAttribute="top" secondItem="16" secondAttribute="top" constant="72" id="ipE-oj-XB0"/>
-                            <constraint firstAttribute="trailing" secondItem="0N7-nz-WGg" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="l4x-Bo-0dz"/>
-                            <constraint firstAttribute="trailing" secondItem="5Ms-ac-7WA" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="lfW-YZ-qMn"/>
-                            <constraint firstAttribute="trailing" secondItem="gfM-hF-aed" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="mjR-hg-Dyy"/>
-                            <constraint firstItem="Wov-89-X3E" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="oMW-MG-9Io"/>
-                            <constraint firstItem="0N7-nz-WGg" firstAttribute="centerY" secondItem="5vg-wb-lCJ" secondAttribute="centerY" type="default" id="rUp-q1-6UM"/>
-                            <constraint firstItem="26T-FK-vWX" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="u5D-0n-ovx"/>
+                            <constraint firstItem="eqO-hz-GSd" firstAttribute="top" secondItem="16" secondAttribute="top" constant="98" id="0Eg-Qt-emj"/>
+                            <constraint firstAttribute="bottom" secondItem="80N-Gh-CYL" secondAttribute="bottom" constant="66" id="0Pp-OC-c3M"/>
+                            <constraint firstItem="ApT-jg-eLM" firstAttribute="baseline" secondItem="uI8-nx-acB" secondAttribute="baseline" type="default" id="1j4-VN-iWp"/>
+                            <constraint firstItem="QfD-2L-WH1" firstAttribute="leading" secondItem="eqO-hz-GSd" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="3Nc-LT-amQ"/>
+                            <constraint firstItem="ApT-jg-eLM" firstAttribute="centerX" secondItem="c0h-fq-YDK" secondAttribute="centerX" type="default" id="9bY-lw-waE"/>
+                            <constraint firstItem="PLK-02-Mrl" firstAttribute="top" secondItem="16" secondAttribute="top" constant="41" id="BOo-WE-sAT"/>
+                            <constraint firstItem="80N-Gh-CYL" firstAttribute="trailing" secondItem="uI8-nx-acB" secondAttribute="trailing" type="default" id="D1g-M0-T76"/>
+                            <constraint firstItem="ApT-jg-eLM" firstAttribute="baseline" secondItem="80N-Gh-CYL" secondAttribute="baseline" type="default" id="Dmh-F9-jLi"/>
+                            <constraint firstItem="3nS-Aw-x6F" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="Glm-Aq-3nX"/>
+                            <constraint firstItem="eqO-hz-GSd" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="KhV-pH-id2"/>
+                            <constraint firstItem="uI8-nx-acB" firstAttribute="trailing" secondItem="ApT-jg-eLM" secondAttribute="trailing" type="default" id="MxA-bx-gbi"/>
+                            <constraint firstItem="80N-Gh-CYL" firstAttribute="leading" secondItem="uI8-nx-acB" secondAttribute="leading" type="default" id="QZP-gJ-dX7"/>
+                            <constraint firstItem="ApT-jg-eLM" firstAttribute="trailing" secondItem="eqO-hz-GSd" secondAttribute="trailing" type="default" id="Ufh-pC-Cgd"/>
+                            <constraint firstItem="3nS-Aw-x6F" firstAttribute="centerX" secondItem="I4z-H9-XDd" secondAttribute="centerX" type="default" id="V0t-tE-VJo"/>
+                            <constraint firstAttribute="bottom" secondItem="ApT-jg-eLM" secondAttribute="bottom" constant="187" id="eZ5-HG-gqp"/>
+                            <constraint firstItem="I4z-H9-XDd" firstAttribute="top" secondItem="16" secondAttribute="top" constant="33" id="eeO-HF-XQW"/>
+                            <constraint firstItem="QfD-2L-WH1" firstAttribute="top" secondItem="16" secondAttribute="top" constant="101" id="gfT-Ea-eS9"/>
+                            <constraint firstAttribute="bottom" secondItem="uI8-nx-acB" secondAttribute="bottom" constant="126" id="htw-dC-fB8"/>
+                            <constraint firstAttribute="trailing" secondItem="3nS-Aw-x6F" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="iam-DT-uPb"/>
+                            <constraint firstItem="c0h-fq-YDK" firstAttribute="top" secondItem="16" secondAttribute="top" constant="187" id="kAY-dm-Skf"/>
+                            <constraint firstItem="ApT-jg-eLM" firstAttribute="leading" secondItem="uI8-nx-acB" secondAttribute="leading" type="default" id="m0c-cT-uMu"/>
+                            <constraint firstItem="PLK-02-Mrl" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="28" id="tBD-yW-bCI"/>
+                            <constraint firstItem="3nS-Aw-x6F" firstAttribute="centerX" secondItem="c0h-fq-YDK" secondAttribute="centerX" type="default" id="wJE-tu-zv5"/>
+                            <constraint firstItem="3nS-Aw-x6F" firstAttribute="top" secondItem="16" secondAttribute="top" constant="143" id="zzO-ht-OcK"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="TZ1" id="7"/>
                     <connections>
-                        <outlet property="clockBackgroundSegmentControl" destination="0N7-nz-WGg" id="cBD-hF-iWB"/>
-                        <outlet property="clockEnabledSwitch" destination="c0h-fq-YDK" id="xKM-fb-pIT"/>
-                        <outlet property="localTimeDisplay" destination="eqO-hz-GSd" id="LUP-Tu-CMP"/>
-                        <outlet property="tzSelectButton" destination="gfM-hF-aed" id="YLm-5T-I54"/>
+                        <outlet property="clockBackground" destination="uI8-nx-acB" id="7PG-cK-cc4"/>
+                        <outlet property="clockDisplay" destination="ApT-jg-eLM" id="cVZ-Rt-1mi"/>
+                        <outlet property="clockEnabled" destination="c0h-fq-YDK" id="6wn-Vn-BdD"/>
+                        <outlet property="clockFace" destination="80N-Gh-CYL" id="Lo3-KE-aHO"/>
+                        <outlet property="clockSelect" destination="I4z-H9-XDd" id="rO6-MV-4mK"/>
+                        <outlet property="timeDisplay" destination="3nS-Aw-x6F" id="hdD-jV-VUI"/>
+                        <outlet property="tzDisplay" destination="eqO-hz-GSd" id="qMa-f8-1s0"/>
+                        <outlet property="tzSelect" destination="QfD-2L-WH1" id="6a7-Yp-tOf"/>
                         <outlet property="view" destination="16" id="NbJ-D4-z7F"/>
-                        <outlet property="watchface" destination="MdB-Jm-RPE" id="7TV-vj-lpF"/>
-                        <outlet property="zoneTimeDisplay" destination="26T-FK-vWX" id="OJn-e2-Skj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="10" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="653" y="-138"/>
+            <point key="canvasLocation" x="465" y="-193"/>
         </scene>
         <!--TimeTZ Controller-->
         <scene sceneID="dvd-8e-jAZ">
             <objects>
                 <tableViewController id="fgm-ez-BqI" customClass="PWTimeTZController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="fwR-rj-kPb">
-                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -186,181 +170,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="49c-cF-4Xl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1195" y="163"/>
-        </scene>
-        <!--Time View Controller - Second-->
-        <scene sceneID="13">
-            <objects>
-                <viewController title="Second" id="3" customClass="PWTimeViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="17">
-                        <rect key="frame" x="0.0" y="20" width="320" height="499"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Pebble Time Zone 2" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hj2-wW-k1s">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="CBB-To-K12"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="TZ 1 Enabled" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kix-ox-hqU">
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="TZ 1 Background" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mXr-c0-hir">
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="154" id="d6C-hM-aGj"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dfF-xs-qyE">
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="77" id="LNc-tP-Ec5"/>
-                                </constraints>
-                                <connections>
-                                    <action selector="clockEnabledSwitchChanged:" destination="3" eventType="valueChanged" id="kBl-dZ-KF4"/>
-                                </connections>
-                            </switch>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="BvB-Ta-ran">
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="137" id="h6s-YE-V6T"/>
-                                </constraints>
-                                <segments>
-                                    <segment title="Dark"/>
-                                    <segment title="Light"/>
-                                </segments>
-                                <connections>
-                                    <action selector="clockBackgroundSegmentSelected:" destination="3" eventType="valueChanged" id="hpt-fr-ycg"/>
-                                </connections>
-                            </segmentedControl>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Local Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0g7-9E-0u3">
-                                <color key="backgroundColor" red="0.042341905079999999" green="0.5543478261" blue="0.11011573080000001" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="TZ Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xwd-JH-CXN">
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="64Q-Dd-I9M">
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="41" type="user" id="w1I-Wu-lEU"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AyM-3f-Y2p">
-                                <color key="backgroundColor" red="0.042341905079999999" green="0.5543478261" blue="0.11011573080000001" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="41" id="dmJ-w6-91c"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bx4-m5-tCt">
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="fgm-ez-BqI" kind="modal" identifier="toTZ" modalTransitionStyle="flipHorizontal" id="uGz-xt-yeP"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Select Time Zone" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lTU-Tw-GLf">
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="TZ2" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WGv-yz-6eq">
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="BvB-Ta-ran" firstAttribute="baseline" secondItem="mXr-c0-hir" secondAttribute="baseline" type="default" id="1xV-id-I4e"/>
-                            <constraint firstItem="64Q-Dd-I9M" firstAttribute="leading" secondItem="17" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="4kg-1V-71M"/>
-                            <constraint firstItem="xwd-JH-CXN" firstAttribute="top" secondItem="17" secondAttribute="top" constant="250" type="user" id="5gC-b1-dNu"/>
-                            <constraint firstItem="lTU-Tw-GLf" firstAttribute="leading" secondItem="17" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="6bQ-jc-QXJ"/>
-                            <constraint firstItem="lTU-Tw-GLf" firstAttribute="top" secondItem="17" secondAttribute="top" constant="326" type="user" id="8ya-41-UlS"/>
-                            <constraint firstItem="kix-ox-hqU" firstAttribute="leading" secondItem="17" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="9Wk-rg-Efs"/>
-                            <constraint firstItem="bx4-m5-tCt" firstAttribute="leading" secondItem="17" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="Ay5-oV-CAm"/>
-                            <constraint firstAttribute="trailing" secondItem="BvB-Ta-ran" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="CTJ-85-jTt"/>
-                            <constraint firstItem="BvB-Ta-ran" firstAttribute="top" secondItem="17" secondAttribute="top" constant="115" id="DJ3-CF-y6u"/>
-                            <constraint firstItem="AyM-3f-Y2p" firstAttribute="top" secondItem="17" secondAttribute="top" constant="193" id="HxQ-9U-5KC"/>
-                            <constraint firstItem="BvB-Ta-ran" firstAttribute="centerY" secondItem="mXr-c0-hir" secondAttribute="centerY" type="default" id="IqV-V9-gOP"/>
-                            <constraint firstItem="0g7-9E-0u3" firstAttribute="leading" secondItem="17" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="MQI-Hd-dkX"/>
-                            <constraint firstItem="hj2-wW-k1s" firstAttribute="top" secondItem="17" secondAttribute="top" constant="20" symbolic="YES" type="default" id="Oz2-p8-U4Y"/>
-                            <constraint firstItem="mXr-c0-hir" firstAttribute="leading" secondItem="17" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="PTx-ZT-31P"/>
-                            <constraint firstItem="dfF-xs-qyE" firstAttribute="leading" secondItem="kix-ox-hqU" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="RNK-Gg-0qN"/>
-                            <constraint firstItem="WGv-yz-6eq" firstAttribute="top" secondItem="17" secondAttribute="top" constant="412" type="user" id="Uwy-iE-RiY"/>
-                            <constraint firstItem="WGv-yz-6eq" firstAttribute="leading" secondItem="17" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="VSH-Lx-Ldk"/>
-                            <constraint firstItem="AyM-3f-Y2p" firstAttribute="leading" secondItem="17" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="VYP-Xo-JUt"/>
-                            <constraint firstAttribute="trailing" secondItem="bx4-m5-tCt" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="ZMX-qF-VmN"/>
-                            <constraint firstItem="dfF-xs-qyE" firstAttribute="top" secondItem="17" secondAttribute="top" constant="72" id="a3V-Od-cg9"/>
-                            <constraint firstItem="xwd-JH-CXN" firstAttribute="leading" secondItem="17" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="bNe-rL-ANi"/>
-                            <constraint firstItem="kix-ox-hqU" firstAttribute="centerY" secondItem="dfF-xs-qyE" secondAttribute="centerY" type="default" id="bte-Cf-f6F"/>
-                            <constraint firstItem="64Q-Dd-I9M" firstAttribute="top" secondItem="17" secondAttribute="top" constant="269" type="user" id="cpz-eS-GvZ"/>
-                            <constraint firstAttribute="trailing" secondItem="64Q-Dd-I9M" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="dAg-Qb-IE8"/>
-                            <constraint firstAttribute="trailing" secondItem="dfF-xs-qyE" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="f72-TA-Yr5"/>
-                            <constraint firstAttribute="trailing" secondItem="hj2-wW-k1s" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="fSg-Lb-9v2"/>
-                            <constraint firstAttribute="trailing" secondItem="xwd-JH-CXN" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="fjp-OI-rat"/>
-                            <constraint firstAttribute="trailing" secondItem="AyM-3f-Y2p" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="gJF-nK-Uet"/>
-                            <constraint firstItem="0g7-9E-0u3" firstAttribute="top" secondItem="17" secondAttribute="top" constant="175" id="iiL-JM-hxm"/>
-                            <constraint firstAttribute="trailing" secondItem="0g7-9E-0u3" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="m3w-Tc-Ot7"/>
-                            <constraint firstItem="hj2-wW-k1s" firstAttribute="leading" secondItem="17" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="uDI-1S-gpu"/>
-                            <constraint firstItem="bx4-m5-tCt" firstAttribute="top" secondItem="17" secondAttribute="top" constant="356" type="user" id="x6f-Tu-cp8"/>
-                            <constraint firstAttribute="trailing" secondItem="lTU-Tw-GLf" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="zPt-Tu-CXQ"/>
-                        </constraints>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="TZ2" id="6"/>
-                    <connections>
-                        <outlet property="clockBackgroundSegmentControl" destination="BvB-Ta-ran" id="uQv-Mv-veD"/>
-                        <outlet property="clockEnabledSwitch" destination="dfF-xs-qyE" id="AJF-C8-7Kf"/>
-                        <outlet property="localTimeDisplay" destination="AyM-3f-Y2p" id="Tc9-Aa-HYr"/>
-                        <outlet property="tzSelectButton" destination="bx4-m5-tCt" id="wxD-Lj-ORZ"/>
-                        <outlet property="view" destination="17" id="YuW-6l-0GS"/>
-                        <outlet property="watchface" destination="WGv-yz-6eq" id="Tfi-KQ-yid"/>
-                        <outlet property="zoneTimeDisplay" destination="64Q-Dd-I9M" id="gfW-qg-UR7"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="12" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="653" y="498"/>
-        </scene>
-        <!--Tab Bar Controller-->
-        <scene sceneID="15">
-            <objects>
-                <tabBarController id="4" sceneMemberID="viewController">
-                    <nil key="simulatedBottomBarMetrics"/>
-                    <tabBar key="tabBar" contentMode="scaleToFill" id="5">
-                        <rect key="frame" x="0.0" y="431" width="320" height="49"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    </tabBar>
-                    <connections>
-                        <segue destination="2" kind="relationship" relationship="viewControllers" id="26"/>
-                        <segue destination="3" kind="relationship" relationship="viewControllers" id="27"/>
-                    </connections>
-                </tabBarController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="14" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="114" y="180"/>
+            <point key="canvasLocation" x="893" y="-193"/>
         </scene>
     </scenes>
     <classes>
@@ -375,21 +185,23 @@
             <relationships>
                 <relationship kind="action" name="clockBackgroundSegmentSelected:"/>
                 <relationship kind="action" name="clockEnabledSwitchChanged:"/>
-                <relationship kind="outlet" name="clockBackgroundSegmentControl" candidateClass="UISegmentedControl"/>
-                <relationship kind="outlet" name="clockEnabledSwitch" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="localTimeDisplay" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="tzSelectButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="watchface" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="zoneTimeDisplay" candidateClass="UILabel"/>
+                <relationship kind="action" name="clockSelected:"/>
+                <relationship kind="action" name="timeDisplayChanged:"/>
+                <relationship kind="action" name="watchFaceChanged:"/>
+                <relationship kind="outlet" name="clockBackground" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="clockDisplay" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="clockEnabled" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="clockFace" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="clockSelect" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="timeDisplay" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="tzDisplay" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="tzSelect" candidateClass="UIButton"/>
             </relationships>
         </class>
     </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4"/>
+        <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
-    <inferredMetricsTieBreakers>
-        <segue reference="uGz-xt-yeP"/>
-    </inferredMetricsTieBreakers>
 </document>

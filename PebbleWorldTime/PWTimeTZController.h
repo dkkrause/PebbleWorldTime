@@ -12,6 +12,6 @@
 @property (strong,nonatomic) NSArray *tzList;
 
 - (void)setDelegate:(id)delegate;
-- (void)setClockTZ:(NSString *)clockTZ;
+- (void)setClockTZ:(NSTimeZone *)clockTZ;
 
 @end

@@ -8,13 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
-#define KEY_DOMAIN @"com.dkkrause.PWTime"
-#define CLOCK_ENABLED_KEY @"clockEnabled"
-#define CLOCK_BACKGROUND_KEY @"clockBackground"
-#define CLOCK_TZ_KEY @"clockTZ"
+#define KEY_DOMAIN              @"com.dkkrause.PWTime"
+#define CLOCK_ENABLED_KEY       @"clockEnabled"
+#define CLOCK_BACKGROUND_KEY    @"clockBackground"
+#define CLOCK_TZ_KEY            @"clockTZ"
+#define CLOCK_DISPLAY_KEY       @"clockDisplay"
+#define CLOCK_WATCHFACE_KEY     @"clockWatchface"
 
 @interface PWTimeViewController : UIViewController
 
-- (void)setClockTZ:(NSString *)clockTZ;
+- (void)setClockTZ:(NSTimeZone *)clockTZ;
 
 @end

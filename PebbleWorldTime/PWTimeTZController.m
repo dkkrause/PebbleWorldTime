@@ -13,7 +13,7 @@
 @interface PWTimeTZController ()
 
 @property (nonatomic, assign) id delegate;
-@property (nonatomic, assign) NSString *clockTZ;
+@property (nonatomic, assign) NSTimeZone *clockTZ;
 
 @end
 
@@ -46,7 +46,7 @@
     // Determine which time zone is already selected, make that the selected one now, and put it on the screen
     int startPos = 0;
     for (int i=0; i< [self.tzList count]; i++) {
-        if ([[self.tzList objectAtIndex:i] isEqualToString:self.clockTZ]) {
+        if ([[self.tzList objectAtIndex:i] isEqualToString:[self.clockTZ name]]) {
             startPos = i;
             break;
         }
@@ -84,7 +84,7 @@
     
     // Configure the cell...
     cell.textLabel.text = [self.tzList objectAtIndex:[indexPath row]];
-    if ([cell.textLabel.text isEqualToString:self.clockTZ]) {
+    if ([cell.textLabel.text isEqualToString:[self.clockTZ name]]) {
         cell.textLabel.textColor = [UIColor whiteColor];
         cell.textLabel.backgroundColor = [UIColor blueColor];
     } else {
@@ -107,7 +107,7 @@
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
     
-    [self.delegate setClockTZ:[self.tzList objectAtIndex:indexPath.row]];
+    [self.delegate setClockTZ:[NSTimeZone timeZoneWithName:[self.tzList objectAtIndex:indexPath.row]]];
     [self dismissViewControllerAnimated:YES completion:nil];
 
 }

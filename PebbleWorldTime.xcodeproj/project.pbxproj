@@ -62,6 +62,7 @@
 		F6727B86175C0C8200452635 /* PebbleKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PebbleKit.framework; path = "../../../../pebble-dev/PebbleKit-v1/iOS/PebbleKit.framework"; sourceTree = "<group>"; };
 		F6727B88175C0C9600452635 /* PebbleVendor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PebbleVendor.framework; path = "../../../../pebble-dev/PebbleKit-v1/iOS/PebbleVendor.framework"; sourceTree = "<group>"; };
 		F6727B8A175C0D5A00452635 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		F6A15A5C175D962400B57E71 /* PWTimeKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PWTimeKeys.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,9 +123,10 @@
 		F600CD20175BA75A00D2CABC /* PebbleWorldTime */ = {
 			isa = PBXGroup;
 			children = (
+				F600CD32175BA75A00D2CABC /* MainStoryboard.storyboard */,
 				F600CD29175BA75A00D2CABC /* PWTimeAppDelegate.h */,
 				F600CD2A175BA75A00D2CABC /* PWTimeAppDelegate.m */,
-				F600CD32175BA75A00D2CABC /* MainStoryboard.storyboard */,
+				F6A15A5C175D962400B57E71 /* PWTimeKeys.h */,
 				F600CD35175BA75A00D2CABC /* PWTimeViewController.h */,
 				F600CD36175BA75A00D2CABC /* PWTimeViewController.m */,
 				F600CD4B175C020200D2CABC /* PWTimeTZController.h */,
