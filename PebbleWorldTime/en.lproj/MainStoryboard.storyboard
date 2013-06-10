@@ -75,7 +75,7 @@
                                     <segue destination="fgm-ez-BqI" kind="modal" identifier="toTZ" modalTransitionStyle="coverVertical" id="0Lw-lT-pL5"/>
                                 </connections>
                             </button>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="80N-Gh-CYL">
+                            <segmentedControl hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="80N-Gh-CYL">
                                 <constraints>
                                     <constraint firstAttribute="height" constant="43" id="oqm-QO-3G3"/>
                                 </constraints>
@@ -183,11 +183,6 @@
         <class className="PWTimeViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/PWTimeViewController.h"/>
             <relationships>
-                <relationship kind="action" name="clockBackgroundSegmentSelected:"/>
-                <relationship kind="action" name="clockEnabledSwitchChanged:"/>
-                <relationship kind="action" name="clockSelected:"/>
-                <relationship kind="action" name="timeDisplayChanged:"/>
-                <relationship kind="action" name="watchFaceChanged:"/>
                 <relationship kind="outlet" name="clockBackground" candidateClass="UISegmentedControl"/>
                 <relationship kind="outlet" name="clockDisplay" candidateClass="UISegmentedControl"/>
                 <relationship kind="outlet" name="clockEnabled" candidateClass="UISwitch"/>
