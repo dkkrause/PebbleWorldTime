@@ -57,7 +57,7 @@
     } else {
         cityName = tzName;
     }
-    NSString *tzAbbr = [_clockTZ abbreviation];
+    NSString *tzAbbr = [tz abbreviation];
     tzAbbr = [[@" (" stringByAppendingString:tzAbbr] stringByAppendingString:@")"];
     cityName = [[cityName stringByReplacingOccurrencesOfString:@"_" withString:@" "] stringByAppendingString:tzAbbr];
     
@@ -96,20 +96,22 @@
 - (void)setClockTZ:(NSTimeZone *)clockTZ
 {
         
-    _clockTZ = clockTZ;
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *tzName = [_clockTZ name];
-    [defaults setObject:tzName forKey:[self makeKey:CLOCK_TZ_KEY]];
-    [defaults synchronize];
-    
-    [self.tzDisplay setText:[self readableTZ:self.clockTZ]];
-    [self.tzDisplay setNeedsDisplay];
-    
-    NSString *watchface = [self.clockSelect titleForSegmentAtIndex:[self.clockSelect selectedSegmentIndex]];
-    
-    [self updateWatch:PBCOMM_CITY_KEY forWatch:watchface];
-    [self updateWatch:PBCOMM_GMT_SEC_OFFSET_KEY forWatch:watchface];
+    if (_clockTZ != clockTZ) {
+        
+        _clockTZ = clockTZ;
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *tzName = [_clockTZ name];
+        [defaults setObject:tzName forKey:[self makeKey:CLOCK_TZ_KEY]];
+        [defaults synchronize];
+        
+        [self.tzDisplay setText:[self readableTZ:self.clockTZ]];
+        [self.tzDisplay setNeedsDisplay];
+        
+        NSString *watchface = [self.clockSelect titleForSegmentAtIndex:[self.clockSelect selectedSegmentIndex]];
+        
+        [self updateWatch:@[@PBCOMM_CITY_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY] forWatches:@[watchface]];
+        
+    }
     
 }
 
@@ -124,9 +126,14 @@
 
 - (NSString *)makeKey:(NSString *)keyLabel
 {
+    return [self makeKey:keyLabel forWatch:[self.clockSelect titleForSegmentAtIndex:[self.clockSelect selectedSegmentIndex]]];
+}
+
+- (NSString *)makeKey:(NSString *)keyLabel forWatch:(NSString *)watch
+{
     
     NSString *finalKey = [KEY_DOMAIN stringByAppendingString:@"."];
-    finalKey = [finalKey stringByAppendingString:[self.clockSelect titleForSegmentAtIndex:[self.clockSelect selectedSegmentIndex]]];
+    finalKey = [finalKey stringByAppendingString:watch];
     finalKey = [finalKey stringByAppendingString:@"."];
     finalKey = [finalKey stringByAppendingString:keyLabel];
     return finalKey;
@@ -141,7 +148,7 @@
     self.clockEnabled.on = [defaults boolForKey:[self makeKey:CLOCK_ENABLED_KEY]];
     self.clockBackground.selectedSegmentIndex = [defaults integerForKey:[self makeKey:CLOCK_BACKGROUND_KEY]];
     self.clockDisplay.selectedSegmentIndex = [defaults integerForKey:[self makeKey:CLOCK_DISPLAY_KEY]];
-    self.clockFace.selectedSegmentIndex = [defaults integerForKey:[self makeKey:CLOCK_WATCHFACE_KEY]];
+//    self.clockFace.selectedSegmentIndex = [defaults integerForKey:[self makeKey:CLOCK_WATCHFACE_KEY]];
     NSString *defTZ = [defaults stringForKey:[self makeKey:CLOCK_TZ_KEY]];
     if (defTZ == nil) {
         defTZ = @"America/Los_Angeles";
@@ -174,13 +181,9 @@
     
     NSString *watchface = [self.clockSelect titleForSegmentAtIndex:[self.clockSelect selectedSegmentIndex]];
     
-    [self updateWatch:PBCOMM_WATCH_ENABLED_KEY forWatch:watchface];
     if ([self.clockEnabled isOn]) {
-        [self updateWatch:PBCOMM_GMT_SEC_OFFSET_KEY forWatch:watchface];
-//        [self updateWatch:PBCOMM_BACKGROUND_KEY forWatch:watchface];
-//        [self updateWatch:PBCOMM_CITY_KEY forWatch:watchface];
-//        [self updateWatch:PBCOMM_12_24_DISPLAY_KEY forWatch:watchface];
-//        [self updateWatch:PBCOMM_WATCHFACE_DISPLAY_KEY forWatch:watchface];
+        [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_CITY_KEY, @PBCOMM_12_24_DISPLAY_KEY] forWatches:@[watchface]];
+//        add @PBCOMM_WATCHFACE_DISPLAY_KEY when supported
     }
     
 }
@@ -191,7 +194,7 @@
     [defaults setObject:[NSNumber numberWithInteger:[sender selectedSegmentIndex]] forKey:[self makeKey:CLOCK_BACKGROUND_KEY]];
     [defaults synchronize];
     
-//    [self updateWatch:PBCOMM_BACKGROUND_KEY forWatch:[self.clockSelect titleForSegmentAtIndex:[sender selectedSegmentIndex]]];
+    [self updateWatch:@[@PBCOMM_BACKGROUND_KEY] forWatches:@[[self.clockSelect titleForSegmentAtIndex:[self.clockSelect  selectedSegmentIndex]]]];
 
 }
 
@@ -201,7 +204,7 @@
     [defaults setObject:[NSNumber numberWithInteger:[sender selectedSegmentIndex]] forKey:[self makeKey:CLOCK_DISPLAY_KEY]];
     [defaults synchronize];
     
-//    [self updateWatch:PBCOMM_12_24_DISPLAY_KEY forWatch:[self.clockSelect titleForSegmentAtIndex:[sender selectedSegmentIndex]]];
+    [self updateWatch:@[@PBCOMM_12_24_DISPLAY_KEY] forWatches:@[[self.clockSelect titleForSegmentAtIndex:[self.clockSelect selectedSegmentIndex]]]];
     
 }
 
@@ -212,11 +215,15 @@
     [defaults setObject:[NSNumber numberWithInteger:[sender selectedSegmentIndex]] forKey:[self makeKey:CLOCK_WATCHFACE_KEY]];
     [defaults synchronize];
     
-//    [self updateWatch:PBCOMM_WATCHFACE_DISPLAY_KEY forWatch:[self.clockSelect titleForSegmentAtIndex:[sender selectedSegmentIndex]]];
+//    [self updateWatch:@[@PBCOMM_WATCHFACE_DISPLAY_KEY] forWatch:[self.clockSelect titleForSegmentAtIndex:[sender selectedSegmentIndex]]];
     
 }
 
-- (void)updateClock:(id)sender
+- (IBAction)updateWatchData:(id)sender {
+    [self sendConfigToWatch];
+}
+
+- (void)updateRunningClock:(id)sender
 {
     
     NSDate *date = [[NSDate alloc] init];   // Get the current date and time
@@ -239,22 +246,48 @@
     
     // Initialize with the last connected watch:
     [self setTargetWatch:[[PBPebbleCentral defaultCentral] lastConnectedWatch]];
+    [self loadClockFields];
     
 }
+
+- (void)sendConfigToWatch
+{
+    // First choice is to update all watches in one message. Doesn't work yet
+    //    [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY] forWatches:@[@"Local", @"TZ1", @"TZ2"]];
+    //    [self updateWatch:PBCOMM_WATCHFACE_DISPLAY_KEY forWatch:@"Local"];
+
+    
+
+    // Update the local watch with all of the current settings
+    [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY] forWatches:@[@"Local"]];
+    //    [self updateWatch:PBCOMM_WATCHFACE_DISPLAY_KEY forWatch:@"TZ1"];
+    
+    //    [NSThread sleepForTimeInterval:1.0];
+    
+//    [NSThread sleepForTimeInterval:1.0];
+    
+    // Update the TZ1 watch with all of the current settings
+    [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY] forWatches:@[@"TZ1"]];
+    //    [self updateWatch:PBCOMM_WATCHFACE_DISPLAY_KEY forWatch:@"TZ1"];
+    
+//    [NSThread sleepForTimeInterval:1.0];
+
+    // Update the TZ2 watch with all of the current settings
+    [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY] forWatches:@[@"TZ2"]];
+    //    [self updateWatch:PBCOMM_WATCHFACE_DISPLAY_KEY forWatch:@[@"TZ2"]];
+    
+//    [NSThread sleepForTimeInterval:1.0];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
 	// Do any additional setup after loading the view, typically from a nib.
     self.dateFormatter.dateFormat = @"yyyy-MM-dd, HH:mm:ss Z";
-    [self loadClockFields];    
-    self.myTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateClock:) userInfo:nil repeats:YES];
+    self.myTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateRunningClock:) userInfo:nil repeats:YES];
+    [self sendConfigToWatch];
 
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    self.myTimer = nil;
 }
 
 - (void)didReceiveMemoryWarning
@@ -276,7 +309,7 @@
 /*
  * updateWatch - sends the data associated with the key parameter to the watch to update the information
  */
-- (void)updateWatch:(int)key forWatch:(NSString *)watchface
+- (void)updateWatch:(NSArray *)keys forWatches:(NSArray *)watchfaces
 {
     
     // We  communicate with the watch when we call -appMessagesGetIsSupported: which implicitely opens the communication session.
@@ -294,41 +327,67 @@
 //            [[[UIAlertView alloc] initWithTitle:@"Connected!" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
             @try {
 
-                // TODO: type checking / validation, this is really dangerous...
-                    
                 // There are three possible watchfaces, local time, time zone 1 and time zone 2. Which face are we updating?
                 int watchOffset;
-                if ([watchface isEqualToString:@"Local"]) {
-                    watchOffset = LOCAL_WATCH_OFFSET;
-                } else if ([watchface isEqualToString:@"TZ1"]) {
-                    watchOffset = WATCH_1_OFFSET;
-                } else if ([watchface isEqualToString:@"TZ2"]) {
-                    watchOffset = WATCH_2_OFFSET;
-                } else {
-                    return;
-                }
-                
-                // Now we need to put together the tuples to be sent to the Pebble watch
-                NSDictionary *update;
+                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                NSMutableDictionary *update = [[NSMutableDictionary alloc] init];
+                NSString *defTZ;
                 uint8_t isOn;
-                switch (key) {
-                        
-                    case PBCOMM_WATCH_ENABLED_KEY:
-                        // Is the clock enabled?
-                        isOn = (uint8_t) [[NSNumber numberWithBool:self.clockEnabled.isOn] int8Value];
-                        update = [@{ @(watchOffset + key):[NSNumber numberWithUint8:isOn] } mutableCopy];
-                        break;
-                    case PBCOMM_GMT_SEC_OFFSET_KEY:
-                        // GMT Offset
-                        update = [@{ @(watchOffset + PBCOMM_GMT_SEC_OFFSET_KEY):[NSNumber numberWithInt16:[self.clockTZ secondsFromGMT]]} mutableCopy];
-                        break;
-                    case PBCOMM_CITY_KEY:
-                        // Time Zone location string
-                        update = [@{ @(watchOffset + key):[self readableTZ:self.clockTZ] } mutableCopy];
-                        break;
-                    default:
+                for (NSString *watchface in watchfaces) {
+                    
+                    if ([watchface isEqualToString:@"Local"]) {
+                        watchOffset = LOCAL_WATCH_OFFSET;
+                    } else if ([watchface isEqualToString:@"TZ1"]) {
+                        watchOffset = WATCH_1_OFFSET;
+                    } else if ([watchface isEqualToString:@"TZ2"]) {
+                        watchOffset = WATCH_2_OFFSET;
+                    } else {
                         return;
+                    }
+                    
+                    for (NSNumber *key in keys) {
                         
+                        // Now we need to put together the tuples to be sent to the Pebble watch
+                        switch ([key intValue]) {
+                                
+                            case PBCOMM_WATCH_ENABLED_KEY:
+                                // Is the clock enabled?
+                                isOn = (uint8_t) [[NSNumber numberWithBool:[defaults boolForKey:[self makeKey:CLOCK_ENABLED_KEY forWatch:watchface]]] int8Value];
+                                if (watchOffset == LOCAL_WATCH_OFFSET) isOn = TRUE;
+                                [update setObject:[NSNumber numberWithUint8:isOn] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
+                                break;
+                            case PBCOMM_GMT_SEC_OFFSET_KEY:
+                                // GMT Offset
+                                defTZ = [defaults stringForKey:[self makeKey:CLOCK_TZ_KEY forWatch:watchface]];
+                                if (defTZ == nil) {
+                                    defTZ = @"America/Los_Angeles";
+                                }
+                                [update setObject:[NSNumber numberWithInt16:[[NSTimeZone timeZoneWithName:defTZ] secondsFromGMT]] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
+                                break;
+                            case PBCOMM_CITY_KEY:
+                                // Time Zone location string
+                                defTZ = [defaults stringForKey:[self makeKey:CLOCK_TZ_KEY forWatch:watchface]];
+                                if (defTZ == nil) {
+                                    defTZ = @"America/Los_Angeles";
+                                }
+                                [update setObject:[self readableTZ:[NSTimeZone timeZoneWithName:defTZ]] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
+                                break;
+                            case PBCOMM_BACKGROUND_KEY:
+                                [update setObject:[NSNumber numberWithInt8:[defaults integerForKey:[self makeKey:CLOCK_BACKGROUND_KEY forWatch:watchface]]] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
+                                break;
+                            case PBCOMM_12_24_DISPLAY_KEY:
+                                [update setObject:[NSNumber numberWithInt8:[defaults integerForKey:[self makeKey:CLOCK_DISPLAY_KEY forWatch:watchface]]] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
+                                break;
+                            case PBCOMM_WATCHFACE_DISPLAY_KEY:
+                                //                            [update setObject:[NSNumber numberWithInt8:[defaults integerForKey:[self makeKey:CLOCK_WATCHFACE_KEY forWatch:watchface]]] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
+                                return; // Change to break when implemented
+                            default:
+                                return;
+                                
+                        }
+                        
+                    }
+                    
                 }
                 
                 // Send data to watch:
@@ -336,7 +395,8 @@
                 [_targetWatch appMessagesPushUpdate:update onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
                     NSString *message = error ? [error localizedDescription] : @"Update sent!";
                     if (![message isEqualToString:@"Update sent!"]) {
-                        [[[UIAlertView alloc] initWithTitle:nil message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+                        NSString *full_message = [NSString stringWithFormat:@"%@ Watches: %@, Update: %@", message, watchfaces, update];
+                        [[[UIAlertView alloc] initWithTitle:nil message:full_message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
                     }
                 }];
                 return;
@@ -353,7 +413,6 @@
         }
         
     }];
-//    [_targetWatch closeSession:nil];
     
 }
 
@@ -364,28 +423,9 @@
 - (void)pebbleCentral:(PBPebbleCentral*)central watchDidConnect:(PBWatch*)watch isNew:(BOOL)isNew {
     
     [self setTargetWatch:watch];
-    
-    // Update the local watch with all of the current settings
-    [self updateWatch:PBCOMM_GMT_SEC_OFFSET_KEY forWatch:@"Local"];
-//    [self updateWatch:PBCOMM_BACKGROUND_KEY forWatch:@"Local"];
-//    [self updateWatch:PBCOMM_12_24_DISPLAY_KEY forWatch:@"Local"];
-//    [self updateWatch:PBCOMM_WATCHFACE_DISPLAY_KEY forWatch:@"Local"];
-    
-    // Update the TZ1 watch with all of the current settings
-    [self updateWatch:PBCOMM_WATCH_ENABLED_KEY forWatch:@"TZ1"];
-    [self updateWatch:PBCOMM_GMT_SEC_OFFSET_KEY forWatch:@"TZ1"];
-    [self updateWatch:PBCOMM_CITY_KEY forWatch:@"TZ1"];
-//    [self updateWatch:PBCOMM_BACKGROUND_KEY forWatch:@"TZ1"];
-//    [self updateWatch:PBCOMM_12_24_DISPLAY_KEY forWatch:@"TZ1"];
-//    [self updateWatch:PBCOMM_WATCHFACE_DISPLAY_KEY forWatch:@"TZ1"];
-    
-    // Update the TZ2 watch with all of the current settings
-    [self updateWatch:PBCOMM_WATCH_ENABLED_KEY forWatch:@"TZ2"];
-    [self updateWatch:PBCOMM_GMT_SEC_OFFSET_KEY forWatch:@"TZ2"];
-    [self updateWatch:PBCOMM_CITY_KEY forWatch:@"TZ2"];
-//    [self updateWatch:PBCOMM_BACKGROUND_KEY forWatch:@"TZ2"];
-//    [self updateWatch:PBCOMM_12_24_DISPLAY_KEY forWatch:@"TZ2"];
-//    [self updateWatch:PBCOMM_WATCHFACE_DISPLAY_KEY forWatch:@"TZ2"];
+    if (isNew) {
+        [self sendConfigToWatch];
+    }
     
 }
 

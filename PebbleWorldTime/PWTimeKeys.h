@@ -17,11 +17,15 @@
 
 // Keys for local time data, maximum of 16, including 0x00
 #define PBCOMM_WATCH_ENABLED_KEY            0x01    // boolean
-#define PBCOMM_GMT_SEC_OFFSET_KEY           0x02    // number x where -12 <= x <= 12
+#define PBCOMM_GMT_SEC_OFFSET_KEY           0x02    // number of seconds before or after GMT
 #define PBCOMM_CITY_KEY                     0x03    // string with city name and GMT offset
 #define PBCOMM_BACKGROUND_KEY               0x04    // light, dark or AM/PM background
-#define PBCOMM_12_24_DISPLAY_KEY            0x05    // disply in 12-, 24- or watch configured-time
-#define PBCOMM_WATCHFACE_DISPLAY_KEY        0x06    // watchface style, analog=true, digital=false
+#define PBCOMM_12_24_DISPLAY_KEY            0x05    // disply in  watch configured-, 12- or 24-hour time
+#define PBCOMM_WATCHFACE_DISPLAY_KEY        0x06    // watchface style
+
+// Values for PBCOMM_WATCH_ENABLED_KEY
+#define WATCH_DISABLED						0x00
+#define WATCH_ENABLED						0x01
 
 // Values for PBCOMMM_BACKGROUND_KEY
 #define BACKGROUND_DARK                     0x00    // Dark background
