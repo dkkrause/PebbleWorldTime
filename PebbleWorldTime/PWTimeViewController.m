@@ -112,16 +112,15 @@
     if (_clockTZ != clockTZ) {
         
         _clockTZ = clockTZ;
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSString *tzName = [_clockTZ name];
-        [defaults setObject:tzName forKey:[self makeKey:CLOCK_TZ_KEY]];
-        [defaults synchronize];
-        
+        NSString *watchface = [self.clockSelect titleForSegmentAtIndex:[self.clockSelect selectedSegmentIndex]];
+        if (![watchface isEqualToString:@"Local"]) {
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            NSString *tzName = [_clockTZ name];
+            [defaults setObject:tzName forKey:[self makeKey:CLOCK_TZ_KEY]];
+            [defaults synchronize];
+        }
         [self.tzDisplay setText:[self readableTZ:self.clockTZ]];
         [self.tzDisplay setNeedsDisplay];
-        
-        NSString *watchface = [self.clockSelect titleForSegmentAtIndex:[self.clockSelect selectedSegmentIndex]];
-        
         [self updateWatch:@[@PBCOMM_CITY_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY] forWatches:@[watchface]];
         
     }
@@ -164,7 +163,7 @@
     self.clockFace.selectedSegmentIndex = [defaults integerForKey:[self makeKey:CLOCK_WATCHFACE_KEY]];
     NSString *defTZ = [defaults stringForKey:[self makeKey:CLOCK_TZ_KEY]];
     if (defTZ == nil) {
-        defTZ = @"America/Los_Angeles";
+        defTZ = [[NSTimeZone systemTimeZone] name];
     }
     self.clockTZ = [NSTimeZone timeZoneWithName:defTZ];
     
@@ -376,7 +375,7 @@
                                 // GMT Offset
                                 defTZ = [defaults stringForKey:[self makeKey:CLOCK_TZ_KEY forWatch:watchface]];
                                 if (defTZ == nil) {
-                                    defTZ = @"America/Los_Angeles";
+                                    defTZ = [[NSTimeZone systemTimeZone] name];
                                 }
                                 seconds = [[NSTimeZone timeZoneWithName:defTZ] secondsFromGMT];
                                 [update setObject:[NSNumber numberWithInt32:seconds] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
@@ -385,7 +384,7 @@
                                 // Time Zone location string
                                 defTZ = [defaults stringForKey:[self makeKey:CLOCK_TZ_KEY forWatch:watchface]];
                                 if (defTZ == nil) {
-                                    defTZ = @"America/Los_Angeles";
+                                    defTZ = [[NSTimeZone systemTimeZone] name];
                                 }
                                 [update setObject:[self readableTZ:[NSTimeZone timeZoneWithName:defTZ]] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
                                 break;
