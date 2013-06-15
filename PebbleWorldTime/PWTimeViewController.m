@@ -67,6 +67,22 @@
     
 }
 
+- (void)runWatchApp
+{
+    
+    // Attempt to launch the app on the Pebble
+    [self.targetWatch appMessagesLaunch:^(PBWatch *watch, NSError *error) {
+        if (!error) {
+            NSString *message = error ? [error localizedDescription] : @"Update sent!";
+            if (![message isEqualToString:@"Update sent!"]) {
+                NSString *full_message = [NSString stringWithFormat:@"Cannot launch app on Pebble: %@ ", message];
+                [[[UIAlertView alloc] initWithTitle:nil message:full_message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            }
+        }
+    }];
+    
+}
+
 - (void)setTargetWatch:(PBWatch *)targetWatch
 {
     
@@ -80,18 +96,8 @@
             uint8_t bytes[] = {0xC5, 0x5D, 0x88, 0x75, 0x56, 0x09, 0x43, 0x9D, 0xA5, 0x2F, 0x0A, 0x97, 0x73, 0x50, 0xB9, 0x55};
             NSData *uuid = [NSData dataWithBytes:bytes length:sizeof(bytes)];
             [watch appMessagesSetUUID:uuid];
+            [self runWatchApp];
 
-            // Attempt to launch the app on the Pebble
-            [watch appMessagesLaunch:^(PBWatch *watch, NSError *error) {
-                if (!error) {
-                    NSString *message = error ? [error localizedDescription] : @"Update sent!";
-                    if (![message isEqualToString:@"Update sent!"]) {
-                        NSString *full_message = [NSString stringWithFormat:@"Cannot launch app on Pebble: %@ ", message];
-                        [[[UIAlertView alloc] initWithTitle:nil message:full_message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-                    }
-                }
-            }];
-            
 //            NSString *message = [NSString stringWithFormat:@"Yay! %@ supports AppMessages :D", [watch name]];
 //            [[[UIAlertView alloc] initWithTitle:@"Connected!" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
             
@@ -336,7 +342,8 @@
             uint8_t bytes[] = {0xC5, 0x5D, 0x88, 0x75, 0x56, 0x09, 0x43, 0x9D, 0xA5, 0x2F, 0x0A, 0x97, 0x73, 0x50, 0xB9, 0x55};
             NSData *uuid = [NSData dataWithBytes:bytes length:sizeof(bytes)];
             [watch appMessagesSetUUID:uuid];
-            
+            [self runWatchApp];
+           
 //            NSString *message = [NSString stringWithFormat:@"Yay! %@ supports AppMessages :D", [watch name]];
 //            [[[UIAlertView alloc] initWithTitle:@"Connected!" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
             @try {
