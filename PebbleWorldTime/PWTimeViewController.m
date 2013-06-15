@@ -6,8 +6,6 @@
 //  Copyright (c) 2013 Don Krause. All rights reserved.
 //
 
-// #define SEND_CONFIG_IN_ONE_MESSAGE
-
 #import "PWTimeViewController.h"
 #import "PWTimeTZController.h"
 #import "PWTimeKeys.h"
@@ -23,6 +21,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *tzSelect;
 @property (strong, nonatomic) IBOutlet UILabel *tzDisplay;
 @property (strong, nonatomic) IBOutlet UILabel *timeDisplay;
+@property (weak, nonatomic) IBOutlet UISwitch *singleMessage;
 
 @property (strong, nonatomic) PBWatch *targetWatch;
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
@@ -40,6 +39,7 @@
 @synthesize tzSelect = _tzSelect;
 @synthesize tzDisplay = _tzDisplay;
 @synthesize timeDisplay = _timeDisplay;
+@synthesize singleMessage = _singleMessage;
 
 @synthesize targetWatch = _targetWatch;
 @synthesize dateFormatter = _dateFormatter;
@@ -96,7 +96,8 @@
             uint8_t bytes[] = {0xC5, 0x5D, 0x88, 0x75, 0x56, 0x09, 0x43, 0x9D, 0xA5, 0x2F, 0x0A, 0x97, 0x73, 0x50, 0xB9, 0x55};
             NSData *uuid = [NSData dataWithBytes:bytes length:sizeof(bytes)];
             [watch appMessagesSetUUID:uuid];
-            [self runWatchApp];
+            [self runWatchApp];             // make sure the watch app is running and ...
+            [self sendConfigToWatch];       // ... send the configuration to the watch
 
 //            NSString *message = [NSString stringWithFormat:@"Yay! %@ supports AppMessages :D", [watch name]];
 //            [[[UIAlertView alloc] initWithTitle:@"Connected!" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
@@ -237,6 +238,9 @@
 - (IBAction)updateWatchData:(id)sender {
     [self sendConfigToWatch];
 }
+- (IBAction)sendSingleMessage:(id)sender {
+    
+}
 
 - (void)updateRunningClock:(id)sender
 {
@@ -268,34 +272,32 @@
 - (void)sendConfigToWatch
 {
 
-#ifdef SEND_CONFIG_IN_ONE_MESSAGE
-    
-    // First choice is to update all watches in one message. Doesn't work yet
-    [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY, @PBCOMM_WATCHFACE_DISPLAY_KEY] forWatches:@[@"Local", @"TZ1", @"TZ2"]];
-
-#endif
-    
-#ifndef SEND_CONFIG_IN_ONE_MESSAGE
-
-    // Update the local watch with all of the current settings
-    [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY,
-     @PBCOMM_WATCHFACE_DISPLAY_KEY] forWatches:@[@"Local"]];
-    
-//    [NSThread sleepForTimeInterval:1.0];
-    
-    // Update the TZ1 watch with all of the current settings
-    [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY,
-     @PBCOMM_WATCHFACE_DISPLAY_KEY] forWatches:@[@"TZ1"]];
-    
-//    [NSThread sleepForTimeInterval:1.0];
-
-    // Update the TZ2 watch with all of the current settings
-    [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY,
-     @PBCOMM_WATCHFACE_DISPLAY_KEY] forWatches:@[@"TZ2"]];
-    
-//    [NSThread sleepForTimeInterval:1.0];
-    
-#endif
+    if (self.singleMessage.isOn) {
+        
+        // First choice is to update all watches in one message. Doesn't work yet
+        [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY, @PBCOMM_WATCHFACE_DISPLAY_KEY] forWatches:@[@"Local", @"TZ1", @"TZ2"]];
+        
+    } else {
+        
+        // Update the local watch with all of the current settings
+        [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY,
+         @PBCOMM_WATCHFACE_DISPLAY_KEY] forWatches:@[@"Local"]];
+        
+        //[NSThread sleepForTimeInterval:1.0];
+        
+        // Update the TZ1 watch with all of the current settings
+        [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY,
+         @PBCOMM_WATCHFACE_DISPLAY_KEY] forWatches:@[@"TZ1"]];
+        
+        //[NSThread sleepForTimeInterval:1.0];
+        
+        // Update the TZ2 watch with all of the current settings
+        [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY,
+         @PBCOMM_WATCHFACE_DISPLAY_KEY] forWatches:@[@"TZ2"]];
+        
+        //[NSThread sleepForTimeInterval:1.0];
+        
+    }
     
 }
 
@@ -306,7 +308,6 @@
 	// Do any additional setup after loading the view, typically from a nib.
     self.dateFormatter.dateFormat = @"yyyy-MM-dd, HH:mm:ss Z";
     self.myTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateRunningClock:) userInfo:nil repeats:YES];
-    [self sendConfigToWatch];
 
 }
 
@@ -446,9 +447,6 @@
 - (void)pebbleCentral:(PBPebbleCentral*)central watchDidConnect:(PBWatch*)watch isNew:(BOOL)isNew {
     
     [self setTargetWatch:watch];
-    if (isNew) {
-        [self sendConfigToWatch];
-    }
     
 }
 
