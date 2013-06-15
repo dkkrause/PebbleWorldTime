@@ -115,8 +115,7 @@
 
 - (void)setClockTZ:(NSTimeZone *)clockTZ
 {
-        
-    if (_clockTZ != clockTZ) {
+    if (![_clockTZ isEqualToTimeZone:clockTZ]) {
         
         _clockTZ = clockTZ;
         NSString *watchface = [self.clockSelect titleForSegmentAtIndex:[self.clockSelect selectedSegmentIndex]];
