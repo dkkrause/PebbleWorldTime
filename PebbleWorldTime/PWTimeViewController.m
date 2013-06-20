@@ -237,6 +237,7 @@
 - (IBAction)updateWatchData:(id)sender {
     [self sendConfigToWatch];
 }
+
 - (IBAction)sendSingleMessage:(id)sender {
     
 }
@@ -282,19 +283,19 @@
         [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY,
          @PBCOMM_WATCHFACE_DISPLAY_KEY] forWatches:@[@"Local"]];
         
-        //[NSThread sleepForTimeInterval:1.0];
+        //[NSThread sleepForTimeInterval:2.0];
         
         // Update the TZ1 watch with all of the current settings
         [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY,
          @PBCOMM_WATCHFACE_DISPLAY_KEY] forWatches:@[@"TZ1"]];
         
-        //[NSThread sleepForTimeInterval:1.0];
+        //[NSThread sleepForTimeInterval:2.0];
         
         // Update the TZ2 watch with all of the current settings
         [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY,
          @PBCOMM_WATCHFACE_DISPLAY_KEY] forWatches:@[@"TZ2"]];
         
-        //[NSThread sleepForTimeInterval:1.0];
+        //[NSThread sleepForTimeInterval:2.0];
         
     }
     
@@ -305,7 +306,7 @@
     [super viewDidLoad];
     
 	// Do any additional setup after loading the view, typically from a nib.
-    self.dateFormatter.dateFormat = @"yyyy-MM-dd, HH:mm:ss Z";
+    self.dateFormatter.dateFormat = @"yyyy-MM-dd \n HH:mm:ss Z";
     self.myTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateRunningClock:) userInfo:nil repeats:YES];
 
 }
