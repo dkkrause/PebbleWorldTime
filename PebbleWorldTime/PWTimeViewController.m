@@ -7,6 +7,7 @@
 //
 
 #import "PWTimeViewController.h"
+#import "NSMutableArray+QueueAdditions.h"
 #import "PWTimeTZController.h"
 #import "PWTimeKeys.h"
 #import <PebbleKit/PebbleKit.h>
@@ -27,6 +28,8 @@
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
 @property (strong, nonatomic) NSTimeZone *clockTZ;
 @property (strong, nonatomic) NSTimer *myTimer;
+@property (strong, nonatomic) NSMutableArray *msgQueue;
+@property (strong, nonatomic) NSLock *queueLock;
 
 @end
 
@@ -45,6 +48,27 @@
 @synthesize dateFormatter = _dateFormatter;
 @synthesize clockTZ = _clockTZ;
 @synthesize myTimer = _myTimer;
+@synthesize msgQueue = _msgQueue;
+@synthesize queueLock = _queueLock;
+dispatch_queue_t watchQueue;
+
+NSMutableDictionary *update; // Need a strong pointer
+
+- (NSMutableArray *) msgQueue
+{
+    if (_msgQueue == nil) {
+        _msgQueue = [[NSMutableArray alloc] init];
+    }
+    return _msgQueue;
+}
+
+- (NSLock *) queueLock
+{
+    if (_queueLock == nil) {
+        _queueLock = [[NSLock alloc] init];
+    }
+    return _queueLock;
+}
 
 - (NSString *)readableTZ:(NSTimeZone *)tz
 {
@@ -254,21 +278,6 @@
     
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    
-    [super viewWillAppear:animated];
-    
-    // See if a watch is connected
-    // We'd like to get called when Pebbles connect and disconnect, so become the delegate of PBPebbleCentral:
-    [[PBPebbleCentral defaultCentral] setDelegate:self];
-    
-    // Initialize with the last connected watch:
-    [self setTargetWatch:[[PBPebbleCentral defaultCentral] lastConnectedWatch]];
-    [self loadClockFields];
-    
-}
-
 - (void)sendConfigToWatch
 {
 
@@ -301,30 +310,45 @@
     
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-	// Do any additional setup after loading the view, typically from a nib.
-    self.dateFormatter.dateFormat = @"yyyy-MM-dd \n HH:mm:ss Z";
-    self.myTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateRunningClock:) userInfo:nil repeats:YES];
-
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+- (void)viewWillAppear:(BOOL)animated
 {
     
-    if ([segue.identifier isEqualToString:@"toTZ"]) {
-        PWTimeTZController *tzController = segue.destinationViewController;
-        [tzController setDelegate:self];
-        [tzController setClockTZ:self.clockTZ];
+    [super viewWillAppear:animated];
+    
+    // See if a watch is connected
+    // We'd like to get called when Pebbles connect and disconnect, so become the delegate of PBPebbleCentral:
+    [[PBPebbleCentral defaultCentral] setDelegate:self];
+    
+    // Initialize with the last connected watch:
+    [self setTargetWatch:[[PBPebbleCentral defaultCentral] lastConnectedWatch]];
+    [self loadClockFields];
+    
+}
+
+- (void)sendMsgToWatch
+{
+    NSMutableDictionary *update;
+    BOOL queueEmpty;
+    
+    [self.queueLock lock];
+    queueEmpty = [self.msgQueue NSMAEmpty];
+    [self.queueLock unlock];
+    
+    if (!queueEmpty) {
+        [self.queueLock lock];
+        update = [self.msgQueue NSMADequeue];
+        [self.queueLock unlock];
+        [_targetWatch appMessagesPushUpdate:update onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
+            NSString *message = error ? [error localizedDescription] : @"Update sent!";
+            if (![message isEqualToString:@"Update sent!"]) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSString *full_message = [NSString stringWithFormat:@"Error: %@, Update: %@", message, update];
+                    [[[UIAlertView alloc] initWithTitle:nil message:full_message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];});
+            }
+        }];
+        
     }
+    
 }
 
 /*
@@ -351,7 +375,7 @@
 
                 int watchOffset;
                 NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                NSMutableDictionary *update = [[NSMutableDictionary alloc] init];
+                update = [[NSMutableDictionary alloc] init];
                 NSString *defTZ;
                 int32_t seconds;
                 uint8_t isOn;
@@ -416,13 +440,17 @@
                 
                 // Send data to watch:
                 // See demos/feature_app_messages/weather.c in the native watch app SDK for the same definitions on the watch's end:
-                [_targetWatch appMessagesPushUpdate:update onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
-                    NSString *message = error ? [error localizedDescription] : @"Update sent!";
-                    if (![message isEqualToString:@"Update sent!"]) {
-                        NSString *full_message = [NSString stringWithFormat:@"%@ Watches: %@, Update: %@", message, watchfaces, update];
-                        [[[UIAlertView alloc] initWithTitle:nil message:full_message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-                    }
-                }];
+                [self.queueLock lock];
+                [self.msgQueue NSMAEnqueue:update];
+                [self.queueLock unlock];
+                dispatch_async(watchQueue, ^{[self sendMsgToWatch];});
+//                [_targetWatch appMessagesPushUpdate:update onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
+//                    NSString *message = error ? [error localizedDescription] : @"Update sent!";
+//                    if (![message isEqualToString:@"Update sent!"]) {
+//                        NSString *full_message = [NSString stringWithFormat:@"%@ Watches: %@, Update: %@", message, watchfaces, update];
+//                        [[[UIAlertView alloc] initWithTitle:nil message:full_message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+//                    }
+//                }];
                 return;
             }
             @catch (NSException *exception) {
@@ -438,6 +466,35 @@
         
     }];
     
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    watchQueue = dispatch_queue_create("com.dkkrause.PebbleWorldTime", NULL);
+    [self sendConfigToWatch];
+    
+	// Do any additional setup after loading the view, typically from a nib.
+    self.dateFormatter.dateFormat = @"yyyy-MM-dd \n HH:mm:ss Z";
+    self.myTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateRunningClock:) userInfo:nil repeats:YES];
+    
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    
+    if ([segue.identifier isEqualToString:@"toTZ"]) {
+        PWTimeTZController *tzController = segue.destinationViewController;
+        [tzController setDelegate:self];
+        [tzController setClockTZ:self.clockTZ];
+    }
 }
 
 /*

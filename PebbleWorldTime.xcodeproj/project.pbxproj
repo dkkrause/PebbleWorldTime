@@ -30,6 +30,7 @@
 		F6727B87175C0C8200452635 /* PebbleKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6727B86175C0C8200452635 /* PebbleKit.framework */; };
 		F6727B89175C0C9600452635 /* PebbleVendor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6727B88175C0C9600452635 /* PebbleVendor.framework */; };
 		F6727B8B175C0D5A00452635 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6727B8A175C0D5A00452635 /* CoreMotion.framework */; };
+		F6F1425B17839A50004ACAAC /* NSMutableArray+QueueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = F6F1425A17839A50004ACAAC /* NSMutableArray+QueueAdditions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +64,8 @@
 		F6727B88175C0C9600452635 /* PebbleVendor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PebbleVendor.framework; path = "../../../../pebble-dev/PebbleKit-v1/iOS/PebbleVendor.framework"; sourceTree = "<group>"; };
 		F6727B8A175C0D5A00452635 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		F6A15A5C175D962400B57E71 /* PWTimeKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PWTimeKeys.h; sourceTree = "<group>"; };
+		F6F1425917839A50004ACAAC /* NSMutableArray+QueueAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+QueueAdditions.h"; sourceTree = "<group>"; };
+		F6F1425A17839A50004ACAAC /* NSMutableArray+QueueAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+QueueAdditions.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +126,8 @@
 		F600CD20175BA75A00D2CABC /* PebbleWorldTime */ = {
 			isa = PBXGroup;
 			children = (
+				F6F1425917839A50004ACAAC /* NSMutableArray+QueueAdditions.h */,
+				F6F1425A17839A50004ACAAC /* NSMutableArray+QueueAdditions.m */,
 				F600CD32175BA75A00D2CABC /* MainStoryboard.storyboard */,
 				F600CD29175BA75A00D2CABC /* PWTimeAppDelegate.h */,
 				F600CD2A175BA75A00D2CABC /* PWTimeAppDelegate.m */,
@@ -229,6 +234,7 @@
 				F600CD2B175BA75A00D2CABC /* PWTimeAppDelegate.m in Sources */,
 				F600CD37175BA75A00D2CABC /* PWTimeViewController.m in Sources */,
 				F600CD4D175C020200D2CABC /* PWTimeTZController.m in Sources */,
+				F6F1425B17839A50004ACAAC /* NSMutableArray+QueueAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
