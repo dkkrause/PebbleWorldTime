@@ -34,22 +34,7 @@
 @end
 
 @implementation PWTimeViewController
-@synthesize clockSelect = _clockSelect;
-@synthesize clockEnabled = _clockEnabled;
-@synthesize clockBackground = _clockBackground;
-@synthesize clockDisplay = _clockDisplay;
-@synthesize clockFace = _clockFace;
-@synthesize tzSelect = _tzSelect;
-@synthesize tzDisplay = _tzDisplay;
-@synthesize timeDisplay = _timeDisplay;
-@synthesize singleMessage = _singleMessage;
 
-@synthesize targetWatch = _targetWatch;
-@synthesize dateFormatter = _dateFormatter;
-@synthesize clockTZ = _clockTZ;
-@synthesize myTimer = _myTimer;
-@synthesize msgQueue = _msgQueue;
-@synthesize queueLock = _queueLock;
 dispatch_queue_t watchQueue;
 
 NSMutableDictionary *update; // Need a strong pointer
@@ -123,9 +108,6 @@ NSMutableDictionary *update; // Need a strong pointer
             [self runWatchApp];             // make sure the watch app is running and ...
             [self sendConfigToWatch];       // ... send the configuration to the watch
 
-//            NSString *message = [NSString stringWithFormat:@"Yay! %@ supports AppMessages :D", [watch name]];
-//            [[[UIAlertView alloc] initWithTitle:@"Connected!" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-            
         } else {
             
             NSString *message = [NSString stringWithFormat:@"Blegh... %@ does NOT support AppMessages :'(", [watch name]];
@@ -259,6 +241,7 @@ NSMutableDictionary *update; // Need a strong pointer
 }
 
 - (IBAction)updateWatchData:(id)sender {
+    
     [self sendConfigToWatch];
 }
 
@@ -292,36 +275,15 @@ NSMutableDictionary *update; // Need a strong pointer
         [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY,
          @PBCOMM_WATCHFACE_DISPLAY_KEY] forWatches:@[@"Local"]];
         
-        //[NSThread sleepForTimeInterval:2.0];
-        
         // Update the TZ1 watch with all of the current settings
         [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY,
          @PBCOMM_WATCHFACE_DISPLAY_KEY] forWatches:@[@"TZ1"]];
-        
-        //[NSThread sleepForTimeInterval:2.0];
         
         // Update the TZ2 watch with all of the current settings
         [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY,
          @PBCOMM_WATCHFACE_DISPLAY_KEY] forWatches:@[@"TZ2"]];
         
-        //[NSThread sleepForTimeInterval:2.0];
-        
     }
-    
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    
-    [super viewWillAppear:animated];
-    
-    // See if a watch is connected
-    // We'd like to get called when Pebbles connect and disconnect, so become the delegate of PBPebbleCentral:
-    [[PBPebbleCentral defaultCentral] setDelegate:self];
-    
-    // Initialize with the last connected watch:
-    [self setTargetWatch:[[PBPebbleCentral defaultCentral] lastConnectedWatch]];
-    [self loadClockFields];
     
 }
 
@@ -368,9 +330,6 @@ NSMutableDictionary *update; // Need a strong pointer
             NSData *uuid = [NSData dataWithBytes:bytes length:sizeof(bytes)];
             [watch appMessagesSetUUID:uuid];
             [self runWatchApp];
-           
-//            NSString *message = [NSString stringWithFormat:@"Yay! %@ supports AppMessages :D", [watch name]];
-//            [[[UIAlertView alloc] initWithTitle:@"Connected!" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
             @try {
 
                 int watchOffset;
@@ -444,13 +403,6 @@ NSMutableDictionary *update; // Need a strong pointer
                 [self.msgQueue NSMAEnqueue:update];
                 [self.queueLock unlock];
                 dispatch_async(watchQueue, ^{[self sendMsgToWatch];});
-//                [_targetWatch appMessagesPushUpdate:update onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
-//                    NSString *message = error ? [error localizedDescription] : @"Update sent!";
-//                    if (![message isEqualToString:@"Update sent!"]) {
-//                        NSString *full_message = [NSString stringWithFormat:@"%@ Watches: %@, Update: %@", message, watchfaces, update];
-//                        [[[UIAlertView alloc] initWithTitle:nil message:full_message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-//                    }
-//                }];
                 return;
             }
             @catch (NSException *exception) {
@@ -478,6 +430,21 @@ NSMutableDictionary *update; // Need a strong pointer
 	// Do any additional setup after loading the view, typically from a nib.
     self.dateFormatter.dateFormat = @"yyyy-MM-dd \n HH:mm:ss Z";
     self.myTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateRunningClock:) userInfo:nil repeats:YES];
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    
+    [super viewWillAppear:animated];
+    
+    // See if a watch is connected
+    // We'd like to get called when Pebbles connect and disconnect, so become the delegate of PBPebbleCentral:
+    [[PBPebbleCentral defaultCentral] setDelegate:self];
+    
+    // Initialize with the last connected watch:
+    [self setTargetWatch:[[PBPebbleCentral defaultCentral] lastConnectedWatch]];
+    [self loadClockFields];
     
 }
 
