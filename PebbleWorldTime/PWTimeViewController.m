@@ -6,30 +6,39 @@
 //  Copyright (c) 2013 Don Krause. All rights reserved.
 //
 
+#import <CoreLocation/CoreLocation.h>
+#import <PebbleKit/PebbleKit.h>
 #import "PWTimeViewController.h"
 #import "NSMutableArray+QueueAdditions.h"
 #import "PWTimeTZController.h"
 #import "PWTimeKeys.h"
-#import <PebbleKit/PebbleKit.h>
+#import "AFNetworking/AFNetworking.h"
+#import "Forecastr.h"
 
-@interface PWTimeViewController () <PBPebbleCentralDelegate>
+@interface PWTimeViewController () <PBPebbleCentralDelegate, CLLocationManagerDelegate>
 
-@property (strong, nonatomic) IBOutlet UISegmentedControl *clockSelect;
-@property (strong, nonatomic) IBOutlet UISwitch *clockEnabled;
-@property (strong, nonatomic) IBOutlet UISegmentedControl *clockBackground;
-@property (strong, nonatomic) IBOutlet UISegmentedControl *clockDisplay;
-@property (strong, nonatomic) IBOutlet UISegmentedControl *clockFace;
-@property (strong, nonatomic) IBOutlet UIButton *tzSelect;
-@property (strong, nonatomic) IBOutlet UILabel *tzDisplay;
-@property (strong, nonatomic) IBOutlet UILabel *timeDisplay;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *clockSelect;
+@property (weak, nonatomic) IBOutlet UISwitch *clockEnabled;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *clockBackground;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *clockDisplay;
+@property (weak, nonatomic) IBOutlet UILabel *locality;
+@property (weak, nonatomic) IBOutlet UIButton *tzSelect;
+@property (weak, nonatomic) IBOutlet UILabel *tzDisplay;
+@property (weak, nonatomic) IBOutlet UILabel *timeDisplay;
 @property (weak, nonatomic) IBOutlet UISwitch *singleMessage;
 
-@property (strong, nonatomic) PBWatch *targetWatch;
+@property (weak, nonatomic) PBWatch *targetWatch;
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
 @property (strong, nonatomic) NSTimeZone *clockTZ;
-@property (strong, nonatomic) NSTimer *myTimer;
+@property (weak, nonatomic) NSTimer *myTimer;
 @property (strong, nonatomic) NSMutableArray *msgQueue;
 @property (strong, nonatomic) NSLock *queueLock;
+@property (strong, nonatomic) CLLocationManager *locationManager;
+@property (weak, nonatomic) NSString *currentCity;
+@property (weak, nonatomic) NSString *currentState;
+@property (weak, nonatomic) NSString *currentCountry;
+@property (strong, nonatomic) Forecastr *forecastr;
+@property (strong, nonatomic) NSMutableDictionary *conditions;
 
 @end
 
@@ -38,6 +47,19 @@
 dispatch_queue_t watchQueue;
 
 NSMutableDictionary *update; // Need a strong pointer
+NSString *currentCondition[3];
+CLLocationCoordinate2D lastLocation;
+
+- (CLLocationManager *) locationManager
+{
+    
+    // Create the location manager if this object does not
+    // already have one.
+    if (_locationManager == nil)
+        _locationManager = [[CLLocationManager alloc] init];
+    
+    return _locationManager;
+}
 
 - (NSMutableArray *) msgQueue
 {
@@ -53,6 +75,25 @@ NSMutableDictionary *update; // Need a strong pointer
         _queueLock = [[NSLock alloc] init];
     }
     return _queueLock;
+}
+
+- (Forecastr *) forecastr
+{
+    if (_forecastr == nil) {
+        _forecastr = [[Forecastr alloc] init];
+    }
+    return _forecastr;
+}
+
+- (NSDictionary *) conditions
+{
+    
+    if (_conditions == nil) {
+        _conditions = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@WEATHER_UNKNOWN, @"unknown", @WEATHER_SUNNY, @"clear-day", @WEATHER_UNKNOWN, @"clear-night", @WEATHER_RAINY, @"rain", WEATHER_UNKNOWN, @"snow", @WEATHER_UNKNOWN, @"sleet", @WEATHER_UNKNOWN, @"wind", @WEATHER_UNKNOWN, @"fog", @WEATHER_CLOUDY, @"cloudy", @WEATHER_UNKNOWN, @"partly-cloudy-day", @WEATHER_UNKNOWN, @"partly-cloudy-night", nil];
+
+    }
+    return _conditions;
+    
 }
 
 - (NSString *)readableTZ:(NSTimeZone *)tz
@@ -172,7 +213,6 @@ NSMutableDictionary *update; // Need a strong pointer
     self.clockEnabled.on = [defaults boolForKey:[self makeKey:CLOCK_ENABLED_KEY]];
     self.clockBackground.selectedSegmentIndex = [defaults integerForKey:[self makeKey:CLOCK_BACKGROUND_KEY]];
     self.clockDisplay.selectedSegmentIndex = [defaults integerForKey:[self makeKey:CLOCK_DISPLAY_KEY]];
-    self.clockFace.selectedSegmentIndex = [defaults integerForKey:[self makeKey:CLOCK_WATCHFACE_KEY]];
     NSString *defTZ = [defaults stringForKey:[self makeKey:CLOCK_TZ_KEY]];
     if (defTZ == nil) {
         defTZ = [[NSTimeZone systemTimeZone] name];
@@ -182,9 +222,11 @@ NSMutableDictionary *update; // Need a strong pointer
     if (_clockSelect.selectedSegmentIndex == 0) {
         self.clockEnabled.on = TRUE;
         self.clockEnabled.hidden = TRUE;
+        self.locality.hidden = FALSE;
         self.tzSelect.hidden = TRUE;
     } else {
         self.clockEnabled.hidden = FALSE;
+        self.locality.hidden = TRUE;
         self.tzSelect.hidden = FALSE;
     }
     
@@ -205,7 +247,7 @@ NSMutableDictionary *update; // Need a strong pointer
     NSString *watchface = [self.clockSelect titleForSegmentAtIndex:[self.clockSelect selectedSegmentIndex]];
     
     [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_CITY_KEY, @PBCOMM_12_24_DISPLAY_KEY,
-     @PBCOMM_WATCHFACE_DISPLAY_KEY] forWatches:@[watchface]];
+     @PBCOMM_WEATHER_KEY] forWatches:@[watchface]];
     
 }
 
@@ -229,16 +271,6 @@ NSMutableDictionary *update; // Need a strong pointer
     
 }
 
-
-- (IBAction)watchFaceChanged:(id)sender {
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:[NSNumber numberWithInteger:[sender selectedSegmentIndex]] forKey:[self makeKey:CLOCK_WATCHFACE_KEY]];
-    [defaults synchronize];
-    
-    [self updateWatch:@[@PBCOMM_WATCHFACE_DISPLAY_KEY] forWatches:@[[self.clockSelect titleForSegmentAtIndex:[sender selectedSegmentIndex]]]];
-    
-}
 
 - (IBAction)updateWatchData:(id)sender {
     
@@ -267,21 +299,21 @@ NSMutableDictionary *update; // Need a strong pointer
     if (self.singleMessage.isOn) {
         
         // First choice is to update all watches in one message. Doesn't work yet
-        [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY, @PBCOMM_WATCHFACE_DISPLAY_KEY] forWatches:@[@"Local", @"TZ1", @"TZ2"]];
+        [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY, @PBCOMM_WEATHER_KEY] forWatches:@[@"Local", @"TZ1", @"TZ2"]];
         
     } else {
         
         // Update the local watch with all of the current settings
         [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY,
-         @PBCOMM_WATCHFACE_DISPLAY_KEY] forWatches:@[@"Local"]];
+         @PBCOMM_WEATHER_KEY] forWatches:@[@"Local"]];
         
         // Update the TZ1 watch with all of the current settings
         [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY,
-         @PBCOMM_WATCHFACE_DISPLAY_KEY] forWatches:@[@"TZ1"]];
+         @PBCOMM_WEATHER_KEY] forWatches:@[@"TZ1"]];
         
         // Update the TZ2 watch with all of the current settings
         [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY,
-         @PBCOMM_WATCHFACE_DISPLAY_KEY] forWatches:@[@"TZ2"]];
+         @PBCOMM_WEATHER_KEY] forWatches:@[@"TZ2"]];
         
     }
     
@@ -336,6 +368,7 @@ NSMutableDictionary *update; // Need a strong pointer
                 NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
                 update = [[NSMutableDictionary alloc] init];
                 NSString *defTZ;
+                NSString *displayTZ;
                 int32_t seconds;
                 uint8_t isOn;
                 for (NSString *watchface in watchfaces) {
@@ -372,12 +405,17 @@ NSMutableDictionary *update; // Need a strong pointer
                                 [update setObject:[NSNumber numberWithInt32:seconds] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
                                 break;
                             case PBCOMM_CITY_KEY:
-                                // Time Zone location string
-                                defTZ = [defaults stringForKey:[self makeKey:CLOCK_TZ_KEY forWatch:watchface]];
-                                if (defTZ == nil) {
-                                    defTZ = [[NSTimeZone systemTimeZone] name];
+                                // Time Zone location string. If we have a geolocation, use that instead
+                                if ((self.currentCity != nil) && (watchOffset == LOCAL_WATCH_OFFSET)) {
+                                    displayTZ = [[self.currentCity stringByAppendingString:@", "] stringByAppendingString:self.currentState];
+                                } else {
+                                    defTZ = [defaults stringForKey:[self makeKey:CLOCK_TZ_KEY forWatch:watchface]];
+                                    if (defTZ == nil) {
+                                        defTZ = [[NSTimeZone systemTimeZone] name];
+                                    }
+                                    displayTZ = [self readableTZ:[NSTimeZone timeZoneWithName:defTZ]];
                                 }
-                                [update setObject:[self readableTZ:[NSTimeZone timeZoneWithName:defTZ]] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
+                                [update setObject:displayTZ forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
                                 break;
                             case PBCOMM_BACKGROUND_KEY:
                                 [update setObject:[NSNumber numberWithInt8:[defaults integerForKey:[self makeKey:CLOCK_BACKGROUND_KEY forWatch:watchface]]] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
@@ -385,8 +423,9 @@ NSMutableDictionary *update; // Need a strong pointer
                             case PBCOMM_12_24_DISPLAY_KEY:
                                 [update setObject:[NSNumber numberWithInt8:[defaults integerForKey:[self makeKey:CLOCK_DISPLAY_KEY forWatch:watchface]]] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
                                 break;
-                            case PBCOMM_WATCHFACE_DISPLAY_KEY:
-                                [update setObject:[NSNumber numberWithInt8:[defaults integerForKey:[self makeKey:CLOCK_WATCHFACE_KEY forWatch:watchface]]] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
+                            case PBCOMM_WEATHER_KEY:
+                                NSLog(@"value: %@\n", [NSNumber numberWithUint8:[[self.conditions objectForKey:currentCondition[watchOffset]] intValue]] );
+                                [update setObject:[NSNumber numberWithUint8:[[self.conditions objectForKey:currentCondition[watchOffset]] intValue]] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
                                 break;
                             default:
                                 return;
@@ -420,16 +459,96 @@ NSMutableDictionary *update; // Need a strong pointer
     
 }
 
+- (void)updateWeather {
+        
+    [self updateWatch:@[@PBCOMM_WEATHER_KEY] forWatches:@[@"Local", @"TZ1", @"TZ2"]];
+    
+}
+
+//
+// Location methods/delegates
+//
+- (void)startStandardUpdates
+{
+    
+    self.locationManager.delegate = self;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
+    
+    // Set a movement threshold for new events.
+    self.locationManager.distanceFilter = 500;
+    
+    [self.locationManager startUpdatingLocation];
+    
+}
+
+- (void)startSignificantLocationChangeUpdates
+{
+    
+    self.locationManager.delegate = self;
+    [self.locationManager startMonitoringSignificantLocationChanges];
+    
+}
+
+//
+// Delegate method from the CLLocationManagerDelegate protocol.
+//
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+
+    CLLocation *location = [locations lastObject];
+    CLGeocoder * geoCoder = [[CLGeocoder alloc] init];
+    [geoCoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+        for (CLPlacemark * placemark in placemarks) {
+            
+//            for (NSString *key in [placemark.addressDictionary keyEnumerator]) {
+//                NSLog (@"%@, %@\n", key, [placemark.addressDictionary objectForKey:key]);
+//            }
+//            NSLog(@"latitude %+.6f, longitude %+.6f\n",
+//                  location.coordinate.latitude,
+//                  location.coordinate.longitude);
+            
+            // Remember where we were last found ...
+            self.currentCity = [placemark.addressDictionary objectForKey:@"City"];
+            self.currentState = [placemark.addressDictionary objectForKey:@"State"];
+            self.currentCountry = [placemark.addressDictionary objectForKey:@"CountryCode"];
+            [self.locality setText:[[[placemark.addressDictionary objectForKey:@"City"] stringByAppendingString:@", "] stringByAppendingString:[placemark.addressDictionary objectForKey:@"State"]]];
+            [self updateWatch:@[@PBCOMM_CITY_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY] forWatches:@[@"Local"]];
+            
+            //
+            // Since location changed, update weather as well
+            //
+            // Kick off asking for weather without specifying a time
+            [self.forecastr getForecastForLatitude:location.coordinate.latitude longitude:location.coordinate.longitude time:nil exclusions:nil success:^(id JSON) {
+                currentCondition[0] = [[JSON objectForKey:@"currently"] objectForKey:@"icon"];
+                if ([currentCondition[0] isEqualToString:@""])
+                    currentCondition[0] = @"unknown";
+                [self updateWatch:@[@PBCOMM_WEATHER_KEY] forWatches:@[@"Local"]];
+            } failure:^(NSError *error, id response) {
+                currentCondition[0] = @"unknown";
+                NSLog(@"Error while retrieving forecast: %@", [self.forecastr messageForError:error withResponse:response]);
+            }];
+            
+        }
+        
+    }];
+
+}
+
 - (void)viewDidLoad
 {
+    
     [super viewDidLoad];
     
     watchQueue = dispatch_queue_create("com.dkkrause.PebbleWorldTime", NULL);
     [self sendConfigToWatch];
     
+    self.forecastr.apiKey = @"3348fb0cf7f9595aa092b5c8150bdedb";
+    
 	// Do any additional setup after loading the view, typically from a nib.
     self.dateFormatter.dateFormat = @"yyyy-MM-dd \n HH:mm:ss Z";
     self.myTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateRunningClock:) userInfo:nil repeats:YES];
+    [self startSignificantLocationChangeUpdates];
+//    [self startStandardUpdates];
     
 }
 
