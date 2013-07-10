@@ -38,10 +38,18 @@
 #define DISPLAY_24_HOUR_TIME                0x02    // Show 24-hour time
 
 // Values for PBCOMM_WEATHER_KEY
-#define WEATHER_UNKNOWN                     0x00    // Weather unknown
-#define WEATHER_SUNNY                       0x01    // Weather sunny
-#define WEATHER_CLOUDY                      0x02    // Weather cloudy
-#define WEATHER_RAINY                       0x03    // Weather rainy
-#define MAX_WEATHER_CONDITIONS              0x04    // Number of weather conditions
+// Map directly to forecast.io weather icon values
+#define WEATHER_UNKNOWN                     0x00
+#define WEATHER_CLEAR_DAY                   0x01
+#define WEATHER_CLEAR_NIGHT                 0x02
+#define WEATHER_RAIN                        0x03
+#define WEATHER_SNOW                        0x04
+#define WEATHER_SLEET                       0x05
+#define WEATHER_WIND                        0x06
+#define WEATHER_FOG                         0x07
+#define WEATHER_CLOUDY                      0x08
+#define WEATHER_PARTLY_CLOUDY_DAY           0x09
+#define WEATHER_PARTLY_CLOUDY_NIGHT         0x0A
+#define MAX_WEATHER_CONDITIONS              0x0B    // Number of weather conditions
 
 #endif
