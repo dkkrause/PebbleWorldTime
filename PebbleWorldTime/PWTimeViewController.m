@@ -90,7 +90,7 @@ CLLocationCoordinate2D lastLocation;
 {
     
     if (_conditions == nil) {
-        _conditions = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@WEATHER_UNKNOWN, @"unknown", @WEATHER_CLEAR_DAY, @"clear-day", @WEATHER_CLEAR_NIGHT, @"clear-night", @WEATHER_RAIN, @"rain", @WEATHER_UNKNOWN, @"snow", @WEATHER_UNKNOWN, @"sleet", @WEATHER_UNKNOWN, @"wind", @WEATHER_UNKNOWN, @"fog", @WEATHER_CLOUDY, @"cloudy", @WEATHER_UNKNOWN, @"partly-cloudy-day", @WEATHER_UNKNOWN, @"partly-cloudy-night", nil];
+        _conditions = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@WEATHER_UNKNOWN, @"unknown", @WEATHER_CLEAR_DAY, @"clear-day", @WEATHER_CLEAR_NIGHT, @"clear-night", @WEATHER_RAIN, @"rain", @WEATHER_UNKNOWN, @"snow", @WEATHER_UNKNOWN, @"sleet", @WEATHER_UNKNOWN, @"wind", @WEATHER_UNKNOWN, @"fog", @WEATHER_CLOUDY, @"cloudy", @WEATHER_PARTLY_CLOUDY_DAY, @"partly-cloudy-day", @WEATHER_PARTLY_CLOUDY_NIGHT, @"partly-cloudy-night", nil];
 
     }
     return _conditions;
@@ -425,7 +425,7 @@ CLLocationCoordinate2D lastLocation;
                                 [update setObject:[NSNumber numberWithInt8:[defaults integerForKey:[self makeKey:CLOCK_DISPLAY_KEY forWatch:watchface]]] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
                                 break;
                             case PBCOMM_WEATHER_KEY:
- //                               NSLog(@"Weather code: %@\n", [NSNumber numberWithUint8:[[self.conditions objectForKey:currentCondition[watchOffset]] intValue]]);
+                                NSLog(@"Weather code: %@\n", [NSNumber numberWithUint8:[[self.conditions objectForKey:currentCondition[watchOffset]] intValue]]);
                                 [update setObject:[NSNumber numberWithUint8:[[self.conditions objectForKey:currentCondition[watchOffset]] intValue]] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
                                 break;
                             default:
