@@ -83,10 +83,12 @@
                                 </connections>
                             </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="I4z-H9-XDd">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="188" id="Evr-19-dXl"/>
+                                </constraints>
                                 <segments>
                                     <segment title="Local"/>
                                     <segment title="TZ1"/>
-                                    <segment title="TZ2"/>
                                 </segments>
                                 <connections>
                                     <action selector="clockSelected:" destination="2" eventType="valueChanged" id="BKa-l4-5iz"/>
@@ -212,6 +214,34 @@
             <point key="canvasLocation" x="893" y="-193"/>
         </scene>
     </scenes>
+    <classes>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="PWTimeTZController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PWTimeTZController.h"/>
+        </class>
+        <class className="PWTimeViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PWTimeViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="clockBackgroundSegmentSelected:"/>
+                <relationship kind="action" name="clockEnabledSwitchChanged:"/>
+                <relationship kind="action" name="clockSelected:"/>
+                <relationship kind="action" name="sendSingleMessage:"/>
+                <relationship kind="action" name="timeDisplayChanged:"/>
+                <relationship kind="action" name="updateWatchData:"/>
+                <relationship kind="outlet" name="clockBackground" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="clockDisplay" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="clockEnabled" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="clockSelect" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="locality" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="singleMessage" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="timeDisplay" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="tzDisplay" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="tzSelect" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

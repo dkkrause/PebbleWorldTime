@@ -18,5 +18,9 @@
 @interface PWTimeViewController : UIViewController
 
 - (void)setClockTZ:(NSTimeZone *)clockTZ;
+- (void)startSignificantLocationChangeUpdates;
+- (void)stopSignificantLocationChangeUpdates;
+- (void)startWeatherUpdateTimer:(NSTimeInterval) ti;
+- (void)stopWeatherUpdateTimer;
 
 @end

@@ -27,39 +27,57 @@
 @property (weak, nonatomic) IBOutlet UILabel *timeDisplay;
 @property (weak, nonatomic) IBOutlet UISwitch *singleMessage;
 
-@property (weak, nonatomic) PBWatch *targetWatch;
+@property (strong, nonatomic) PBWatch *targetWatch;
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
 @property (strong, nonatomic) NSTimeZone *clockTZ;
-@property (weak, nonatomic) NSTimer *clockUpdateTimer;
-@property (weak, nonatomic) NSTimer *weatherUpdateTimer;
+@property (strong, nonatomic) NSTimer *clockUpdateTimer;
+@property (strong, nonatomic) NSTimer *weatherUpdateTimer;
 @property (strong, nonatomic) NSMutableArray *msgQueue;
 @property (strong, nonatomic) NSLock *queueLock;
 @property (strong, nonatomic) CLLocationManager *locationManager;
-@property (weak, nonatomic) NSString *currentCity;
-@property (weak, nonatomic) NSString *currentState;
-@property (weak, nonatomic) NSString *currentCountry;
+@property (strong, nonatomic) NSString *currentCity;
+@property (strong, nonatomic) NSString *currentState;
+@property (strong, nonatomic) NSString *currentCountry;
 @property (strong, nonatomic) Forecastr *forecastr;
 @property (strong, nonatomic) NSMutableDictionary *conditions;
 
 @end
 
 @implementation PWTimeViewController
-
-dispatch_queue_t watchQueue;
-
-NSMutableDictionary *update; // Need a strong pointer
-NSString *currentCondition[3];
-CLLocationCoordinate2D lastLocation;
-
-- (CLLocationManager *) locationManager
 {
     
-    // Create the location manager if this object does not
-    // already have one.
-    if (_locationManager == nil)
-        _locationManager = [[CLLocationManager alloc] init];
+    dispatch_queue_t watchQueue;
     
-    return _locationManager;
+    NSString *currentCondition[2];
+    int8_t currentTemp[2];
+    CLLocationCoordinate2D lastLocation;
+    
+}
+
+NSMutableDictionary *update;
+
+- (NSDateFormatter *) dateFormatter
+{
+    if (_dateFormatter == nil) {
+        _dateFormatter = [[NSDateFormatter alloc] init];
+    }
+    return _dateFormatter;
+}
+
+- (NSTimer *) clockUpdateTimer
+{
+    if (_clockUpdateTimer == nil) {
+        _clockUpdateTimer = [[NSTimer alloc] init];
+    }
+    return _clockUpdateTimer;
+}
+
+- (NSTimer *) weatherUpdateTimer
+{
+    if (_weatherUpdateTimer == nil) {
+        _weatherUpdateTimer = [[NSTimer alloc] init];
+    }
+    return _weatherUpdateTimer;
 }
 
 - (NSMutableArray *) msgQueue
@@ -78,6 +96,14 @@ CLLocationCoordinate2D lastLocation;
     return _queueLock;
 }
 
+- (CLLocationManager *) locationManager
+{
+    if (_locationManager == nil) {
+        _locationManager = [[CLLocationManager alloc] init];
+    }
+    return _locationManager;
+}
+
 - (Forecastr *) forecastr
 {
     if (_forecastr == nil) {
@@ -86,7 +112,7 @@ CLLocationCoordinate2D lastLocation;
     return _forecastr;
 }
 
-- (NSDictionary *) conditions
+- (NSMutableDictionary *) conditions
 {
     
     if (_conditions == nil) {
@@ -179,15 +205,6 @@ CLLocationCoordinate2D lastLocation;
         
     }
     
-}
-
-- (NSDateFormatter *)dateFormatter
-{
-
-    if (_dateFormatter == nil) {
-        _dateFormatter = [[NSDateFormatter alloc] init];
-    }
-    return _dateFormatter;
 }
 
 - (NSString *)makeKey:(NSString *)keyLabel
@@ -300,21 +317,17 @@ CLLocationCoordinate2D lastLocation;
     if (self.singleMessage.isOn) {
         
         // First choice is to update all watches in one message. Doesn't work yet
-        [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY, @PBCOMM_WEATHER_KEY] forWatches:@[@"Local", @"TZ1", @"TZ2"]];
+        [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY, @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY] forWatches:@[@"Local", @"TZ1"]];
         
     } else {
         
         // Update the local watch with all of the current settings
         [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY,
-         @PBCOMM_WEATHER_KEY] forWatches:@[@"Local"]];
+         @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY] forWatches:@[@"Local"]];
         
         // Update the TZ1 watch with all of the current settings
         [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY,
-         @PBCOMM_WEATHER_KEY] forWatches:@[@"TZ1"]];
-        
-        // Update the TZ2 watch with all of the current settings
-        [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY,
-         @PBCOMM_WEATHER_KEY] forWatches:@[@"TZ2"]];
+         @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY] forWatches:@[@"TZ1"]];
         
     }
     
@@ -352,6 +365,7 @@ CLLocationCoordinate2D lastLocation;
 - (void)updateWatch:(NSArray *)keys forWatches:(NSArray *)watchfaces
 {
     
+    
     // We  communicate with the watch when we call -appMessagesGetIsSupported: which implicitely opens the communication session.
     // Test if the Pebble's firmware supports AppMessages:
     [_targetWatch appMessagesGetIsSupported:^(PBWatch *watch, BOOL isAppMessagesSupported) {
@@ -379,8 +393,6 @@ CLLocationCoordinate2D lastLocation;
                         watchOffset = LOCAL_WATCH_OFFSET;
                     } else if ([watchface isEqualToString:@"TZ1"]) {
                         watchOffset = WATCH_1_OFFSET;
-                    } else if ([watchface isEqualToString:@"TZ2"]) {
-                        watchOffset = WATCH_2_OFFSET;
                     } else {
                         return;
                     }
@@ -425,8 +437,10 @@ CLLocationCoordinate2D lastLocation;
                                 [update setObject:[NSNumber numberWithInt8:[defaults integerForKey:[self makeKey:CLOCK_DISPLAY_KEY forWatch:watchface]]] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
                                 break;
                             case PBCOMM_WEATHER_KEY:
-                                NSLog(@"Weather code: %@\n", [NSNumber numberWithUint8:[[self.conditions objectForKey:currentCondition[watchOffset]] intValue]]);
                                 [update setObject:[NSNumber numberWithUint8:[[self.conditions objectForKey:currentCondition[watchOffset]] intValue]] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
+                                break;
+                            case PBCOMM_TEMPERATURE_KEY:
+                                [update setObject:[NSNumber numberWithInt8:currentTemp[watchOffset]] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
                                 break;
                             default:
                                 return;
@@ -434,7 +448,7 @@ CLLocationCoordinate2D lastLocation;
                         }
                         
                     }
-                    
+                
                 }
                 
                 // Send data to watch:
@@ -460,26 +474,29 @@ CLLocationCoordinate2D lastLocation;
     
 }
 
-- (void)updateWeather {
+- (void)updateWeather
+{
         
     // Kick off asking for weather without specifying a time
     [self.forecastr getForecastForLatitude:lastLocation.latitude longitude:lastLocation.longitude time:nil exclusions:nil success:^(id JSON) {
+        currentTemp[0] = (int8_t)([[[JSON objectForKey:@"currently"] objectForKey:@"temperature"] doubleValue] + 0.5);
         currentCondition[0] = [[JSON objectForKey:@"currently"] objectForKey:@"icon"];
         if ([currentCondition[0] isEqualToString:@""])
             currentCondition[0] = @"unknown";
         [self updateWatch:@[@PBCOMM_WEATHER_KEY] forWatches:@[@"Local"]];
-        self.weatherUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:1800.0 target:self selector:@selector(updateWeather:) userInfo:nil repeats:NO];
+        [self startWeatherUpdateTimer:1800.0];
     } failure:^(NSError *error, id response) {
+        currentTemp[0] = 0;
         currentCondition[0] = @"unknown";
         NSLog(@"Error while retrieving forecast: %@", [self.forecastr messageForError:error withResponse:response]);
-        [self updateWatch:@[@PBCOMM_WEATHER_KEY] forWatches:@[@"Local", @"TZ1", @"TZ2"]];
-        self.weatherUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:900.0 target:self selector:@selector(updateWeather:) userInfo:nil repeats:NO];
+        [self updateWatch:@[@PBCOMM_WEATHER_KEY] forWatches:@[@"Local", @"TZ1"]];
+        [self startWeatherUpdateTimer:900.0];
     }];
     
 }
 
 //
-// Location methods/delegates
+// Location methods/delegates. Starts and stops are called by the App delegate when the app goes inactive/active
 //
 - (void)startStandardUpdates
 {
@@ -502,15 +519,35 @@ CLLocationCoordinate2D lastLocation;
     
 }
 
+- (void)stopSignificantLocationChangeUpdates
+{
+    [self.locationManager stopMonitoringSignificantLocationChanges];
+    self.locationManager.delegate = nil;
+}
+
 //
 // Delegate method from the CLLocationManagerDelegate protocol.
 //
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
-{
 
+- (void)startWeatherUpdateTimer:(NSTimeInterval) ti
+{
     if (self.weatherUpdateTimer != nil) {
         [self.weatherUpdateTimer invalidate];
     }
+    self.weatherUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:ti target:self selector:@selector(updateWeather:) userInfo:nil repeats:NO];
+}
+
+- (void)stopWeatherUpdateTimer
+{
+    if (self.weatherUpdateTimer != nil) {
+        [self.weatherUpdateTimer invalidate];
+    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+
+    [self stopWeatherUpdateTimer];  // In case one is running
     
     CLLocation *location = [locations lastObject];
     CLGeocoder * geoCoder = [[CLGeocoder alloc] init];
@@ -532,16 +569,18 @@ CLLocationCoordinate2D lastLocation;
         //
         // Kick off asking for weather without specifying a time
         [self.forecastr getForecastForLatitude:location.coordinate.latitude longitude:location.coordinate.longitude time:nil exclusions:nil success:^(id JSON) {
+            currentTemp[0] = (int8_t)([[[JSON objectForKey:@"currently"] objectForKey:@"temperature"] doubleValue] + 0.5);
             currentCondition[0] = [[JSON objectForKey:@"currently"] objectForKey:@"icon"];
             if ([currentCondition[0] isEqualToString:@""])
                 currentCondition[0] = @"unknown";
-            [self updateWatch:@[@PBCOMM_WEATHER_KEY] forWatches:@[@"Local"]];
-            self.weatherUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:1800.0 target:self selector:@selector(updateWeather:) userInfo:nil repeats:NO];
+            [self updateWatch:@[@PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY] forWatches:@[@"Local"]];
+            [self startWeatherUpdateTimer:1800.0];
         } failure:^(NSError *error, id response) {
+            currentTemp[0] = 0;
             currentCondition[0] = @"unknown";
             NSLog(@"Error while retrieving forecast: %@", [self.forecastr messageForError:error withResponse:response]);
-            [self updateWatch:@[@PBCOMM_WEATHER_KEY] forWatches:@[@"Local", @"TZ1", @"TZ2"]];
-            self.weatherUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:900.0 target:self selector:@selector(updateWeather:) userInfo:nil repeats:NO];
+            [self updateWatch:@[@PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY] forWatches:@[@"Local", @"TZ1"]];
+            [self startWeatherUpdateTimer:900.0];
         }];
         
     }];
@@ -554,6 +593,9 @@ CLLocationCoordinate2D lastLocation;
     [super viewDidLoad];
     
 	// Do any additional setup after loading the view, typically from a nib.
+    
+    currentTemp[0] = -100;
+    currentTemp[1] = -100;
 
     // We'd like to get called when Pebbles connect and disconnect, so become the delegate of PBPebbleCentral:
     [[PBPebbleCentral defaultCentral] setDelegate:self];
@@ -567,9 +609,6 @@ CLLocationCoordinate2D lastLocation;
     
     self.dateFormatter.dateFormat = @"yyyy-MM-dd \n HH:mm:ss Z";
     self.clockUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateRunningClock:) userInfo:nil repeats:YES];
-    
-    [self startSignificantLocationChangeUpdates];
-//    [self startStandardUpdates];
     
     [self loadClockFields];
     [self sendConfigToWatch];
@@ -587,6 +626,7 @@ CLLocationCoordinate2D lastLocation;
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

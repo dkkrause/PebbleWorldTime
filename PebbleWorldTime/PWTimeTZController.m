@@ -14,14 +14,11 @@
 
 @property (nonatomic, assign) id delegate;
 @property (nonatomic, assign) NSTimeZone *clockTZ;
+@property (weak, nonatomic) NSArray *tzList;
 
 @end
 
 @implementation PWTimeTZController
-
-@synthesize tzList = _tzList;
-@synthesize delegate = _delegate;
-@synthesize clockTZ = _clockTZ;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {

@@ -13,7 +13,6 @@
 // Add these to the KEYs to get the actual value
 #define LOCAL_WATCH_OFFSET                  0x00
 #define WATCH_1_OFFSET                      0x10
-#define WATCH_2_OFFSET                      0x20
 
 // Keys for local time data, maximum of 16, including 0x00
 #define PBCOMM_WATCH_ENABLED_KEY            0x01    // boolean
@@ -22,6 +21,7 @@
 #define PBCOMM_BACKGROUND_KEY               0x04    // light, dark or AM/PM background
 #define PBCOMM_12_24_DISPLAY_KEY            0x05    // display in watch configured-, 12- or 24-hour time
 #define PBCOMM_WEATHER_KEY                  0x06    // weather conditions
+#define PBCOMM_TEMPERATURE_KEY              0x07    // temperature
 
 // Values for PBCOMM_WATCH_ENABLED_KEY
 #define WATCH_DISABLED						0x00

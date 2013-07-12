@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface PWTimeTZController : UITableViewController
-@property (strong,nonatomic) NSArray *tzList;
 
 - (void)setDelegate:(id)delegate;
 - (void)setClockTZ:(NSTimeZone *)clockTZ;
