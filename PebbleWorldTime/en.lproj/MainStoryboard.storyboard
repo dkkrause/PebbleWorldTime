@@ -14,9 +14,6 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="c0h-fq-YDK">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="27" id="SSU-9U-w47"/>
-                                </constraints>
                                 <connections>
                                     <action selector="clockEnabledSwitchChanged:" destination="2" eventType="valueChanged" id="LMI-hx-akr"/>
                                 </connections>
@@ -95,9 +92,6 @@
                                 </connections>
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1DL-hY-YMp">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="43" id="9ng-Lc-2Qj"/>
-                                </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Update">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -138,32 +132,32 @@
                             <constraint firstItem="eqO-hz-GSd" firstAttribute="top" secondItem="16" secondAttribute="top" constant="98" id="0Eg-Qt-emj"/>
                             <constraint firstItem="ApT-jg-eLM" firstAttribute="baseline" secondItem="uI8-nx-acB" secondAttribute="baseline" type="default" id="1j4-VN-iWp"/>
                             <constraint firstItem="QfD-2L-WH1" firstAttribute="leading" secondItem="eqO-hz-GSd" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="3Nc-LT-amQ"/>
-                            <constraint firstItem="ApT-jg-eLM" firstAttribute="centerX" secondItem="c0h-fq-YDK" secondAttribute="centerX" type="default" id="9bY-lw-waE"/>
+                            <constraint firstItem="QfD-2L-WH1" firstAttribute="top" secondItem="16" secondAttribute="top" constant="99" id="7WN-3U-bUi"/>
                             <constraint firstItem="PLK-02-Mrl" firstAttribute="top" secondItem="16" secondAttribute="top" constant="41" id="BOo-WE-sAT"/>
+                            <constraint firstItem="3nS-Aw-x6F" firstAttribute="top" secondItem="auI-Kb-jPZ" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="BeJ-A0-UEj"/>
                             <constraint firstItem="3nS-Aw-x6F" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="Glm-Aq-3nX"/>
                             <constraint firstItem="4as-fj-ZC7" firstAttribute="baseline" secondItem="1DL-hY-YMp" secondAttribute="baseline" type="default" id="JUK-Fo-mVv"/>
                             <constraint firstItem="eqO-hz-GSd" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="KhV-pH-id2"/>
+                            <constraint firstItem="auI-Kb-jPZ" firstAttribute="top" secondItem="eqO-hz-GSd" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="L2Q-wM-Jlh"/>
                             <constraint firstItem="uI8-nx-acB" firstAttribute="trailing" secondItem="ApT-jg-eLM" secondAttribute="trailing" type="default" id="MxA-bx-gbi"/>
-                            <constraint firstItem="ApT-jg-eLM" firstAttribute="top" secondItem="c0h-fq-YDK" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="NoT-Na-PlJ"/>
+                            <constraint firstItem="I4z-H9-XDd" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="QBc-Gu-exc"/>
                             <constraint firstAttribute="trailing" secondItem="h81-TR-kKS" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="SzY-vC-CdH"/>
+                            <constraint firstAttribute="bottom" secondItem="uI8-nx-acB" secondAttribute="bottom" constant="110" id="T9r-CH-w69"/>
                             <constraint firstItem="ApT-jg-eLM" firstAttribute="trailing" secondItem="eqO-hz-GSd" secondAttribute="trailing" type="default" id="Ufh-pC-Cgd"/>
-                            <constraint firstItem="3nS-Aw-x6F" firstAttribute="top" secondItem="16" secondAttribute="top" constant="189" id="V74-Yc-ddK"/>
-                            <constraint firstItem="I4z-H9-XDd" firstAttribute="top" secondItem="16" secondAttribute="top" constant="33" id="eeO-HF-XQW"/>
+                            <constraint firstAttribute="bottom" secondItem="ApT-jg-eLM" secondAttribute="bottom" constant="174" id="Zmg-3Q-2tR"/>
+                            <constraint firstItem="I4z-H9-XDd" firstAttribute="top" secondItem="16" secondAttribute="top" constant="34" id="bB5-eN-cH6"/>
+                            <constraint firstItem="c0h-fq-YDK" firstAttribute="trailing" secondItem="QfD-2L-WH1" secondAttribute="trailing" type="default" id="e3Q-bA-Tq0"/>
                             <constraint firstItem="auI-Kb-jPZ" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="hKi-is-GIA"/>
                             <constraint firstAttribute="trailing" secondItem="3nS-Aw-x6F" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="iam-DT-uPb"/>
-                            <constraint firstItem="eqO-hz-GSd" firstAttribute="bottom" secondItem="QfD-2L-WH1" secondAttribute="bottom" type="default" id="j39-1a-cCg"/>
+                            <constraint firstItem="c0h-fq-YDK" firstAttribute="centerY" secondItem="I4z-H9-XDd" secondAttribute="centerY" type="default" id="id9-39-dt4"/>
                             <constraint firstItem="4as-fj-ZC7" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="110" id="jc6-iW-oGK"/>
                             <constraint firstItem="1DL-hY-YMp" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="lhg-X4-o8z"/>
                             <constraint firstItem="ApT-jg-eLM" firstAttribute="leading" secondItem="uI8-nx-acB" secondAttribute="leading" type="default" id="m0c-cT-uMu"/>
                             <constraint firstAttribute="trailing" secondItem="auI-Kb-jPZ" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="mfS-Lt-s3l"/>
-                            <constraint firstItem="1DL-hY-YMp" firstAttribute="top" secondItem="uI8-nx-acB" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="ohV-gv-ep7"/>
+                            <constraint firstItem="ApT-jg-eLM" firstAttribute="centerX" secondItem="3nS-Aw-x6F" secondAttribute="centerX" type="default" id="oIM-DS-Lkb"/>
                             <constraint firstItem="PLK-02-Mrl" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="28" id="tBD-yW-bCI"/>
-                            <constraint firstItem="c0h-fq-YDK" firstAttribute="top" secondItem="3nS-Aw-x6F" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="v3f-0b-6id"/>
                             <constraint firstAttribute="bottom" secondItem="1DL-hY-YMp" secondAttribute="bottom" constant="15" id="vcG-jc-Aj1"/>
-                            <constraint firstItem="3nS-Aw-x6F" firstAttribute="centerX" secondItem="c0h-fq-YDK" secondAttribute="centerX" type="default" id="wJE-tu-zv5"/>
-                            <constraint firstItem="auI-Kb-jPZ" firstAttribute="top" secondItem="16" secondAttribute="top" constant="149" id="yHR-gN-Zhe"/>
                             <constraint firstItem="h81-TR-kKS" firstAttribute="centerY" secondItem="1DL-hY-YMp" secondAttribute="centerY" type="default" id="yO9-qu-6jW"/>
-                            <constraint firstItem="I4z-H9-XDd" firstAttribute="centerX" secondItem="auI-Kb-jPZ" secondAttribute="centerX" type="default" id="yZM-1J-uCe"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="TZ1" id="7"/>
@@ -224,12 +218,7 @@
         <class className="PWTimeViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/PWTimeViewController.h"/>
             <relationships>
-                <relationship kind="action" name="clockBackgroundSegmentSelected:"/>
-                <relationship kind="action" name="clockEnabledSwitchChanged:"/>
-                <relationship kind="action" name="clockSelected:"/>
                 <relationship kind="action" name="sendSingleMessage:"/>
-                <relationship kind="action" name="timeDisplayChanged:"/>
-                <relationship kind="action" name="updateWatchData:"/>
                 <relationship kind="outlet" name="clockBackground" candidateClass="UISegmentedControl"/>
                 <relationship kind="outlet" name="clockDisplay" candidateClass="UISegmentedControl"/>
                 <relationship kind="outlet" name="clockEnabled" candidateClass="UISwitch"/>
