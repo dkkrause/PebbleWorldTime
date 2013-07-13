@@ -28,6 +28,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *tzDisplay;
 @property (weak, nonatomic) IBOutlet UILabel *timeDisplay;
 @property (weak, nonatomic) IBOutlet UISwitch *singleMessage;
+@property (strong, nonatomic) IBOutlet UILabel *tempDisplay;
 
 @property (strong, nonatomic) PBWatch *targetWatch;
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
@@ -530,6 +531,7 @@ NSMutableDictionary *update;
     // Kick off asking for weather without specifying a time
     [self.forecastr getForecastForLatitude:lastLocation.latitude longitude:lastLocation.longitude time:nil exclusions:nil success:^(id JSON) {
         [self.currentTemp setObject:[NSNumber numberWithInt8:(int8_t)([[[JSON objectForKey:@"currently"] objectForKey:@"temperature"] doubleValue] + 0.5)]atIndexedSubscript:0];
+        self.tempDisplay.text = [[self.currentTemp objectAtIndex:0]stringValue];
         [self.currentCondition setObject:[[JSON objectForKey:@"currently"] objectForKey:@"icon"] atIndexedSubscript:0];
         if ([[self.currentCondition objectAtIndex:0] isEqualToString:@""])
             [self.currentCondition setObject:@"unknown" atIndexedSubscript:0];
@@ -537,6 +539,7 @@ NSMutableDictionary *update;
         [self startWeatherUpdateTimer:1800.0];
     } failure:^(NSError *error, id response) {
         [self.currentTemp setObject:[NSNumber numberWithInt8:-100] atIndexedSubscript:0];
+        self.tempDisplay.text = [[self.currentTemp objectAtIndex:0] stringValue];
         [self.currentCondition setObject:@"unknown" atIndexedSubscript:0];
 #ifdef PWDEBUG
         NSLog(@"Error while retrieving forecast: %@", [self.forecastr messageForError:error withResponse:response]);
@@ -627,6 +630,7 @@ NSMutableDictionary *update;
             NSLog(@"JSON:\n %@\n\n", JSON);
 #endif
             [self.currentTemp setObject:[NSNumber numberWithInt8:(int8_t)([[[JSON objectForKey:@"currently"] objectForKey:@"temperature"] doubleValue] + 0.5)]atIndexedSubscript:0];
+            self.tempDisplay.text = [[self.currentTemp objectAtIndex:0] stringValue];
             [self.currentCondition setObject:[[JSON objectForKey:@"currently"] objectForKey:@"icon"] atIndexedSubscript:0];
             if ([[self.currentCondition objectAtIndex:0] isEqualToString:@""])
                 [self.currentCondition setObject:@"unknown" atIndexedSubscript:0];
@@ -634,6 +638,7 @@ NSMutableDictionary *update;
             [self startWeatherUpdateTimer:1800.0];
         } failure:^(NSError *error, id response) {
             [self.currentTemp setObject:[NSNumber numberWithInt8:-100] atIndexedSubscript:0];
+            self.tempDisplay.text = [[self.currentTemp objectAtIndex:0] stringValue];
             [self.currentCondition setObject:@"unknown" atIndexedSubscript:0];
 #ifdef PWDEBUG
             NSLog(@"Error while retrieving forecast: %@", [self.forecastr messageForError:error withResponse:response]);

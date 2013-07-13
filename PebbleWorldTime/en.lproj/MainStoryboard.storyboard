@@ -19,9 +19,6 @@
                                 </connections>
                             </switch>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bordered" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="uI8-nx-acB">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="43" id="EPZ-ea-r1c"/>
-                                </constraints>
                                 <segments>
                                     <segment title="Dark"/>
                                     <segment title="Light"/>
@@ -42,6 +39,7 @@
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eqO-hz-GSd">
                                 <constraints>
                                     <constraint firstAttribute="height" constant="26" id="Kgm-Hz-VpX"/>
+                                    <constraint firstAttribute="width" constant="250" id="zOB-pM-6XC"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                 <nil key="highlightedColor"/>
@@ -55,7 +53,7 @@
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="2" translatesAutoresizingMaskIntoConstraints="NO" id="ApT-jg-eLM">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="220" id="KOX-pM-gpG"/>
+                                    <constraint firstAttribute="width" constant="220" id="KpG-vC-PmW"/>
                                 </constraints>
                                 <segments>
                                     <segment title="Watch"/>
@@ -126,35 +124,45 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cQd-eS-pOd">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="42" id="7jE-qx-M48"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="eqO-hz-GSd" firstAttribute="top" secondItem="16" secondAttribute="top" constant="98" id="0Eg-Qt-emj"/>
-                            <constraint firstItem="ApT-jg-eLM" firstAttribute="baseline" secondItem="uI8-nx-acB" secondAttribute="baseline" type="default" id="1j4-VN-iWp"/>
                             <constraint firstItem="QfD-2L-WH1" firstAttribute="leading" secondItem="eqO-hz-GSd" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="3Nc-LT-amQ"/>
+                            <constraint firstItem="ApT-jg-eLM" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="643-mS-1hi"/>
                             <constraint firstItem="QfD-2L-WH1" firstAttribute="top" secondItem="16" secondAttribute="top" constant="99" id="7WN-3U-bUi"/>
                             <constraint firstItem="PLK-02-Mrl" firstAttribute="top" secondItem="16" secondAttribute="top" constant="41" id="BOo-WE-sAT"/>
                             <constraint firstItem="3nS-Aw-x6F" firstAttribute="top" secondItem="auI-Kb-jPZ" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="BeJ-A0-UEj"/>
+                            <constraint firstAttribute="bottom" secondItem="ApT-jg-eLM" secondAttribute="bottom" constant="170" id="D1k-mi-NdY"/>
                             <constraint firstItem="3nS-Aw-x6F" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="Glm-Aq-3nX"/>
+                            <constraint firstAttribute="trailing" secondItem="cQd-eS-pOd" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="It9-fF-imp"/>
                             <constraint firstItem="4as-fj-ZC7" firstAttribute="baseline" secondItem="1DL-hY-YMp" secondAttribute="baseline" type="default" id="JUK-Fo-mVv"/>
                             <constraint firstItem="eqO-hz-GSd" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="KhV-pH-id2"/>
                             <constraint firstItem="auI-Kb-jPZ" firstAttribute="top" secondItem="eqO-hz-GSd" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="L2Q-wM-Jlh"/>
-                            <constraint firstItem="uI8-nx-acB" firstAttribute="trailing" secondItem="ApT-jg-eLM" secondAttribute="trailing" type="default" id="MxA-bx-gbi"/>
+                            <constraint firstItem="cQd-eS-pOd" firstAttribute="baseline" secondItem="ApT-jg-eLM" secondAttribute="baseline" type="default" id="NoH-Yg-zNX"/>
+                            <constraint firstItem="ApT-jg-eLM" firstAttribute="top" secondItem="cQd-eS-pOd" secondAttribute="top" type="default" id="Ofw-fR-yoM"/>
                             <constraint firstItem="I4z-H9-XDd" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="QBc-Gu-exc"/>
                             <constraint firstAttribute="trailing" secondItem="h81-TR-kKS" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="SzY-vC-CdH"/>
                             <constraint firstAttribute="bottom" secondItem="uI8-nx-acB" secondAttribute="bottom" constant="110" id="T9r-CH-w69"/>
-                            <constraint firstItem="ApT-jg-eLM" firstAttribute="trailing" secondItem="eqO-hz-GSd" secondAttribute="trailing" type="default" id="Ufh-pC-Cgd"/>
-                            <constraint firstAttribute="bottom" secondItem="ApT-jg-eLM" secondAttribute="bottom" constant="174" id="Zmg-3Q-2tR"/>
+                            <constraint firstItem="uI8-nx-acB" firstAttribute="trailing" secondItem="ApT-jg-eLM" secondAttribute="trailing" type="default" id="a6o-1H-Cuj"/>
                             <constraint firstItem="I4z-H9-XDd" firstAttribute="top" secondItem="16" secondAttribute="top" constant="34" id="bB5-eN-cH6"/>
+                            <constraint firstItem="ApT-jg-eLM" firstAttribute="bottom" secondItem="cQd-eS-pOd" secondAttribute="bottom" type="default" id="bhz-O9-0bo"/>
                             <constraint firstItem="c0h-fq-YDK" firstAttribute="trailing" secondItem="QfD-2L-WH1" secondAttribute="trailing" type="default" id="e3Q-bA-Tq0"/>
                             <constraint firstItem="auI-Kb-jPZ" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="hKi-is-GIA"/>
                             <constraint firstAttribute="trailing" secondItem="3nS-Aw-x6F" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="iam-DT-uPb"/>
                             <constraint firstItem="c0h-fq-YDK" firstAttribute="centerY" secondItem="I4z-H9-XDd" secondAttribute="centerY" type="default" id="id9-39-dt4"/>
                             <constraint firstItem="4as-fj-ZC7" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="110" id="jc6-iW-oGK"/>
+                            <constraint firstItem="uI8-nx-acB" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="jpZ-28-T9s"/>
                             <constraint firstItem="1DL-hY-YMp" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="lhg-X4-o8z"/>
-                            <constraint firstItem="ApT-jg-eLM" firstAttribute="leading" secondItem="uI8-nx-acB" secondAttribute="leading" type="default" id="m0c-cT-uMu"/>
                             <constraint firstAttribute="trailing" secondItem="auI-Kb-jPZ" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="mfS-Lt-s3l"/>
-                            <constraint firstItem="ApT-jg-eLM" firstAttribute="centerX" secondItem="3nS-Aw-x6F" secondAttribute="centerX" type="default" id="oIM-DS-Lkb"/>
                             <constraint firstItem="PLK-02-Mrl" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="28" id="tBD-yW-bCI"/>
                             <constraint firstAttribute="bottom" secondItem="1DL-hY-YMp" secondAttribute="bottom" constant="15" id="vcG-jc-Aj1"/>
                             <constraint firstItem="h81-TR-kKS" firstAttribute="centerY" secondItem="1DL-hY-YMp" secondAttribute="centerY" type="default" id="yO9-qu-6jW"/>
@@ -168,6 +176,7 @@
                         <outlet property="clockSelect" destination="I4z-H9-XDd" id="rO6-MV-4mK"/>
                         <outlet property="locality" destination="auI-Kb-jPZ" id="dIe-fn-1xB"/>
                         <outlet property="singleMessage" destination="h81-TR-kKS" id="QXa-qW-HS2"/>
+                        <outlet property="tempDisplay" destination="cQd-eS-pOd" id="FBg-ps-ZJB"/>
                         <outlet property="timeDisplay" destination="3nS-Aw-x6F" id="hdD-jV-VUI"/>
                         <outlet property="tzDisplay" destination="eqO-hz-GSd" id="qMa-f8-1s0"/>
                         <outlet property="tzSelect" destination="QfD-2L-WH1" id="6a7-Yp-tOf"/>
@@ -186,14 +195,14 @@
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="eTD-hO-7eW">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="38" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="eTD-hO-7eW">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TZCell" id="tju-i2-LCY">
-                                        <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TZCell" rowHeight="38" id="tju-i2-LCY">
+                                        <rect key="frame" x="0.0" y="22" width="320" height="38"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="37"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -233,38 +242,6 @@
             <point key="canvasLocation" x="827" y="-193"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="NSLayoutConstraint" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
-        </class>
-        <class className="PWTimeTZSearchViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/PWTimeTZSearchViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="tzSearchBar" candidateClass="UISearchBar"/>
-                <relationship kind="outlet" name="tzTable" candidateClass="UITableView"/>
-            </relationships>
-        </class>
-        <class className="PWTimeViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/PWTimeViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="clockBackgroundSegmentSelected:"/>
-                <relationship kind="action" name="clockEnabledSwitchChanged:"/>
-                <relationship kind="action" name="clockSelected:"/>
-                <relationship kind="action" name="sendSingleMessage:"/>
-                <relationship kind="action" name="timeDisplayChanged:"/>
-                <relationship kind="action" name="updateWatchData:"/>
-                <relationship kind="outlet" name="clockBackground" candidateClass="UISegmentedControl"/>
-                <relationship kind="outlet" name="clockDisplay" candidateClass="UISegmentedControl"/>
-                <relationship kind="outlet" name="clockEnabled" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="clockSelect" candidateClass="UISegmentedControl"/>
-                <relationship kind="outlet" name="locality" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="singleMessage" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="timeDisplay" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="tzDisplay" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="tzSelect" candidateClass="UIButton"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
