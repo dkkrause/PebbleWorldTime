@@ -76,7 +76,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="fgm-ez-BqI" kind="modal" identifier="toTZ" modalTransitionStyle="coverVertical" id="0Lw-lT-pL5"/>
+                                    <segue destination="mMr-UV-GEK" kind="modal" identifier="toTZ" modalTransitionStyle="coverVertical" id="e8z-nD-Uoa"/>
                                 </connections>
                             </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="I4z-H9-XDd">
@@ -178,47 +178,81 @@
             </objects>
             <point key="canvasLocation" x="465" y="-193"/>
         </scene>
-        <!--TimeTZ Controller-->
-        <scene sceneID="dvd-8e-jAZ">
+        <!--TimeTZ Search View Controller-->
+        <scene sceneID="4f8-eq-IbS">
             <objects>
-                <tableViewController id="fgm-ez-BqI" customClass="PWTimeTZController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="fwR-rj-kPb">
+                <viewController id="mMr-UV-GEK" customClass="PWTimeTZSearchViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="qdX-y3-LAt">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TZCell" id="LHt-Sf-lvf">
-                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                </view>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="fgm-ez-BqI" id="iSz-27-DpD"/>
-                            <outlet property="delegate" destination="fgm-ez-BqI" id="UFt-15-RQS"/>
-                        </connections>
-                    </tableView>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="49c-cF-4Xl" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="eTD-hO-7eW">
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TZCell" id="tju-i2-LCY">
+                                        <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="mMr-UV-GEK" id="suu-ml-QS8"/>
+                                    <outlet property="delegate" destination="mMr-UV-GEK" id="3EE-vP-gQQ"/>
+                                </connections>
+                            </tableView>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="9rs-nT-HZX">
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="mMr-UV-GEK" id="DPX-iG-5AZ"/>
+                                </connections>
+                            </searchBar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="eTD-hO-7eW" firstAttribute="top" secondItem="9rs-nT-HZX" secondAttribute="bottom" type="default" id="5o5-Bv-tDX"/>
+                            <constraint firstItem="9rs-nT-HZX" firstAttribute="trailing" secondItem="qdX-y3-LAt" secondAttribute="trailing" type="default" id="Bpk-Bo-CJh"/>
+                            <constraint firstItem="9rs-nT-HZX" firstAttribute="top" secondItem="qdX-y3-LAt" secondAttribute="top" type="default" id="VDP-1R-yiF"/>
+                            <constraint firstItem="9rs-nT-HZX" firstAttribute="leading" secondItem="qdX-y3-LAt" secondAttribute="leading" type="default" id="VWt-9n-MTg"/>
+                            <constraint firstItem="eTD-hO-7eW" firstAttribute="bottom" secondItem="qdX-y3-LAt" secondAttribute="bottom" type="default" id="beS-A3-KRr"/>
+                            <constraint firstItem="eTD-hO-7eW" firstAttribute="trailing" secondItem="qdX-y3-LAt" secondAttribute="trailing" type="default" id="sIO-MW-Kq1"/>
+                            <constraint firstItem="eTD-hO-7eW" firstAttribute="leading" secondItem="qdX-y3-LAt" secondAttribute="leading" type="default" id="x3u-nd-ni0"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="g4M-PM-pJk"/>
+                    <connections>
+                        <outlet property="tzSearchBar" destination="9rs-nT-HZX" id="rR8-y1-r0R"/>
+                        <outlet property="tzTable" destination="eTD-hO-7eW" id="D5m-jB-OyU"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ANc-U2-80p" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="893" y="-193"/>
+            <point key="canvasLocation" x="827" y="-193"/>
         </scene>
     </scenes>
     <classes>
         <class className="NSLayoutConstraint" superclassName="NSObject">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
         </class>
-        <class className="PWTimeTZController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/PWTimeTZController.h"/>
+        <class className="PWTimeTZSearchViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PWTimeTZSearchViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="tzSearchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="tzTable" candidateClass="UITableView"/>
+            </relationships>
         </class>
         <class className="PWTimeViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/PWTimeViewController.h"/>
             <relationships>
+                <relationship kind="action" name="clockBackgroundSegmentSelected:"/>
+                <relationship kind="action" name="clockEnabledSwitchChanged:"/>
+                <relationship kind="action" name="clockSelected:"/>
                 <relationship kind="action" name="sendSingleMessage:"/>
+                <relationship kind="action" name="timeDisplayChanged:"/>
+                <relationship kind="action" name="updateWatchData:"/>
                 <relationship kind="outlet" name="clockBackground" candidateClass="UISegmentedControl"/>
                 <relationship kind="outlet" name="clockDisplay" candidateClass="UISegmentedControl"/>
                 <relationship kind="outlet" name="clockEnabled" candidateClass="UISwitch"/>

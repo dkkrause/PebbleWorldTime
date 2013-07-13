@@ -10,7 +10,7 @@
 #import <PebbleKit/PebbleKit.h>
 #import "PWTimeViewController.h"
 #import "NSMutableArray+QueueAdditions.h"
-#import "PWTimeTZController.h"
+#import "PWTimeTZSearchViewController.h"
 #import "PWTimeKeys.h"
 #import "AFNetworking/AFNetworking.h"
 #import "Forecastr.h"
@@ -596,6 +596,8 @@ NSMutableDictionary *update;
     }
 }
 
+#pragma mark - CLLocationManager delegate methods
+
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
 
@@ -643,6 +645,8 @@ NSMutableDictionary *update;
     }];
 
 }
+
+#pragma mark - UIViewController delegate methods
 
 - (void)viewDidLoad
 {
@@ -693,11 +697,13 @@ NSMutableDictionary *update;
 {
     
     if ([segue.identifier isEqualToString:@"toTZ"]) {
-        PWTimeTZController *tzController = segue.destinationViewController;
+        PWTimeTZSearchViewController *tzController = segue.destinationViewController;
         [tzController setDelegate:self];
         [tzController setClockTZ:self.clockTZ];
     }
 }
+
+#pragma mark - PBPebbleCentral delegate methods
 
 /*
  *  PBPebbleCentral delegate methods
