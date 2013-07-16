@@ -29,6 +29,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *timeDisplay;
 @property (weak, nonatomic) IBOutlet UISwitch *singleMessage;
 @property (strong, nonatomic) IBOutlet UILabel *tempDisplay;
+@property (strong, nonatomic) IBOutlet UILabel *tempUpdateTime;
 
 @property (strong, nonatomic) PBWatch *targetWatch;
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
@@ -45,6 +46,7 @@
 @property (strong, nonatomic) NSMutableDictionary *conditions;
 @property (strong, nonatomic) NSMutableArray *currentCondition;
 @property (strong, nonatomic) NSMutableArray *currentTemp;
+@property (strong, nonatomic) NSMutableArray *lastKnownLocation;
 
 @end
 
@@ -52,10 +54,6 @@
 {
     
     dispatch_queue_t watchQueue;
-    
-//    NSString *currentCondition[2];
-//    int8_t currentTemp[2];
-    CLLocationCoordinate2D lastLocation;
     
 }
 
@@ -131,6 +129,14 @@ NSMutableDictionary *update;
         _currentTemp = [[NSMutableArray alloc] init];
     }
     return _currentTemp;
+}
+
+- (NSMutableArray *) lastKnownLocation
+{
+    if (_lastKnownLocation == nil) {
+        _lastKnownLocation = [[NSMutableArray alloc] init];
+    }
+    return _lastKnownLocation;
 }
 
 - (NSMutableDictionary *) conditions
@@ -525,32 +531,53 @@ NSMutableDictionary *update;
     
 }
 
-- (void)updateWeather
+- (void)updateWeather:(id)sender
 {
         
     // Kick off asking for weather without specifying a time
-    [self.weatherUpdateTimer invalidate];
-    [self.forecastr getForecastForLatitude:lastLocation.latitude longitude:lastLocation.longitude time:nil exclusions:nil success:^(id JSON) {
+    [self stopWeatherUpdateTimer];
+    
+    CLLocation *lastLocation = [self.lastKnownLocation objectAtIndex:0];
+    if (lastLocation != nil) {
+        
 #ifdef PWDEBUG
-        NSLog(@"JSON:\n %@\n\n", JSON);
+        NSLog(@"updateWeather: Last known location: latitude: %3.8f, %3.8f\n", lastLocation.coordinate.latitude, lastLocation.coordinate.longitude);
 #endif
-        [self.currentTemp setObject:[NSNumber numberWithInt8:(int8_t)([[[JSON objectForKey:@"currently"] objectForKey:@"temperature"] doubleValue] + 0.5)]atIndexedSubscript:0];
-        self.tempDisplay.text = [[self.currentTemp objectAtIndex:0]stringValue];
-        [self.currentCondition setObject:[[JSON objectForKey:@"currently"] objectForKey:@"icon"] atIndexedSubscript:0];
-        if ([[self.currentCondition objectAtIndex:0] isEqualToString:@""])
+    
+        [self.forecastr getForecastForLatitude:lastLocation.coordinate.latitude longitude:lastLocation.coordinate.longitude time:nil exclusions:nil success:^(id JSON) {
+#ifdef PWDEBUG
+            NSLog(@"JSON:\n %@\n\n", JSON);
+#endif
+            [self.currentTemp setObject:[NSNumber numberWithInt8:(int8_t)([[[JSON objectForKey:@"currently"] objectForKey:@"temperature"] doubleValue] + 0.5)]atIndexedSubscript:0];
+            self.tempDisplay.text = [[self.currentTemp objectAtIndex:0]stringValue];
+            [self.currentCondition setObject:[[JSON objectForKey:@"currently"] objectForKey:@"icon"] atIndexedSubscript:0];
+            if ([[self.currentCondition objectAtIndex:0] isEqualToString:@""])
+                [self.currentCondition setObject:@"unknown" atIndexedSubscript:0];
+            [self updateWatch:@[@PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY] forWatches:@[@"Local", @"TZ1"]];
+            [self startWeatherUpdateTimer:1800.0];
+            
+            // Print the time in the selected time zone
+            NSDate *date = [[NSDate alloc] init];   // Get the current date and time
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            formatter.dateFormat = @"HH:mm";
+            [formatter setTimeZone:self.clockTZ];
+            self.tempUpdateTime.text = [formatter stringFromDate:date];
+            [self.tempUpdateTime setNeedsDisplay];
+            
+        } failure:^(NSError *error, id response) {
+            [self.currentTemp setObject:[NSNumber numberWithInt8:-100] atIndexedSubscript:0];
+            self.tempDisplay.text = [[self.currentTemp objectAtIndex:0] stringValue];
             [self.currentCondition setObject:@"unknown" atIndexedSubscript:0];
-        [self updateWatch:@[@PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY] forWatches:@[@"Local", @"TZ1"]];
-        [self startWeatherUpdateTimer:1800.0];
-    } failure:^(NSError *error, id response) {
-        [self.currentTemp setObject:[NSNumber numberWithInt8:-100] atIndexedSubscript:0];
-        self.tempDisplay.text = [[self.currentTemp objectAtIndex:0] stringValue];
-        [self.currentCondition setObject:@"unknown" atIndexedSubscript:0];
 #ifdef PWDEBUG
-        NSLog(@"Error while retrieving forecast: %@", [self.forecastr messageForError:error withResponse:response]);
+            NSLog(@"Error while retrieving forecast: %@", [self.forecastr messageForError:error withResponse:response]);
 #endif
-        [self updateWatch:@[@PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY] forWatches:@[@"Local", @"TZ1"]];
-        [self startWeatherUpdateTimer:900.0];
-    }];
+            [self updateWatch:@[@PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY] forWatches:@[@"Local", @"TZ1"]];
+            [self startWeatherUpdateTimer:900.0];
+        }];
+        
+    } else {
+        [self startWeatherUpdateTimer:30.0];
+    }
     
 }
 
@@ -621,15 +648,17 @@ NSMutableDictionary *update;
         self.currentState = [placemark.addressDictionary objectForKey:@"State"];
         self.currentCountry = [placemark.addressDictionary objectForKey:@"CountryCode"];
         [self.locality setText:[[[placemark.addressDictionary objectForKey:@"City"] stringByAppendingString:@", "] stringByAppendingString:[placemark.addressDictionary objectForKey:@"State"]]];
-        lastLocation.latitude = location.coordinate.latitude;
-        lastLocation.longitude = location.coordinate.longitude;
+        [self.lastKnownLocation setObject:location atIndexedSubscript:0];
+#ifdef PWDEBUG
+        NSLog(@"locationManager: lastKnownLocation: latitude: %3.8f, longitude: %3.8f\n", location.coordinate.latitude, location.coordinate.longitude);
+#endif
         [self updateWatch:@[@PBCOMM_CITY_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY] forWatches:@[@"Local"]];
         
         //
         // Since location changed, update weather as well
         //
         // Kick off asking for weather without specifying a time
-        [self updateWeather];
+        [self updateWeather:self];
         
     }];
 
