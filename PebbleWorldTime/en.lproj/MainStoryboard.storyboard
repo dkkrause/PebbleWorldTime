@@ -85,7 +85,7 @@
                                 </constraints>
                                 <segments>
                                     <segment title="Local"/>
-                                    <segment title="TZ1"/>
+                                    <segment title="TZ"/>
                                 </segments>
                                 <connections>
                                     <action selector="clockSelected:" destination="2" eventType="valueChanged" id="BKa-l4-5iz"/>
@@ -270,6 +270,37 @@
             <point key="canvasLocation" x="827" y="-193"/>
         </scene>
     </scenes>
+    <classes>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="PWTimeTZSearchViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PWTimeTZSearchViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="tzSearchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="tzTable" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="PWTimeViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PWTimeViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="clockBackground" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="clockDisplay" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="clockEnabled" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="clockSelect" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="locality" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="sunrise" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="sunset" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="tempDisplay" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="tempHi" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="tempLo" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="tempUpdateTime" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="timeDisplay" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="tzDisplay" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="tzSelect" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
