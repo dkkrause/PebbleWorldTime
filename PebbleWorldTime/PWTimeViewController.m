@@ -27,9 +27,12 @@
 @property (weak, nonatomic) IBOutlet UIButton *tzSelect;
 @property (weak, nonatomic) IBOutlet UILabel *tzDisplay;
 @property (weak, nonatomic) IBOutlet UILabel *timeDisplay;
-@property (weak, nonatomic) IBOutlet UISwitch *singleMessage;
 @property (strong, nonatomic) IBOutlet UILabel *tempDisplay;
 @property (strong, nonatomic) IBOutlet UILabel *tempUpdateTime;
+@property (strong, nonatomic) IBOutlet UILabel *tempHi;
+@property (strong, nonatomic) IBOutlet UILabel *tempLo;
+@property (strong, nonatomic) IBOutlet UILabel *sunrise;
+@property (strong, nonatomic) IBOutlet UILabel *sunset;
 
 @property (strong, nonatomic) PBWatch *targetWatch;
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
@@ -46,6 +49,10 @@
 @property (strong, nonatomic) NSMutableDictionary *conditions;
 @property (strong, nonatomic) NSMutableArray *currentCondition;
 @property (strong, nonatomic) NSMutableArray *currentTemp;
+@property (strong, nonatomic) NSMutableArray *dailyHiTemp;
+@property (strong, nonatomic) NSMutableArray *dailyLoTemp;
+@property (strong, nonatomic) NSMutableArray *sunriseTime;
+@property (strong, nonatomic) NSMutableArray *sunsetTime;
 @property (strong, nonatomic) NSMutableArray *lastKnownLocation;
 
 @end
@@ -129,6 +136,38 @@ NSMutableDictionary *update;
         _currentTemp = [[NSMutableArray alloc] init];
     }
     return _currentTemp;
+}
+
+- (NSMutableArray *) dailyHiTemp
+{
+    if (_dailyHiTemp == nil) {
+        _dailyHiTemp = [[NSMutableArray alloc] init];
+    }
+    return _dailyHiTemp;
+}
+
+- (NSMutableArray *) dailyLoTemp
+{
+    if (_dailyLoTemp == nil) {
+        _dailyLoTemp = [[NSMutableArray alloc] init];
+    }
+    return _dailyLoTemp;
+}
+
+- (NSMutableArray *) sunriseTime
+{
+    if (_sunriseTime == nil) {
+        _sunriseTime = [[NSMutableArray alloc] init];
+    }
+    return _sunriseTime;
+}
+
+- (NSMutableArray *) sunsetTime
+{
+    if (_sunsetTime == nil) {
+        _sunsetTime = [[NSMutableArray alloc] init];
+    }
+    return _sunsetTime;
 }
 
 - (NSMutableArray *) lastKnownLocation
@@ -322,10 +361,6 @@ NSMutableDictionary *update;
     [self sendConfigToWatch];
 }
 
-- (IBAction)sendSingleMessage:(id)sender {
-    
-}
-
 - (void)updateRunningClock:(id)sender
 {
     
@@ -341,22 +376,11 @@ NSMutableDictionary *update;
 - (void)sendConfigToWatch
 {
 
-    if (self.singleMessage.isOn) {
-        
-        // First choice is to update all watches in one message. Doesn't work yet
-        [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY, @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY] forWatches:@[@"Local", @"TZ1"]];
-        
-    } else {
-        
-        // Update the local watch with all of the current settings
-        [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY,
-         @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY] forWatches:@[@"Local"]];
-        
-        // Update the TZ1 watch with all of the current settings
-        [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY,
-         @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY] forWatches:@[@"TZ1"]];
-        
-    }
+    // Update the local watch with all of the current settings
+    [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY, @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY, @PBCOMM_HI_TEMP_KEY, @PBCOMM_LO_TEMP_KEY, @PBCOMM_SUNRISE_KEY, @PBCOMM_SUNSET_KEY] forWatches:@[@"Local"]];
+    
+    // Update the TZ1 watch with all of the current settings
+    [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY, @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY, @PBCOMM_HI_TEMP_KEY, @PBCOMM_LO_TEMP_KEY, @PBCOMM_SUNRISE_KEY, @PBCOMM_SUNSET_KEY] forWatches:@[@"TZ1"]];
     
 }
 
@@ -415,7 +439,7 @@ NSMutableDictionary *update;
                 uint8_t isOn;
                 for (NSString *watchface in watchfaces) {
                     
-                    // There are three possible watchfaces, local time, time zone 1 and time zone 2. Which face are we updating?
+                    // There are two possible watchfaces, local time and time zone 1. Which face are we updating?
                     if ([watchface isEqualToString:@"Local"]) {
                         watchOffset = LOCAL_WATCH_OFFSET;
                     } else if ([watchface isEqualToString:@"TZ1"]) {
@@ -496,6 +520,30 @@ NSMutableDictionary *update;
 #endif
                                 [update setObject:[NSNumber numberWithInt8:(int8_t)[[self.currentTemp objectAtIndex:(watchOffset/16)] int8Value]] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
                                 break;
+                            case PBCOMM_HI_TEMP_KEY:
+#ifdef PWDEBUG
+                                NSLog(@"Hi Temp: %4d\n", [[self.dailyHiTemp objectAtIndex:(watchOffset/16)] int8Value]);
+#endif
+                                [update setObject:[NSNumber numberWithInt8:(int8_t)[[self.dailyHiTemp objectAtIndex:(watchOffset/16)] int8Value]] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
+                                break;
+                            case PBCOMM_LO_TEMP_KEY:
+#ifdef PWDEBUG
+                                NSLog(@"Lo Temp: %4d\n", [[self.dailyLoTemp objectAtIndex:(watchOffset/16)] int8Value]);
+#endif
+                                [update setObject:[NSNumber numberWithInt8:(int8_t)[[self.dailyLoTemp objectAtIndex:(watchOffset/16)] int8Value]] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
+                                break;
+                            case PBCOMM_SUNRISE_KEY:
+#ifdef PWDEBUG
+                                NSLog(@"Sunrise: %@", [self.sunriseTime objectAtIndex:(watchOffset/16)]);
+#endif
+                                [update setObject:[self.sunriseTime objectAtIndex:(watchOffset/16)] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
+                                break;
+                            case PBCOMM_SUNSET_KEY:
+#ifdef PWDEBUG
+                                NSLog(@"Sunset: %@", [self.sunsetTime objectAtIndex:(watchOffset/16)]);
+#endif
+                                [update setObject:[self.sunsetTime objectAtIndex:(watchOffset/16)] forKey:[NSNumber numberWithInt:(watchOffset + [key intValue])]];
+                                break;
                             default:
                                 return;
                                 
@@ -531,48 +579,80 @@ NSMutableDictionary *update;
     
 }
 
-- (void)updateWeather:(id)sender
+- (void)updateWeather:(id) sender
+{
+    [self updateWeather:self forWatch:@"Local"];
+    [self updateWeather:self forWatch:@"TZ1"];
+}
+
+- (void)updateWeather:(id)sender forWatch:(NSString *)watch
 {
         
+    int watchNum;
+    
     // Kick off asking for weather without specifying a time
     [self stopWeatherUpdateTimer];
     
-    CLLocation *lastLocation = [self.lastKnownLocation objectAtIndex:0];
+    // There are three possible watchfaces, local time, time zone 1 and time zone 2. Which face are we updating?
+    if ([watch isEqualToString:@"Local"]) {
+        watchNum = LOCAL_WATCH_OFFSET / 16;
+    } else if ([watch isEqualToString:@"TZ1"]) {
+        watchNum = WATCH_1_OFFSET / 16;
+    } else {
+        return;
+    }
+    CLLocation *lastLocation = [self.lastKnownLocation objectAtIndex:watchNum];
     if (lastLocation != nil) {
         
 #ifdef PWDEBUG
-        NSLog(@"updateWeather: Last known location: latitude: %3.8f, %3.8f\n", lastLocation.coordinate.latitude, lastLocation.coordinate.longitude);
+        NSLog(@"updateWeather: Last known location for watch: %@, latitude: %3.8f, %3.8f\n", watch, lastLocation.coordinate.latitude, lastLocation.coordinate.longitude);
 #endif
-    
         [self.forecastr getForecastForLatitude:lastLocation.coordinate.latitude longitude:lastLocation.coordinate.longitude time:nil exclusions:nil success:^(id JSON) {
 #ifdef PWDEBUG
             NSLog(@"JSON:\n %@\n\n", JSON);
 #endif
-            [self.currentTemp setObject:[NSNumber numberWithInt8:(int8_t)([[[JSON objectForKey:@"currently"] objectForKey:@"temperature"] doubleValue] + 0.5)]atIndexedSubscript:0];
-            self.tempDisplay.text = [[self.currentTemp objectAtIndex:0]stringValue];
-            [self.currentCondition setObject:[[JSON objectForKey:@"currently"] objectForKey:@"icon"] atIndexedSubscript:0];
-            if ([[self.currentCondition objectAtIndex:0] isEqualToString:@""])
-                [self.currentCondition setObject:@"unknown" atIndexedSubscript:0];
-            [self updateWatch:@[@PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY] forWatches:@[@"Local", @"TZ1"]];
-            [self startWeatherUpdateTimer:1800.0];
-            
             // Print the time in the selected time zone
             NSDate *date = [[NSDate alloc] init];   // Get the current date and time
             NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
             formatter.dateFormat = @"HH:mm";
             [formatter setTimeZone:self.clockTZ];
+            
+            [self.currentTemp setObject:[NSNumber numberWithInt8:(int8_t)([[[JSON objectForKey:@"currently"] objectForKey:@"temperature"] doubleValue] + 0.5)]atIndexedSubscript:watchNum];
+            self.tempDisplay.text = [[self.currentTemp objectAtIndex:0]stringValue];
+            [self.currentCondition setObject:[[JSON objectForKey:@"currently"] objectForKey:@"icon"] atIndexedSubscript:watchNum];
+            if ([[self.currentCondition objectAtIndex:0] isEqualToString:@""])
+                [self.currentCondition setObject:@"unknown" atIndexedSubscript:watchNum];
+            [self.dailyHiTemp setObject:[NSNumber numberWithInt8:(int8_t)([[[[[JSON objectForKey:@"daily"] objectForKey:@"data"] firstObject] objectForKey:@"temperatureMax"] doubleValue] + 0.5)] atIndexedSubscript:watchNum];
+            [self.dailyLoTemp setObject:[NSNumber numberWithInt8:(int8_t)([[[[[JSON objectForKey:@"daily"] objectForKey:@"data"]  firstObject]objectForKey:@"temperatureMin"] doubleValue] + 0.5)] atIndexedSubscript:watchNum];
+            NSDate *sunriseDate = [[NSDate alloc] initWithTimeIntervalSince1970:[[[[[JSON objectForKey:@"daily"] objectForKey:@"data"]  firstObject]objectForKey:@"sunriseTime"] doubleValue]];
+            NSDate *sunsetDate = [[NSDate alloc] initWithTimeIntervalSince1970:[[[[[JSON objectForKey:@"daily"] objectForKey:@"data"] firstObject] objectForKey:@"sunsetTime"] doubleValue]];
+            [self.sunriseTime setObject:[formatter stringFromDate:sunriseDate] atIndexedSubscript:watchNum];
+            [self.sunsetTime setObject:[formatter stringFromDate:sunsetDate] atIndexedSubscript:watchNum];
+            [self updateWatch:@[@PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY, @PBCOMM_HI_TEMP_KEY, @PBCOMM_LO_TEMP_KEY, @PBCOMM_SUNRISE_KEY, @PBCOMM_SUNSET_KEY] forWatches:@[watch]];
+            [self startWeatherUpdateTimer:1800.0];
+            
+            // Display the time on the phone in the selected time zone
+            self.tempHi.text = [[self.dailyHiTemp objectAtIndex:watchNum] stringValue];
+            self.tempLo.text = [[self.dailyLoTemp objectAtIndex:watchNum] stringValue];
+            self.sunrise.text = [self.sunriseTime objectAtIndex:watchNum];
+            self.sunset.text = [self.sunsetTime objectAtIndex:watchNum];
             self.tempUpdateTime.text = [formatter stringFromDate:date];
-            [self.tempUpdateTime setNeedsDisplay];
             
         } failure:^(NSError *error, id response) {
-            [self.currentTemp setObject:[NSNumber numberWithInt8:-100] atIndexedSubscript:0];
-            self.tempDisplay.text = [[self.currentTemp objectAtIndex:0] stringValue];
-            [self.currentCondition setObject:@"unknown" atIndexedSubscript:0];
+            
+            [self.currentTemp setObject:[NSNumber numberWithInt8:-99] atIndexedSubscript:watchNum];
+            [self.dailyHiTemp setObject:[NSNumber numberWithInt8:-99] atIndexedSubscript:watchNum];
+            [self.dailyLoTemp setObject:[NSNumber numberWithInt8:-99] atIndexedSubscript:watchNum];
+            self.tempDisplay.text = [[self.currentTemp objectAtIndex:watchNum] stringValue];
+            [self.currentCondition setObject:@"unknown" atIndexedSubscript:watchNum];
+            [self.sunriseTime setObject:@"iphone" atIndexedSubscript:watchNum];
+            [self.sunsetTime setObject:@"iphone" atIndexedSubscript:watchNum];
 #ifdef PWDEBUG
             NSLog(@"Error while retrieving forecast: %@", [self.forecastr messageForError:error withResponse:response]);
 #endif
-            [self updateWatch:@[@PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY] forWatches:@[@"Local", @"TZ1"]];
+            [self updateWatch:@[@PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY, @PBCOMM_HI_TEMP_KEY, @PBCOMM_LO_TEMP_KEY, @PBCOMM_SUNRISE_KEY, @PBCOMM_SUNSET_KEY] forWatches:@[watch]];
             [self startWeatherUpdateTimer:900.0];
+            
         }];
         
     } else {
@@ -589,6 +669,7 @@ NSMutableDictionary *update;
     
     self.locationManager.delegate = self;
     self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
+    
     
     // Set a movement threshold for new events.
     self.locationManager.distanceFilter = 500;
@@ -658,7 +739,7 @@ NSMutableDictionary *update;
         // Since location changed, update weather as well
         //
         // Kick off asking for weather without specifying a time
-        [self updateWeather:self];
+        [self updateWeather:self forWatch:@"Local"];
         
     }];
 
@@ -677,6 +758,15 @@ NSMutableDictionary *update;
     
     [self.currentTemp setObject:[NSNumber numberWithInt8:(int8_t)-100] atIndexedSubscript:0];
     [self.currentTemp setObject:[NSNumber numberWithInt8:(int8_t)-100] atIndexedSubscript:1];
+    [self.dailyHiTemp setObject:[NSNumber numberWithInt8:(int8_t)-100] atIndexedSubscript:0];
+    [self.dailyHiTemp setObject:[NSNumber numberWithInt8:(int8_t)-100] atIndexedSubscript:1];
+    [self.dailyLoTemp setObject:[NSNumber numberWithInt8:(int8_t)-100] atIndexedSubscript:0];
+    [self.dailyLoTemp setObject:[NSNumber numberWithInt8:(int8_t)-100] atIndexedSubscript:1];
+    
+    [self.sunriseTime setObject:@"unknown" atIndexedSubscript:0];
+    [self.sunriseTime setObject:@"unknown" atIndexedSubscript:1];
+    [self.sunsetTime setObject:@"unknown" atIndexedSubscript:0];
+    [self.sunsetTime setObject:@"unknown" atIndexedSubscript:1];
     
     // We'd like to get called when Pebbles connect and disconnect, so become the delegate of PBPebbleCentral:
     [[PBPebbleCentral defaultCentral] setDelegate:self];

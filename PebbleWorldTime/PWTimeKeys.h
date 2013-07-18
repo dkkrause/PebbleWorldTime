@@ -22,6 +22,10 @@
 #define PBCOMM_12_24_DISPLAY_KEY            0x05    // display in watch configured-, 12- or 24-hour time
 #define PBCOMM_WEATHER_KEY                  0x06    // weather conditions
 #define PBCOMM_TEMPERATURE_KEY              0x07    // temperature
+#define PBCOMM_HI_TEMP_KEY                  0x08    // daily high temperature
+#define PBCOMM_LO_TEMP_KEY                  0x09    // daily low temperature
+#define PBCOMM_SUNRISE_KEY                  0x0A    // time of sunrise
+#define PBCOMM_SUNSET_KEY                   0x0B    // time of sunset
 
 // Values for PBCOMM_WATCH_ENABLED_KEY
 #define WATCH_DISABLED						0x00

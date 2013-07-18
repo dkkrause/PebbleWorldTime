@@ -23,6 +23,8 @@
 		F600CD3B175BA75A00D2CABC /* first@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F600CD3A175BA75A00D2CABC /* first@2x.png */; };
 		F600CD40175BA75A00D2CABC /* second.png in Resources */ = {isa = PBXBuildFile; fileRef = F600CD3F175BA75A00D2CABC /* second.png */; };
 		F600CD42175BA75A00D2CABC /* second@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F600CD41175BA75A00D2CABC /* second@2x.png */; };
+		F60AE20F1795CC03005A88C2 /* Cities.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F60AE20D1795CC03005A88C2 /* Cities.xcdatamodeld */; };
+		F60AE2111795FB57005A88C2 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F60AE2101795FB57005A88C2 /* CoreData.framework */; };
 		F63913221788CCF0000322D6 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F63913211788CCF0000322D6 /* CoreLocation.framework */; };
 		F6391341178CC77E000322D6 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6391340178CC77E000322D6 /* SystemConfiguration.framework */; };
 		F6391343178CC78C000322D6 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6391342178CC78C000322D6 /* MobileCoreServices.framework */; };
@@ -59,6 +61,8 @@
 		F600CD3A175BA75A00D2CABC /* first@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "first@2x.png"; sourceTree = "<group>"; };
 		F600CD3F175BA75A00D2CABC /* second.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = second.png; sourceTree = "<group>"; };
 		F600CD41175BA75A00D2CABC /* second@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "second@2x.png"; sourceTree = "<group>"; };
+		F60AE20E1795CC03005A88C2 /* Cities.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Cities.xcdatamodel; sourceTree = "<group>"; };
+		F60AE2101795FB57005A88C2 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		F63913211788CCF0000322D6 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		F6391340178CC77E000322D6 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		F6391342178CC78C000322D6 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -82,6 +86,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F60AE2111795FB57005A88C2 /* CoreData.framework in Frameworks */,
 				F6391343178CC78C000322D6 /* MobileCoreServices.framework in Frameworks */,
 				F6391341178CC77E000322D6 /* SystemConfiguration.framework in Frameworks */,
 				F63913221788CCF0000322D6 /* CoreLocation.framework in Frameworks */,
@@ -105,6 +110,7 @@
 		F600CD0E175BA75900D2CABC = {
 			isa = PBXGroup;
 			children = (
+				F60AE2101795FB57005A88C2 /* CoreData.framework */,
 				F600CD20175BA75A00D2CABC /* PebbleWorldTime */,
 				F600CD19175BA75900D2CABC /* Frameworks */,
 				F600CD18175BA75900D2CABC /* Products */,
@@ -145,6 +151,7 @@
 			isa = PBXGroup;
 			children = (
 				F600CD32175BA75A00D2CABC /* MainStoryboard.storyboard */,
+				F60AE20D1795CC03005A88C2 /* Cities.xcdatamodeld */,
 				F600CD29175BA75A00D2CABC /* PWTimeAppDelegate.h */,
 				F600CD2A175BA75A00D2CABC /* PWTimeAppDelegate.m */,
 				F6A15A5C175D962400B57E71 /* PWTimeKeys.h */,
@@ -288,6 +295,7 @@
 				F600CD37175BA75A00D2CABC /* PWTimeViewController.m in Sources */,
 				F6F1425B17839A50004ACAAC /* NSMutableArray+QueueAdditions.m in Sources */,
 				F6EB63E71791E9B90040E015 /* PWTimeTZSearchViewController.m in Sources */,
+				F60AE20F1795CC03005A88C2 /* Cities.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -427,6 +435,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		F60AE20D1795CC03005A88C2 /* Cities.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				F60AE20E1795CC03005A88C2 /* Cities.xcdatamodel */,
+			);
+			currentVersion = F60AE20E1795CC03005A88C2 /* Cities.xcdatamodel */;
+			path = Cities.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = F600CD0F175BA75900D2CABC /* Project object */;
 }

@@ -7,6 +7,7 @@
 //
 
 #import "PWTimeTZSearchViewController.h"
+#import <CoreData/CoreData.h>
 
 @interface PWTimeTZSearchViewController () <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
 
@@ -57,6 +58,7 @@
         }
     }
     [self.tzTable selectRowAtIndexPath:[NSIndexPath indexPathForRow:startPos inSection:0] animated:NO scrollPosition:UITableViewScrollPositionMiddle];
+    
 }
 
 - (void)didReceiveMemoryWarning
