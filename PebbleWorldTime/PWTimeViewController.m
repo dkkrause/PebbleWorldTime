@@ -15,7 +15,7 @@
 #import "AFNetworking/AFNetworking.h"
 #import "Forecastr.h"
 
-#define PWDEBUG
+// #define PWDEBUG
 
 @interface PWTimeViewController () <PBPebbleCentralDelegate, CLLocationManagerDelegate>
 
@@ -65,6 +65,8 @@
 }
 
 NSMutableDictionary *update;
+
+#pragma mark - getters that alloc/init objects if uninitialized
 
 - (NSDateFormatter *) dateFormatter
 {
@@ -361,6 +363,9 @@ NSMutableDictionary *update;
     [self sendConfigToWatch];
 }
 
+//
+// Method to execute every second to update the clock on the iPhone display
+//
 - (void)updateRunningClock:(id)sender
 {
     
@@ -372,6 +377,8 @@ NSMutableDictionary *update;
     [self.timeDisplay setNeedsDisplay];
     
 }
+
+#pragma mark - Watch communication methods
 
 - (void)sendConfigToWatch
 {
@@ -411,7 +418,7 @@ NSMutableDictionary *update;
 }
 
 /*
- * updateWatch - sends the data associated with the key parameter to the watch to update the information
+ * updateWatch:forWatches - sends the data associated with the key parameter to the specified watch to update the information
  */
 - (void)updateWatch:(NSArray *)keys forWatches:(NSArray *)watchfaces
 {
@@ -579,7 +586,27 @@ NSMutableDictionary *update;
     
 }
 
-- (void)updateWeather:(id) sender
+#pragma mark - Weather methods
+
+//
+// Methods to handle weather, both getting info and handling timers to refresh information
+//
+- (void)startWeatherUpdateTimer:(NSTimeInterval) ti
+{
+    if (self.weatherUpdateTimer != nil) {
+        [self.weatherUpdateTimer invalidate];
+    }
+    self.weatherUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:ti target:self selector:@selector(updateAllWeather:) userInfo:nil repeats:NO];
+}
+
+- (void)stopWeatherUpdateTimer
+{
+    if (self.weatherUpdateTimer != nil) {
+        [self.weatherUpdateTimer invalidate];
+    }
+}
+
+- (void)updateAllWeather:(id) sender
 {
     [self updateWeather:self forWatch:@"Local"];
     [self updateWeather:self forWatch:@"TZ1"];
@@ -661,6 +688,8 @@ NSMutableDictionary *update;
     
 }
 
+#pragma mark - Location methods
+
 //
 // Location methods/delegates. Starts and stops are called by the App delegate when the app goes inactive/active
 //
@@ -695,22 +724,6 @@ NSMutableDictionary *update;
 //
 // Delegate method from the CLLocationManagerDelegate protocol.
 //
-
-- (void)startWeatherUpdateTimer:(NSTimeInterval) ti
-{
-    if (self.weatherUpdateTimer != nil) {
-        [self.weatherUpdateTimer invalidate];
-    }
-    self.weatherUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:ti target:self selector:@selector(updateWeather:) userInfo:nil repeats:NO];
-}
-
-- (void)stopWeatherUpdateTimer
-{
-    if (self.weatherUpdateTimer != nil) {
-        [self.weatherUpdateTimer invalidate];
-    }
-}
-
 #pragma mark - CLLocationManager delegate methods
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
@@ -738,7 +751,6 @@ NSMutableDictionary *update;
         //
         // Since location changed, update weather as well
         //
-        // Kick off asking for weather without specifying a time
         [self updateWeather:self forWatch:@"Local"];
         
     }];
@@ -816,7 +828,6 @@ NSMutableDictionary *update;
 /*
  *  PBPebbleCentral delegate methods
  */
-
 - (void)pebbleCentral:(PBPebbleCentral*)central watchDidConnect:(PBWatch*)watch isNew:(BOOL)isNew {
     
     [self setTargetWatch:watch];
