@@ -387,7 +387,7 @@ NSMutableDictionary *update;
     [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY, @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY, @PBCOMM_HI_TEMP_KEY, @PBCOMM_LO_TEMP_KEY, @PBCOMM_SUNRISE_KEY, @PBCOMM_SUNSET_KEY] forWatches:@[@"Local"]];
     
     // Update the TZ1 watch with all of the current settings
-    [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY, @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY, @PBCOMM_HI_TEMP_KEY, @PBCOMM_LO_TEMP_KEY, @PBCOMM_SUNRISE_KEY, @PBCOMM_SUNSET_KEY] forWatches:@[@"TZ1"]];
+    [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY, @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY, @PBCOMM_HI_TEMP_KEY, @PBCOMM_LO_TEMP_KEY, @PBCOMM_SUNRISE_KEY, @PBCOMM_SUNSET_KEY] forWatches:@[@"TZ"]];
     
 }
 
@@ -449,8 +449,8 @@ NSMutableDictionary *update;
                     // There are two possible watchfaces, local time and time zone 1. Which face are we updating?
                     if ([watchface isEqualToString:@"Local"]) {
                         watchOffset = LOCAL_WATCH_OFFSET;
-                    } else if ([watchface isEqualToString:@"TZ1"]) {
-                        watchOffset = WATCH_1_OFFSET;
+                    } else if ([watchface isEqualToString:@"TZ"]) {
+                        watchOffset = TZ_OFFSET;
                     } else {
                         return;
                     }
@@ -606,25 +606,21 @@ NSMutableDictionary *update;
     }
 }
 
-- (void)updateAllWeather:(id) sender
+- (void)updateAllWeather:(id)sender
 {
-    [self updateWeather:self forWatch:@"Local"];
-    [self updateWeather:self forWatch:@"TZ1"];
+    [self updateWeather:@"Local"];
+    [self updateWeather:@"TZ"];
 }
 
-- (void)updateWeather:(id)sender forWatch:(NSString *)watch
-{
-        
+- (void)updateWeather:(NSString *)watch
+{        
+    
+    // There are two possible watchfaces, local time and time zone. Which face are we updating?
     int watchNum;
-    
-    // Kick off asking for weather without specifying a time
-    [self stopWeatherUpdateTimer];
-    
-    // There are three possible watchfaces, local time, time zone 1 and time zone 2. Which face are we updating?
     if ([watch isEqualToString:@"Local"]) {
         watchNum = LOCAL_WATCH_OFFSET / 16;
-    } else if ([watch isEqualToString:@"TZ1"]) {
-        watchNum = WATCH_1_OFFSET / 16;
+    } else if ([watch isEqualToString:@"TZ"]) {
+        watchNum = TZ_OFFSET / 16;
     } else {
         return;
     }
@@ -751,7 +747,7 @@ NSMutableDictionary *update;
         //
         // Since location changed, update weather as well
         //
-        [self updateWeather:self forWatch:@"Local"];
+        [self updateWeather:@"Local"];
         
     }];
 

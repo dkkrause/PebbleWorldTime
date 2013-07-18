@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+//
+// KEYs for storing NSUserDefaults, basic preference information for the app
+//
 #define KEY_DOMAIN              @"com.dkkrause.PWTime"
 #define CLOCK_ENABLED_KEY       @"clockEnabled"
 #define CLOCK_BACKGROUND_KEY    @"clockBackground"

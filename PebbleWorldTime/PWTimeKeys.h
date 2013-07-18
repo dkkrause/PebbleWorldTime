@@ -12,7 +12,7 @@
 // Factors, the keys are actually grouped by 16, depending on the watch to update
 // Add these to the KEYs to get the actual value
 #define LOCAL_WATCH_OFFSET                  0x00
-#define WATCH_1_OFFSET                      0x10
+#define TZ_OFFSET                           0x10
 
 // Keys for local time data, maximum of 16, including 0x00
 #define PBCOMM_WATCH_ENABLED_KEY            0x01    // boolean
