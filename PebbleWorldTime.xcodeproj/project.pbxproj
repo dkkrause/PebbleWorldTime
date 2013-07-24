@@ -35,6 +35,10 @@
 		F6727B87175C0C8200452635 /* PebbleKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6727B86175C0C8200452635 /* PebbleKit.framework */; };
 		F6727B89175C0C9600452635 /* PebbleVendor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6727B88175C0C9600452635 /* PebbleVendor.framework */; };
 		F6727B8B175C0D5A00452635 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6727B8A175C0D5A00452635 /* CoreMotion.framework */; };
+		F6A46B1D17A03B010032D0C2 /* State.m in Sources */ = {isa = PBXBuildFile; fileRef = F6A46B1C17A03B010032D0C2 /* State.m */; };
+		F6A46B2017A03B010032D0C2 /* Country.m in Sources */ = {isa = PBXBuildFile; fileRef = F6A46B1F17A03B010032D0C2 /* Country.m */; };
+		F6A46B2317A03B020032D0C2 /* City.m in Sources */ = {isa = PBXBuildFile; fileRef = F6A46B2217A03B020032D0C2 /* City.m */; };
+		F6A46B2617A03B520032D0C2 /* CoreDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6A46B2517A03B520032D0C2 /* CoreDataTableViewController.m */; };
 		F6EB63E71791E9B90040E015 /* PWTimeTZSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EB63E61791E9B90040E015 /* PWTimeTZSearchViewController.m */; };
 		F6F1425B17839A50004ACAAC /* NSMutableArray+QueueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = F6F1425A17839A50004ACAAC /* NSMutableArray+QueueAdditions.m */; };
 /* End PBXBuildFile section */
@@ -74,6 +78,14 @@
 		F6727B88175C0C9600452635 /* PebbleVendor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PebbleVendor.framework; path = "../../../../pebble-dev/PebbleKit-v1/iOS/PebbleVendor.framework"; sourceTree = "<group>"; };
 		F6727B8A175C0D5A00452635 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		F6A15A5C175D962400B57E71 /* PWTimeKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PWTimeKeys.h; sourceTree = "<group>"; };
+		F6A46B1B17A03B010032D0C2 /* State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = State.h; sourceTree = "<group>"; };
+		F6A46B1C17A03B010032D0C2 /* State.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = State.m; sourceTree = "<group>"; };
+		F6A46B1E17A03B010032D0C2 /* Country.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Country.h; sourceTree = "<group>"; };
+		F6A46B1F17A03B010032D0C2 /* Country.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Country.m; sourceTree = "<group>"; };
+		F6A46B2117A03B010032D0C2 /* City.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = City.h; sourceTree = "<group>"; };
+		F6A46B2217A03B020032D0C2 /* City.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = City.m; sourceTree = "<group>"; };
+		F6A46B2417A03B410032D0C2 /* CoreDataTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreDataTableViewController.h; sourceTree = "<group>"; };
+		F6A46B2517A03B520032D0C2 /* CoreDataTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreDataTableViewController.m; sourceTree = "<group>"; };
 		F6EB63E51791E9B90040E015 /* PWTimeTZSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PWTimeTZSearchViewController.h; path = ../PWTimeTZSearchViewController.h; sourceTree = "<group>"; };
 		F6EB63E61791E9B90040E015 /* PWTimeTZSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PWTimeTZSearchViewController.m; path = ../PWTimeTZSearchViewController.m; sourceTree = "<group>"; };
 		F6F1425917839A50004ACAAC /* NSMutableArray+QueueAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+QueueAdditions.h"; sourceTree = "<group>"; };
@@ -110,7 +122,6 @@
 		F600CD0E175BA75900D2CABC = {
 			isa = PBXGroup;
 			children = (
-				F60AE2101795FB57005A88C2 /* CoreData.framework */,
 				F600CD20175BA75A00D2CABC /* PebbleWorldTime */,
 				F600CD19175BA75900D2CABC /* Frameworks */,
 				F600CD18175BA75900D2CABC /* Products */,
@@ -130,6 +141,7 @@
 			isa = PBXGroup;
 			children = (
 				F6727B80175C0BE000452635 /* CoreBluetooth.framework */,
+				F60AE2101795FB57005A88C2 /* CoreData.framework */,
 				F600CD1E175BA75900D2CABC /* CoreGraphics.framework */,
 				F63913211788CCF0000322D6 /* CoreLocation.framework */,
 				F6727B8A175C0D5A00452635 /* CoreMotion.framework */,
@@ -151,7 +163,6 @@
 			isa = PBXGroup;
 			children = (
 				F600CD32175BA75A00D2CABC /* MainStoryboard.storyboard */,
-				F60AE20D1795CC03005A88C2 /* Cities.xcdatamodeld */,
 				F600CD29175BA75A00D2CABC /* PWTimeAppDelegate.h */,
 				F600CD2A175BA75A00D2CABC /* PWTimeAppDelegate.m */,
 				F6A15A5C175D962400B57E71 /* PWTimeKeys.h */,
@@ -165,6 +176,7 @@
 				F600CD3A175BA75A00D2CABC /* first@2x.png */,
 				F600CD3F175BA75A00D2CABC /* second.png */,
 				F600CD41175BA75A00D2CABC /* second@2x.png */,
+				F6A46B2717A03D6F0032D0C2 /* CoreData */,
 				F600CD21175BA75A00D2CABC /* Supporting Files */,
 			);
 			path = PebbleWorldTime;
@@ -182,6 +194,22 @@
 				F600CD30175BA75A00D2CABC /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F6A46B2717A03D6F0032D0C2 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				F6A46B1B17A03B010032D0C2 /* State.h */,
+				F6A46B2117A03B010032D0C2 /* City.h */,
+				F6A46B2217A03B020032D0C2 /* City.m */,
+				F6A46B1E17A03B010032D0C2 /* Country.h */,
+				F6A46B1F17A03B010032D0C2 /* Country.m */,
+				F6A46B1C17A03B010032D0C2 /* State.m */,
+				F60AE20D1795CC03005A88C2 /* Cities.xcdatamodeld */,
+				F6A46B2417A03B410032D0C2 /* CoreDataTableViewController.h */,
+				F6A46B2517A03B520032D0C2 /* CoreDataTableViewController.m */,
+			);
+			name = CoreData;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -296,6 +324,10 @@
 				F6F1425B17839A50004ACAAC /* NSMutableArray+QueueAdditions.m in Sources */,
 				F6EB63E71791E9B90040E015 /* PWTimeTZSearchViewController.m in Sources */,
 				F60AE20F1795CC03005A88C2 /* Cities.xcdatamodeld in Sources */,
+				F6A46B1D17A03B010032D0C2 /* State.m in Sources */,
+				F6A46B2017A03B010032D0C2 /* Country.m in Sources */,
+				F6A46B2317A03B020032D0C2 /* City.m in Sources */,
+				F6A46B2617A03B520032D0C2 /* CoreDataTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

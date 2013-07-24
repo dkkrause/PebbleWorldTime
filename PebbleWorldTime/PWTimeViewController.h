@@ -25,5 +25,7 @@
 - (void)stopSignificantLocationChangeUpdates;
 - (void)startWeatherUpdateTimer:(NSTimeInterval) ti;
 - (void)stopWeatherUpdateTimer;
+- (void)startClockUpdateTimer;
+- (void)stopClockUpdateTimer;
 
 @end

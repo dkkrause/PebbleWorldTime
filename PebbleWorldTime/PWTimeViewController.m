@@ -27,12 +27,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *tzSelect;
 @property (weak, nonatomic) IBOutlet UILabel *tzDisplay;
 @property (weak, nonatomic) IBOutlet UILabel *timeDisplay;
-@property (strong, nonatomic) IBOutlet UILabel *tempDisplay;
 @property (strong, nonatomic) IBOutlet UILabel *tempUpdateTime;
-@property (strong, nonatomic) IBOutlet UILabel *tempHi;
-@property (strong, nonatomic) IBOutlet UILabel *tempLo;
-@property (strong, nonatomic) IBOutlet UILabel *sunrise;
-@property (strong, nonatomic) IBOutlet UILabel *sunset;
 
 @property (strong, nonatomic) PBWatch *targetWatch;
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
@@ -363,9 +358,32 @@ NSMutableDictionary *update;
     [self sendConfigToWatch];
 }
 
+#pragma mark - Clock update methods
+
 //
-// Method to execute every second to update the clock on the iPhone display
+// Methods to execute every second to update the clock on the iPhone display
 //
+- (void)startClockUpdateTimer
+{
+    
+    if (self.clockUpdateTimer != nil) {
+        [self.clockUpdateTimer invalidate];
+        self.clockUpdateTimer = nil;
+    }
+    self.clockUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateRunningClock:) userInfo:nil repeats:YES];
+
+}
+
+- (void)stopClockUpdateTimer
+{
+    
+    if (self.clockUpdateTimer != nil) {
+        [self.clockUpdateTimer invalidate];
+        self.clockUpdateTimer = nil;
+    }
+    
+}
+
 - (void)updateRunningClock:(id)sender
 {
     
@@ -595,6 +613,7 @@ NSMutableDictionary *update;
 {
     if (self.weatherUpdateTimer != nil) {
         [self.weatherUpdateTimer invalidate];
+        self.weatherUpdateTimer = nil;
     }
     self.weatherUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:ti target:self selector:@selector(updateAllWeather:) userInfo:nil repeats:NO];
 }
@@ -603,6 +622,7 @@ NSMutableDictionary *update;
 {
     if (self.weatherUpdateTimer != nil) {
         [self.weatherUpdateTimer invalidate];
+        self.weatherUpdateTimer = nil;
     }
 }
 
@@ -624,6 +644,11 @@ NSMutableDictionary *update;
     } else {
         return;
     }
+    
+    /*********** REMOVE WHEN WE HAVE WEATHER FOR TZ WATCH **************/
+    if (watchNum == 1) return;
+    /*********** REMOVE WHEN WE HAVE WEATHER FOR TZ WATCH **************/
+
     CLLocation *lastLocation = [self.lastKnownLocation objectAtIndex:watchNum];
     if (lastLocation != nil) {
         
@@ -641,7 +666,6 @@ NSMutableDictionary *update;
             [formatter setTimeZone:self.clockTZ];
             
             [self.currentTemp setObject:[NSNumber numberWithInt8:(int8_t)([[[JSON objectForKey:@"currently"] objectForKey:@"temperature"] doubleValue] + 0.5)]atIndexedSubscript:watchNum];
-            self.tempDisplay.text = [[self.currentTemp objectAtIndex:0]stringValue];
             [self.currentCondition setObject:[[JSON objectForKey:@"currently"] objectForKey:@"icon"] atIndexedSubscript:watchNum];
             if ([[self.currentCondition objectAtIndex:0] isEqualToString:@""])
                 [self.currentCondition setObject:@"unknown" atIndexedSubscript:watchNum];
@@ -655,10 +679,6 @@ NSMutableDictionary *update;
             [self startWeatherUpdateTimer:1800.0];
             
             // Display the time on the phone in the selected time zone
-            self.tempHi.text = [[self.dailyHiTemp objectAtIndex:watchNum] stringValue];
-            self.tempLo.text = [[self.dailyLoTemp objectAtIndex:watchNum] stringValue];
-            self.sunrise.text = [self.sunriseTime objectAtIndex:watchNum];
-            self.sunset.text = [self.sunsetTime objectAtIndex:watchNum];
             self.tempUpdateTime.text = [formatter stringFromDate:date];
             
         } failure:^(NSError *error, id response) {
@@ -666,7 +686,6 @@ NSMutableDictionary *update;
             [self.currentTemp setObject:[NSNumber numberWithInt8:-99] atIndexedSubscript:watchNum];
             [self.dailyHiTemp setObject:[NSNumber numberWithInt8:-99] atIndexedSubscript:watchNum];
             [self.dailyLoTemp setObject:[NSNumber numberWithInt8:-99] atIndexedSubscript:watchNum];
-            self.tempDisplay.text = [[self.currentTemp objectAtIndex:watchNum] stringValue];
             [self.currentCondition setObject:@"unknown" atIndexedSubscript:watchNum];
             [self.sunriseTime setObject:@"iphone" atIndexedSubscript:watchNum];
             [self.sunsetTime setObject:@"iphone" atIndexedSubscript:watchNum];
@@ -794,18 +813,9 @@ NSMutableDictionary *update;
     
     [super viewWillAppear:animated];
     
-    self.clockUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateRunningClock:) userInfo:nil repeats:YES];
     [self loadClockFields];
     [self sendConfigToWatch];
     
-    
-}
-
-- (void)didReceiveMemoryWarning
-{
-    
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
     
 }
 
