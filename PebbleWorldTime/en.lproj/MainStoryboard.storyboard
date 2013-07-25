@@ -223,9 +223,40 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ANc-U2-80p" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="827" y="-193"/>
+            <point key="canvasLocation" x="946" y="-193"/>
         </scene>
     </scenes>
+    <classes>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="PWTimeTZSearchViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PWTimeTZSearchViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="tzSearchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="tzTable" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="PWTimeViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PWTimeViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="clockBackgroundSegmentSelected:"/>
+                <relationship kind="action" name="clockEnabledSwitchChanged:"/>
+                <relationship kind="action" name="clockSelected:"/>
+                <relationship kind="action" name="timeDisplayChanged:"/>
+                <relationship kind="action" name="updateWatchData:"/>
+                <relationship kind="outlet" name="clockBackground" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="clockDisplay" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="clockEnabled" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="clockSelect" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="locality" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="tempUpdateTime" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="timeDisplay" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="tzDisplay" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="tzSelect" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
