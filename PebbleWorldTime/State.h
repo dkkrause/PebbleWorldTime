@@ -21,6 +21,8 @@
 
 @interface State (CoreDataGeneratedAccessors)
 
++ (State *)stateWithName:(NSString *)name andCode:(NSString *)code inManagedObjectContext:(NSManagedObjectContext *)context;
+
 - (void)addCitiesObject:(City *)value;
 - (void)removeCitiesObject:(City *)value;
 - (void)addCities:(NSSet *)values;

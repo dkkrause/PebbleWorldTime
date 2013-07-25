@@ -20,4 +20,15 @@
 @dynamic myCountry;
 @dynamic myState;
 
++ (City *)cityWithName:(NSString *)name
+               inState:(State *)state
+             inCountry:(Country *)country
+              latitude:(NSNumber *)latitude
+             longitude:(NSNumber *)longitude
+            inTimeZone:(NSTimeZone *)timezone
+inManagedObjectContext:(NSManagedObjectContext *)context
+{
+    
+}
+
 @end
