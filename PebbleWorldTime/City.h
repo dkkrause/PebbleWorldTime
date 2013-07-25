@@ -13,14 +13,6 @@
 
 @interface City : NSManagedObject
 
-+ (City *)cityWithName:(NSString *)name
-               inState:(State *)state
-             inCountry:(Country *)country
-              latitude:(NSNumber *)latitude
-             longitude:(NSNumber *)longitude
-            inTimeZone:(NSTimeZone *)timezone
-inManagedObjectContext:(NSManagedObjectContext *)context;
-
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSNumber * latitude;
 @property (nonatomic, retain) NSNumber * longitude;

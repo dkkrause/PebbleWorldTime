@@ -18,11 +18,4 @@
 @dynamic cities;
 @dynamic myCountry;
 
-+ (State *)stateWithName:(NSString *)name
-                 andCode:(NSString *)code
-  inManagedObjectContext:(NSManagedObjectContext *)context
-{
-    
-}
-
 @end
