@@ -13,11 +13,13 @@
 @implementation City (Adders)
 
 + (City *)cityWithName:(NSString *)name
-               inState:(NSString *)stateCode
-             inCountry:(NSString *)countryCode
+             stateCode:(NSString *)stateCode
+             stateName:(NSString *)stateName
+           countryCode:(NSString *)countryCode
+           countryName:(NSString *)countryName
               latitude:(NSNumber *)latitude
              longitude:(NSNumber *)longitude
-            inTimeZone:(NSString *)timezone
+              timeZone:(NSString *)timezone
 inManagedObjectContext:(NSManagedObjectContext *)context
 {
     
@@ -36,15 +38,18 @@ inManagedObjectContext:(NSManagedObjectContext *)context
     } else if ([matches count] == 0) {
         city = [NSEntityDescription insertNewObjectForEntityForName:@"City" inManagedObjectContext:context];
         city.name = name;
-        city.myState = [State stateWithCode:stateCode inManagedObjectContext:context];
-        city.myCountry = [Country countryWithCode:countryCode inManagedObjectContext:context];
+        if ([stateCode isEqualToString:@"US"]) {
+            city.myState = [State stateWithCode:stateCode withName:stateName countryCode:countryCode countryName:countryName inManagedObjectContext:context];
+        } else {
+            city.myState = nil;
+            city.myCountry = [Country countryWithCode:countryCode withName:countryName inManagedObjectContext:context];
+        }
         city.latitude = latitude;
         city.longitude = longitude;
         city.timezone = timezone;
     } else {
         city = [matches lastObject];
     }
-    
     return city;
 }
 

@@ -11,11 +11,13 @@
 @interface City (Adders)
 
 + (City *)cityWithName:(NSString *)name
-               inState:(State *)state
-             inCountry:(Country *)country
+             stateCode:(NSString *)stateCode
+             stateName:(NSString *)stateName
+           countryCode:(NSString *)countryCode
+           countryName:(NSString *)countryName
               latitude:(NSNumber *)latitude
              longitude:(NSNumber *)longitude
-            inTimeZone:(NSString *)timezone
+              timeZone:(NSString *)timezone
 inManagedObjectContext:(NSManagedObjectContext *)context;
 
 @end

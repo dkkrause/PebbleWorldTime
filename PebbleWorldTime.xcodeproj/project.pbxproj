@@ -25,6 +25,9 @@
 		F600CD42175BA75A00D2CABC /* second@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F600CD41175BA75A00D2CABC /* second@2x.png */; };
 		F60AE20F1795CC03005A88C2 /* Cities.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F60AE20D1795CC03005A88C2 /* Cities.xcdatamodeld */; };
 		F60AE2111795FB57005A88C2 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F60AE2101795FB57005A88C2 /* CoreData.framework */; };
+		F62C89C117A1CD8A0006F445 /* Country+Adders.m in Sources */ = {isa = PBXBuildFile; fileRef = F62C89C017A1CD8A0006F445 /* Country+Adders.m */; };
+		F62C89C417A1CDD40006F445 /* State+Adders.m in Sources */ = {isa = PBXBuildFile; fileRef = F62C89C317A1CDD40006F445 /* State+Adders.m */; };
+		F62C89C717A1CE110006F445 /* City+Adders.m in Sources */ = {isa = PBXBuildFile; fileRef = F62C89C617A1CE110006F445 /* City+Adders.m */; };
 		F63913221788CCF0000322D6 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F63913211788CCF0000322D6 /* CoreLocation.framework */; };
 		F6391341178CC77E000322D6 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6391340178CC77E000322D6 /* SystemConfiguration.framework */; };
 		F6391343178CC78C000322D6 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6391342178CC78C000322D6 /* MobileCoreServices.framework */; };
@@ -67,6 +70,12 @@
 		F600CD41175BA75A00D2CABC /* second@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "second@2x.png"; sourceTree = "<group>"; };
 		F60AE20E1795CC03005A88C2 /* Cities.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Cities.xcdatamodel; sourceTree = "<group>"; };
 		F60AE2101795FB57005A88C2 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		F62C89BF17A1CD8A0006F445 /* Country+Adders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Country+Adders.h"; sourceTree = "<group>"; };
+		F62C89C017A1CD8A0006F445 /* Country+Adders.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Country+Adders.m"; sourceTree = "<group>"; };
+		F62C89C217A1CDD40006F445 /* State+Adders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "State+Adders.h"; sourceTree = "<group>"; };
+		F62C89C317A1CDD40006F445 /* State+Adders.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "State+Adders.m"; sourceTree = "<group>"; };
+		F62C89C517A1CE110006F445 /* City+Adders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "City+Adders.h"; sourceTree = "<group>"; };
+		F62C89C617A1CE110006F445 /* City+Adders.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "City+Adders.m"; sourceTree = "<group>"; };
 		F63913211788CCF0000322D6 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		F6391340178CC77E000322D6 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		F6391342178CC78C000322D6 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -199,12 +208,18 @@
 		F6A46B2717A03D6F0032D0C2 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				F6A46B1B17A03B010032D0C2 /* State.h */,
 				F6A46B2117A03B010032D0C2 /* City.h */,
 				F6A46B2217A03B020032D0C2 /* City.m */,
+				F62C89C517A1CE110006F445 /* City+Adders.h */,
+				F62C89C617A1CE110006F445 /* City+Adders.m */,
+				F6A46B1B17A03B010032D0C2 /* State.h */,
+				F6A46B1C17A03B010032D0C2 /* State.m */,
+				F62C89C217A1CDD40006F445 /* State+Adders.h */,
+				F62C89C317A1CDD40006F445 /* State+Adders.m */,
 				F6A46B1E17A03B010032D0C2 /* Country.h */,
 				F6A46B1F17A03B010032D0C2 /* Country.m */,
-				F6A46B1C17A03B010032D0C2 /* State.m */,
+				F62C89BF17A1CD8A0006F445 /* Country+Adders.h */,
+				F62C89C017A1CD8A0006F445 /* Country+Adders.m */,
 				F60AE20D1795CC03005A88C2 /* Cities.xcdatamodeld */,
 				F6A46B2417A03B410032D0C2 /* CoreDataTableViewController.h */,
 				F6A46B2517A03B520032D0C2 /* CoreDataTableViewController.m */,
@@ -328,6 +343,9 @@
 				F6A46B2017A03B010032D0C2 /* Country.m in Sources */,
 				F6A46B2317A03B020032D0C2 /* City.m in Sources */,
 				F6A46B2617A03B520032D0C2 /* CoreDataTableViewController.m in Sources */,
+				F62C89C117A1CD8A0006F445 /* Country+Adders.m in Sources */,
+				F62C89C417A1CDD40006F445 /* State+Adders.m in Sources */,
+				F62C89C717A1CE110006F445 /* City+Adders.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

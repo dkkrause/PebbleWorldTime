@@ -7,33 +7,18 @@
 //
 
 #import "Country+Adders.h"
-#import "State+Adders.h"
-#import "City+Adders.h"
 
 @implementation Country (Adders)
 
-+ (void)populateCountryDB
-{
-    
-}
-
-+ (NSString *)countryNameFromCode:(NSString *)code
-{
-    
-    NSString *name = nil;
-    
-    return name;
-    
-}
-
 + (Country *)countryWithCode:(NSString *)code
+                    withName:(NSString *)name
       inManagedObjectContext:(NSManagedObjectContext *)context
 {
     
     Country *country = nil;
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Country"];
-    request.predicate = [NSPredicate predicateWithFormat:@"code = %@", code];
+    request.predicate = [NSPredicate predicateWithFormat:@"code == %@ AND name == %@", code, name];
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
     request.sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     
@@ -45,11 +30,10 @@
     } else if ([matches count] == 0) {
         country = [NSEntityDescription insertNewObjectForEntityForName:@"Country" inManagedObjectContext:context];
         country.code = code;
-        country.name = [Country countryNameFromCode:code];
+        country.name = name;
     } else {
         country = [matches lastObject];
     }
-    
     return country;
 }
 

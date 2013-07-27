@@ -65,7 +65,7 @@
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QfD-2L-WH1">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="23" id="pPH-lQ-UIm"/>
+                                    <constraint firstAttribute="width" constant="23" id="m39-4t-Evr"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal">
@@ -76,7 +76,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="mMr-UV-GEK" kind="modal" identifier="toTZ" modalTransitionStyle="coverVertical" id="e8z-nD-Uoa"/>
+                                    <segue destination="mMr-UV-GEK" kind="modal" identifier="toTZ" modalTransitionStyle="coverVertical" id="nh5-eW-e0O"/>
                                 </connections>
                             </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="I4z-H9-XDd">
@@ -143,7 +143,6 @@
                             <constraint firstItem="fGr-P1-Z20" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="135" id="YSS-XP-XkS"/>
                             <constraint firstItem="uI8-nx-acB" firstAttribute="trailing" secondItem="ApT-jg-eLM" secondAttribute="trailing" type="default" id="a6o-1H-Cuj"/>
                             <constraint firstItem="I4z-H9-XDd" firstAttribute="top" secondItem="16" secondAttribute="top" constant="34" id="bB5-eN-cH6"/>
-                            <constraint firstAttribute="bottom" secondItem="fGr-P1-Z20" secondAttribute="bottom" constant="28" id="ebX-m7-Qdw"/>
                             <constraint firstItem="auI-Kb-jPZ" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="hKi-is-GIA"/>
                             <constraint firstAttribute="trailing" secondItem="3nS-Aw-x6F" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="iam-DT-uPb"/>
                             <constraint firstItem="c0h-fq-YDK" firstAttribute="centerY" secondItem="I4z-H9-XDd" secondAttribute="centerY" type="default" id="id9-39-dt4"/>
@@ -218,33 +217,30 @@
                     <navigationItem key="navigationItem" id="g4M-PM-pJk"/>
                     <connections>
                         <outlet property="tzSearchBar" destination="9rs-nT-HZX" id="rR8-y1-r0R"/>
-                        <outlet property="tzTable" destination="eTD-hO-7eW" id="D5m-jB-OyU"/>
+                        <outlet property="tzTable" destination="eTD-hO-7eW" id="vpF-Li-aUY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ANc-U2-80p" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="946" y="-193"/>
+            <point key="canvasLocation" x="979" y="-193"/>
         </scene>
     </scenes>
     <classes>
+        <class className="CoreDataTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CoreDataTableViewController.h"/>
+        </class>
         <class className="NSLayoutConstraint" superclassName="NSObject">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
         </class>
-        <class className="PWTimeTZSearchViewController" superclassName="UIViewController">
+        <class className="PWTimeTZSearchViewController" superclassName="CoreDataTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/PWTimeTZSearchViewController.h"/>
             <relationships>
-                <relationship kind="outlet" name="tzSearchBar" candidateClass="UISearchBar"/>
                 <relationship kind="outlet" name="tzTable" candidateClass="UITableView"/>
             </relationships>
         </class>
         <class className="PWTimeViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/PWTimeViewController.h"/>
             <relationships>
-                <relationship kind="action" name="clockBackgroundSegmentSelected:"/>
-                <relationship kind="action" name="clockEnabledSwitchChanged:"/>
-                <relationship kind="action" name="clockSelected:"/>
-                <relationship kind="action" name="timeDisplayChanged:"/>
-                <relationship kind="action" name="updateWatchData:"/>
                 <relationship kind="outlet" name="clockBackground" candidateClass="UISegmentedControl"/>
                 <relationship kind="outlet" name="clockDisplay" candidateClass="UISegmentedControl"/>
                 <relationship kind="outlet" name="clockEnabled" candidateClass="UISwitch"/>

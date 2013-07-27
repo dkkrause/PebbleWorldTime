@@ -13,6 +13,10 @@
 #import <CoreData/CoreData.h>
 #import "PWTimeAppDelegate.h"
 
+#import "City+Adders.h"
+#import "State+Adders.h"
+#import "Country+Adders.h"
+
 @interface PWTimeTZSearchViewController () <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
 
 @property (nonatomic, assign) id delegate;
@@ -25,14 +29,201 @@
 
 @implementation PWTimeTZSearchViewController
 
+#ifndef USECOREDATA
+
 @synthesize tzTable = _tzTable;
 @synthesize tzSearchBar = _tzSearchBar;
 @synthesize cityDatabase = _cityDatabase;
 @synthesize filteredTZList = _filteredTZList;
 
+#endif
+
+#ifdef USECOREDATA
+
+#define MINIMUM_US_POPULATION                     50000
+#define MINIMUM_REST_OF_WORLD_POPULATION        1000000
+
+static NSString *baseURL        = @"http://download.geonames.org/export/dump/";
+static NSString *cityZipFile    = @"cities15000.zip";
+static NSString *cityTxtFile    = @"cities15000.txt";
+static NSString *countryFile    = @"countryInfo.txt";
+static NSString *stateFile      = @"admin1CodesASCII.txt";
+
+#endif
+
+- (void)setDelegate:(id)delegate
+{
+    if (_delegate != delegate) {
+        _delegate = delegate;
+    }
+}
+
+- (void)setClockTZ:(NSTimeZone *)clockTZ
+{
+    if (![clockTZ isEqualToTimeZone:_clockTZ]) {
+        _clockTZ = clockTZ;
+    }
+}
+
 #pragma mark - UIViewController methods
 
 #ifdef USECOREDATA                      // Using Core Data
+- (void)downloadCountryData
+{
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:[baseURL stringByAppendingString:countryFile]]];
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *path = [[paths lastObject] stringByAppendingPathComponent:countryFile];
+    operation.outputStream = [NSOutputStream outputStreamToFileAtPath:path append:NO];
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSLog(@"Successfully downloaded file %@ to %@", request, path);        
+        [self downloadStateData];
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        NSLog(@"Error downloading %@: %@", request, error);
+        
+    }];
+    
+    [operation start];
+}
+
+- (void)downloadStateData
+{
+        
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:[baseURL stringByAppendingString:stateFile]]];
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *path = [[paths lastObject] stringByAppendingPathComponent:stateFile];
+    operation.outputStream = [NSOutputStream outputStreamToFileAtPath:path append:NO];
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSLog(@"Successfully downloaded file %@ to %@", request, path);
+        [self downloadCityData];
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        NSLog(@"Error downloading %@: %@", request, error);
+        
+    }];
+    [operation start];
+    
+}
+
+- (void)downloadCityData
+{
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:[baseURL stringByAppendingString:cityZipFile]]];
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *path = [[paths lastObject] stringByAppendingPathComponent:cityZipFile];
+    operation.outputStream = [NSOutputStream outputStreamToFileAtPath:path append:NO];
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSError *error;
+        NSLog(@"Successfully downloaded file %@ to %@", request, path);
+        // Unzip the file
+        ZipArchive *zipArchive = [[ZipArchive alloc] init];
+        [zipArchive UnzipOpenFile:path];
+        [zipArchive UnzipFileTo:[paths objectAtIndex:0] overWrite:YES];
+        [zipArchive UnzipCloseFile];
+        [[NSFileManager defaultManager] removeItemAtPath:path error:&error];    // Delete the zip file
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        NSLog(@"Error downloading %@: %@", request, error);
+        
+    }];
+    
+    [operation start];
+}
+
+- (void)populateCityDB
+{
+    
+    NSMutableDictionary *countryData;
+    NSMutableDictionary *stateData;
+    
+    countryData = [[NSMutableDictionary alloc] init];
+    stateData = [[NSMutableDictionary alloc] init];
+    
+    // Read all three files into memory
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+
+    NSString *countryFilePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:countryFile];
+    NSString *countryFileData = [[NSString alloc] initWithContentsOfFile:countryFilePath encoding:NSUTF8StringEncoding error:nil];
+    NSMutableArray *countries = [[countryFileData componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] mutableCopy];
+    countryFileData = nil;
+
+    // Create a country dictionary
+    NSMutableArray *singleCountryData;
+    for (NSString *singleCountry in countries) {        
+        if (![singleCountry hasPrefix:@"#"]) {            
+            singleCountryData = [[singleCountry componentsSeparatedByString:@"\t"] mutableCopy];
+            [countryData setObject:[singleCountryData objectAtIndex:GEONAMES_COUNTRY_NAME_INDEX] forKey:[singleCountryData objectAtIndex:GEONAMES_COUNTRY_CODE_INDEX]];            
+        }
+    }
+
+    NSString *stateFilePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:stateFile];
+    NSString *stateFileData = [[NSString alloc] initWithContentsOfFile:stateFilePath encoding:NSUTF8StringEncoding error:nil];
+    NSMutableArray *states = [[stateFileData componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] mutableCopy];
+    stateFileData = nil;
+    
+    // Create a state dictionary
+    NSMutableArray *singleStateData;
+    for (NSString *singleState in states) {
+        singleStateData = [[singleState componentsSeparatedByString:@"\t"] mutableCopy];
+        [stateData setObject:[singleStateData objectAtIndex:GEONAMES_STATE_NAME_INDEX] forKey:[singleStateData objectAtIndex:GEONAMES_STATE_CODE_INDEX]];
+    }
+
+    NSString *cityFilePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:cityTxtFile];
+    NSString *cityFileData = [[NSString alloc] initWithContentsOfFile:cityFilePath encoding:NSUTF8StringEncoding error:nil];
+    NSMutableArray *cities = [[cityFileData componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] mutableCopy];
+    cityFileData = nil;
+    
+    // Go through the cities and add the ones of interest (population, etc.) by adding the city. The state and/or
+    // country will be added as needed. Note that we will only add states in the US, all other countries are cities to country.
+    // Limit population in US and other countries separately.
+    
+    NSMutableArray *singleCityData;
+    for (NSString *singleCity in cities) {
+        
+        singleCityData = [[singleCity componentsSeparatedByString:@"\t"] mutableCopy];
+        [City cityWithName:[singleCityData objectAtIndex:GEONAMES_CITY_NAME_INDEX]
+                 stateCode:[singleCityData objectAtIndex:GEONAMES_CITY_STATE_CODE_INDEX]
+                 stateName:[stateData objectForKey:[NSString stringWithFormat:@"%@.%@", [singleCityData objectAtIndex:GEONAMES_CITY_COUNTRY_CODE_INDEX], [singleCityData objectAtIndex:GEONAMES_CITY_STATE_CODE_INDEX]]]
+               countryCode:[singleCityData objectAtIndex:GEONAMES_CITY_COUNTRY_CODE_INDEX]
+               countryName:[countryData objectForKey:[singleCityData objectAtIndex:GEONAMES_CITY_COUNTRY_CODE_INDEX]]
+                  latitude:[NSNumber numberWithFloat:[[singleCityData objectAtIndex:GEONAMES_CITY_LATITUDE_INDEX] floatValue]]
+                 longitude:[NSNumber numberWithFloat:[[singleCityData objectAtIndex:GEONAMES_CITY_LONGITUDE_INDEX] floatValue]]
+                  timeZone:[singleCityData objectAtIndex:GEONAMES_CITY_TIMEZONE_INDEX]
+    inManagedObjectContext:self.cityDatabase.managedObjectContext];
+        
+    }
+    
+}
+
+- (void)fetchCityDataIntoDocument:(UIManagedDocument *)document
+{
+    dispatch_queue_t fetchQ = dispatch_queue_create("City data fetcher", NULL);
+    dispatch_async(fetchQ, ^{        
+        [self downloadCountryData];
+    });
+    dispatch_async(fetchQ, ^{
+       [document.managedObjectContext performBlock:^{ // perform in the NSMOC's safe thread (main thread)
+           [self populateCityDB];
+           [document saveToURL:document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:NULL];
+       }];
+    });
+}
 
 - (void)setupFetchedResultsController // attaches an NSFetchRequest to this UITableViewController
 {
@@ -44,58 +235,6 @@
                                                                         managedObjectContext:self.cityDatabase.managedObjectContext
                                                                           sectionNameKeyPath:nil
                                                                                    cacheName:nil];
-}
-
-- (void)fetchCityDataIntoDocument:(UIManagedDocument *)document
-{
-    dispatch_queue_t fetchQ = dispatch_queue_create("City data fetcher", NULL);
-    dispatch_async(fetchQ, ^{
-
-        // Download the file
-        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://download.geonames.org/export/dump/cities15000.zip"]];
-        AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-        
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *path = [[paths lastObject] stringByAppendingPathComponent:@"cities15000.zip"];
-        operation.outputStream = [NSOutputStream outputStreamToFileAtPath:path append:NO];
-        
-        [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-            
-            NSError *error;
-            NSLog(@"Successfully downloaded file %@ to %@", request, path);
-            
-            // Unzip the file
-            ZipArchive *zipArchive = [[ZipArchive alloc] init];
-            [zipArchive UnzipOpenFile:path];
-            [zipArchive UnzipFileTo:[paths objectAtIndex:0] overWrite:YES];
-            [zipArchive UnzipCloseFile];
-            [[NSFileManager defaultManager] removeItemAtPath:path error:&error];    // Delete the zip file
-            
-            NSString *txtPath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"cities15000.txt"];
-            NSString *cityData = [[NSString alloc] initWithContentsOfFile:txtPath encoding:NSUTF8StringEncoding error:nil];
-            NSMutableArray *cities = [[cityData componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] mutableCopy];
-            
-            for (NSString *city in cities) {
-                
-            }
-            
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            
-            NSLog(@"Error downloading %@: %@", request, error);
-            
-        }];
-        
-        [operation start];
-        
-
-            // should probably saveToURL:forSaveOperation:(UIDocumentSaveForOverwriting)completionHandler: here!
-            // we could decide to rely on UIManagedDocument's autosaving, but explicit saving would be better
-            // because if we quit the app before autosave happens, then it'll come up blank next time we run
-            // this is what it would look like (ADDED AFTER LECTURE) ...
-            [document saveToURL:document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:NULL];
-            // note that we don't do anything in the completion handler this time
-        
-    });
 }
 
 - (void)useDocument
@@ -264,17 +403,14 @@
     }
     
     // Configure the cell...
-    if (!self.filterList) {
-        cell.textLabel.text = [self.tzList objectAtIndex:[indexPath row]];
+    // ask NSFetchedResultsController for the NSMO at the row in question
+    City *city = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    // Then configure the cell using it ...
+    cell.textLabel.text = city.name;
+    if (city.myState != nil) {
+        cell.detailTextLabel.text = city.myState.name;
     } else {
-        cell.textLabel.text = [self.filteredTZList objectAtIndex:[indexPath row]];
-    }
-    if ([cell.textLabel.text isEqualToString:[self.clockTZ name]]) {
-        cell.textLabel.textColor = [UIColor whiteColor];
-        cell.textLabel.backgroundColor = [UIColor blueColor];
-    } else {
-        cell.textLabel.textColor = [UIColor blackColor];
-        cell.textLabel.backgroundColor = [UIColor whiteColor];
+        cell.detailTextLabel.text = city.myCountry.name;
     }
     return cell;
 }
@@ -291,17 +427,8 @@
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
-    
-    if (self.filterList) {
-        
-        [self.delegate setClockTZ:[NSTimeZone timeZoneWithName:[self.filteredTZList objectAtIndex:indexPath.row]]];
-        
-    } else {
-        
-        [self.delegate setClockTZ:[NSTimeZone timeZoneWithName:[self.tzList objectAtIndex:indexPath.row]]];
-        
-    }
-    [self dismissViewControllerAnimated:YES completion:nil];
+    City *city = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    [self.delegate setClockTZ:[NSTimeZone timeZoneWithName:city.timezone]];
     
 }
 
@@ -309,7 +436,8 @@
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
-    self.filterList = (searchText.length != 0);
+/*
+ self.filterList = (searchText.length != 0);
     if (self.filterList) {
         self.filteredTZList = [[NSMutableArray alloc] init];
         for (NSString *tzName in self.tzList) {
@@ -322,6 +450,8 @@
         [self.filteredTZList removeAllObjects];
     }
     [self.tzTable reloadData];
+ 
+*/
 }
 
 #endif                          // Using Core Data

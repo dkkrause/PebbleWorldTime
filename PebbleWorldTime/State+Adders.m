@@ -12,21 +12,10 @@
 
 @implementation State (Adders)
 
-+ (void)populateStateDB
-{
-    
-}
-
-+ (NSString *)stateNameFromCode:(NSString *)code
-{
-    
-    NSString *name = nil;
-    
-    return name;
-    
-}
-
 + (State *)stateWithCode:(NSString *)code
+                withName:(NSString *)name
+             countryCode:(NSString *)countryCode
+             countryName:(NSString *)countryName
   inManagedObjectContext:(NSManagedObjectContext *)context
 {
     
@@ -43,14 +32,13 @@
     if (!matches || ([matches count] > 1)) {
         // handle error
     } else if ([matches count] == 0) {
-        state.code = code;
         state = [NSEntityDescription insertNewObjectForEntityForName:@"State" inManagedObjectContext:context];
-        //        state.name = name;
-        state.myCountry = [Country countryWithCode:@"" inManagedObjectContext:context];
+        state.name = name;
+        state.code = code;
+        state.myCountry = [Country countryWithCode:countryCode withName:countryName inManagedObjectContext:context];
     } else {
         state = [matches lastObject];
     }
-    
     return state;
 }
 

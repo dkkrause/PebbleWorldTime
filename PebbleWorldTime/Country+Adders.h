@@ -10,8 +10,8 @@
 
 @interface Country (Adders)
 
-+ (void)populateCountryDB;
-+ (NSString *)countryNameFromCode:(NSString *)code;
-+ (Country *)countryWithCode:(NSString *)code inManagedObjectContext:(NSManagedObjectContext *)context;
++ (Country *)countryWithCode:(NSString *)code
+                    withName:(NSString *)name
+      inManagedObjectContext:(NSManagedObjectContext *)context;
 
 @end

@@ -10,8 +10,10 @@
 
 @interface State (Adders)
 
-+ (void)populateStateDB;
-+ (NSString *)stateNameFromCode:(NSString *)code;
-+ (State *)stateWithCode:(NSString *)code inManagedObjectContext:(NSManagedObjectContext *)context;
++ (State *)stateWithCode:(NSString *)code
+                withName:(NSString *)name
+             countryCode:(NSString *)countryCode
+             countryName:(NSString *)countryName
+  inManagedObjectContext:(NSManagedObjectContext *)context;
 
 @end
