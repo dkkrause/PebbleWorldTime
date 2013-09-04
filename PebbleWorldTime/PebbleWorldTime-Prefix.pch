@@ -15,3 +15,6 @@
     #import <MobileCoreServices/MobileCoreServices.h>
     #import <CoreData/CoreData.h>
 #endif
+
+#define PWDEBUG
+#define BGDEBUG

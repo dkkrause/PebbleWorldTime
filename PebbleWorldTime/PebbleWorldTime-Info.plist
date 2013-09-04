@@ -47,6 +47,8 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>external-accessory</string>
+		<string>location</string>
+		<string>bluetooth-peripheral</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>

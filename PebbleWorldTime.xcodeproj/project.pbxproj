@@ -31,6 +31,9 @@
 		F63913221788CCF0000322D6 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F63913211788CCF0000322D6 /* CoreLocation.framework */; };
 		F6391341178CC77E000322D6 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6391340178CC77E000322D6 /* SystemConfiguration.framework */; };
 		F6391343178CC78C000322D6 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6391342178CC78C000322D6 /* MobileCoreServices.framework */; };
+		F65C861517CE788F0077800A /* USStateAbbreviations.plist in Resources */ = {isa = PBXBuildFile; fileRef = F65C861417CE788F0077800A /* USStateAbbreviations.plist */; };
+		F65C861817CE8F660077800A /* NSString+USStateMap.m in Sources */ = {isa = PBXBuildFile; fileRef = F65C861717CE8F660077800A /* NSString+USStateMap.m */; };
+		F65C861B17D278780077800A /* PWClock.m in Sources */ = {isa = PBXBuildFile; fileRef = F65C861A17D278770077800A /* PWClock.m */; };
 		F6727B7F175C0BD300452635 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6727B7E175C0BD300452635 /* MessageUI.framework */; };
 		F6727B81175C0BE000452635 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6727B80175C0BE000452635 /* CoreBluetooth.framework */; };
 		F6727B83175C0BF500452635 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F6727B82175C0BF500452635 /* libz.dylib */; };
@@ -42,6 +45,8 @@
 		F6A46B2017A03B010032D0C2 /* Country.m in Sources */ = {isa = PBXBuildFile; fileRef = F6A46B1F17A03B010032D0C2 /* Country.m */; };
 		F6A46B2317A03B020032D0C2 /* City.m in Sources */ = {isa = PBXBuildFile; fileRef = F6A46B2217A03B020032D0C2 /* City.m */; };
 		F6A46B2617A03B520032D0C2 /* CoreDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6A46B2517A03B520032D0C2 /* CoreDataTableViewController.m */; };
+		F6C31ECB17B983B00087F4DB /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6C31EC817B982CA0087F4DB /* MapKit.framework */; };
+		F6C31ECE17B986E70087F4DB /* PWTZMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C31ECD17B986E70087F4DB /* PWTZMapViewController.m */; };
 		F6EB63E71791E9B90040E015 /* PWTimeTZSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EB63E61791E9B90040E015 /* PWTimeTZSearchViewController.m */; };
 		F6F1425B17839A50004ACAAC /* NSMutableArray+QueueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = F6F1425A17839A50004ACAAC /* NSMutableArray+QueueAdditions.m */; };
 /* End PBXBuildFile section */
@@ -79,6 +84,11 @@
 		F63913211788CCF0000322D6 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		F6391340178CC77E000322D6 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		F6391342178CC78C000322D6 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		F65C861417CE788F0077800A /* USStateAbbreviations.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = USStateAbbreviations.plist; sourceTree = "<group>"; };
+		F65C861617CE8F5A0077800A /* NSString+USStateMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+USStateMap.h"; sourceTree = "<group>"; };
+		F65C861717CE8F660077800A /* NSString+USStateMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+USStateMap.m"; sourceTree = "<group>"; };
+		F65C861917D278770077800A /* PWClock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWClock.h; sourceTree = "<group>"; };
+		F65C861A17D278770077800A /* PWClock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWClock.m; sourceTree = "<group>"; };
 		F6727B7E175C0BD300452635 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		F6727B80175C0BE000452635 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		F6727B82175C0BF500452635 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -95,6 +105,9 @@
 		F6A46B2217A03B020032D0C2 /* City.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = City.m; sourceTree = "<group>"; };
 		F6A46B2417A03B410032D0C2 /* CoreDataTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreDataTableViewController.h; sourceTree = "<group>"; };
 		F6A46B2517A03B520032D0C2 /* CoreDataTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreDataTableViewController.m; sourceTree = "<group>"; };
+		F6C31EC817B982CA0087F4DB /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		F6C31ECC17B986E70087F4DB /* PWTZMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PWTZMapViewController.h; sourceTree = "<group>"; };
+		F6C31ECD17B986E70087F4DB /* PWTZMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PWTZMapViewController.m; sourceTree = "<group>"; };
 		F6EB63E51791E9B90040E015 /* PWTimeTZSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PWTimeTZSearchViewController.h; path = ../PWTimeTZSearchViewController.h; sourceTree = "<group>"; };
 		F6EB63E61791E9B90040E015 /* PWTimeTZSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PWTimeTZSearchViewController.m; path = ../PWTimeTZSearchViewController.m; sourceTree = "<group>"; };
 		F6F1425917839A50004ACAAC /* NSMutableArray+QueueAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+QueueAdditions.h"; sourceTree = "<group>"; };
@@ -107,6 +120,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6C31ECB17B983B00087F4DB /* MapKit.framework in Frameworks */,
 				F60AE2111795FB57005A88C2 /* CoreData.framework in Frameworks */,
 				F6391343178CC78C000322D6 /* MobileCoreServices.framework in Frameworks */,
 				F6391341178CC77E000322D6 /* SystemConfiguration.framework in Frameworks */,
@@ -157,6 +171,7 @@
 				F6727B84175C0C4300452635 /* ExternalAccessory.framework */,
 				F600CD1C175BA75900D2CABC /* Foundation.framework */,
 				F6727B82175C0BF500452635 /* libz.dylib */,
+				F6C31EC817B982CA0087F4DB /* MapKit.framework */,
 				F6727B7E175C0BD300452635 /* MessageUI.framework */,
 				F6391342178CC78C000322D6 /* MobileCoreServices.framework */,
 				F6727B86175C0C8200452635 /* PebbleKit.framework */,
@@ -177,10 +192,16 @@
 				F6A15A5C175D962400B57E71 /* PWTimeKeys.h */,
 				F600CD35175BA75A00D2CABC /* PWTimeViewController.h */,
 				F600CD36175BA75A00D2CABC /* PWTimeViewController.m */,
+				F65C861917D278770077800A /* PWClock.h */,
+				F65C861A17D278770077800A /* PWClock.m */,
+				F6C31ECC17B986E70087F4DB /* PWTZMapViewController.h */,
+				F6C31ECD17B986E70087F4DB /* PWTZMapViewController.m */,
 				F6EB63E51791E9B90040E015 /* PWTimeTZSearchViewController.h */,
 				F6EB63E61791E9B90040E015 /* PWTimeTZSearchViewController.m */,
 				F6F1425917839A50004ACAAC /* NSMutableArray+QueueAdditions.h */,
 				F6F1425A17839A50004ACAAC /* NSMutableArray+QueueAdditions.m */,
+				F65C861617CE8F5A0077800A /* NSString+USStateMap.h */,
+				F65C861717CE8F660077800A /* NSString+USStateMap.m */,
 				F600CD38175BA75A00D2CABC /* first.png */,
 				F600CD3A175BA75A00D2CABC /* first@2x.png */,
 				F600CD3F175BA75A00D2CABC /* second.png */,
@@ -195,6 +216,7 @@
 			isa = PBXGroup;
 			children = (
 				F600CD22175BA75A00D2CABC /* PebbleWorldTime-Info.plist */,
+				F65C861417CE788F0077800A /* USStateAbbreviations.plist */,
 				F600CD23175BA75A00D2CABC /* InfoPlist.strings */,
 				F600CD26175BA75A00D2CABC /* main.m */,
 				F600CD28175BA75A00D2CABC /* PebbleWorldTime-Prefix.pch */,
@@ -290,6 +312,7 @@
 				F600CD3B175BA75A00D2CABC /* first@2x.png in Resources */,
 				F600CD40175BA75A00D2CABC /* second.png in Resources */,
 				F600CD42175BA75A00D2CABC /* second@2x.png in Resources */,
+				F65C861517CE788F0077800A /* USStateAbbreviations.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -346,6 +369,9 @@
 				F62C89C117A1CD8A0006F445 /* Country+Adders.m in Sources */,
 				F62C89C417A1CDD40006F445 /* State+Adders.m in Sources */,
 				F62C89C717A1CE110006F445 /* City+Adders.m in Sources */,
+				F6C31ECE17B986E70087F4DB /* PWTZMapViewController.m in Sources */,
+				F65C861817CE8F660077800A /* NSString+USStateMap.m in Sources */,
+				F65C861B17D278780077800A /* PWClock.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

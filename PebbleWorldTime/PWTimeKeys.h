@@ -9,6 +9,8 @@
 #ifndef PebbleWorldTime_PWTimeKeys_h
 #define PebbleWorldTime_PWTimeKeys_h
 
+// Keys and values for messages from iOS to the Pebble
+
 // Factors, the keys are actually grouped by 16, depending on the watch to update
 // Add these to the KEYs to get the actual value
 #define LOCAL_WATCH_OFFSET                  0x00
@@ -24,8 +26,10 @@
 #define PBCOMM_TEMPERATURE_KEY              0x07    // temperature
 #define PBCOMM_HI_TEMP_KEY                  0x08    // daily high temperature
 #define PBCOMM_LO_TEMP_KEY                  0x09    // daily low temperature
-#define PBCOMM_SUNRISE_KEY                  0x0A    // time of sunrise
-#define PBCOMM_SUNSET_KEY                   0x0B    // time of sunset
+#define PBCOMM_SUNRISE_HOUR_KEY				0x0A	// time of sunrise
+#define PBCOMM_SUNRISE_MIN_KEY				0x0B	// time of sunrise
+#define PBCOMM_SUNSET_HOUR_KEY				0x0C	// time of sunset
+#define PBCOMM_SUNSET_MIN_KEY				0x0D	// time of sunset
 
 // Values for PBCOMM_WATCH_ENABLED_KEY
 #define WATCH_DISABLED						0x00
@@ -34,7 +38,7 @@
 // Values for PBCOMMM_BACKGROUND_KEY
 #define BACKGROUND_DARK                     0x00    // Dark background
 #define BACKGROUND_LIGHT                    0x01    // Light background
-#define BACKGROUND_AM_PM                    0x02    // Light for AM, dark for PM
+#define BACKGROUND_SUNS                     0x02    // Light for Sunrise (or AM), dark for Sunset (or PM)
 
 // Values for PBCOMM_12_24_DISPLAY_KEY
 #define DISPLAY_WATCH_CONFIG_TIME           0x00    // Show 12- or 24-hour time as configured on watch
@@ -55,5 +59,13 @@
 #define WEATHER_PARTLY_CLOUDY_DAY           0x09
 #define WEATHER_PARTLY_CLOUDY_NIGHT         0x0A
 #define MAX_WEATHER_CONDITIONS              0x0B    // Number of weather conditions
+
+// Keys and values for messages from the Pebble to iOS
+
+#define IOS_UPDATE_WEATHER                  0x81
+
+#define LOCAL_WEATHER                       0x01
+#define TZ_WEATHER                          0x02
+#define BOTH_WEATHER                        0x03
 
 #endif

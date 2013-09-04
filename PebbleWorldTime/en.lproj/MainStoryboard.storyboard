@@ -22,7 +22,7 @@
                                 <segments>
                                     <segment title="Dark"/>
                                     <segment title="Light"/>
-                                    <segment title="AM/PM"/>
+                                    <segment title="Suns"/>
                                 </segments>
                                 <connections>
                                     <action selector="clockBackgroundSegmentSelected:" destination="2" eventType="valueChanged" id="hUh-fW-whH"/>
@@ -36,23 +36,9 @@
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eqO-hz-GSd">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="26" id="Kgm-Hz-VpX"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="3nS-Aw-x6F">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="63" id="uBm-Vs-30M"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="2" translatesAutoresizingMaskIntoConstraints="NO" id="ApT-jg-eLM">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="220" id="KpG-vC-PmW"/>
+                                    <constraint firstAttribute="width" constant="303" id="zF9-mY-snB"/>
                                 </constraints>
                                 <segments>
                                     <segment title="Watch"/>
@@ -64,9 +50,6 @@
                                 </connections>
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QfD-2L-WH1">
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="23" id="m39-4t-Evr"/>
-                                </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -76,12 +59,12 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="mMr-UV-GEK" kind="modal" identifier="toTZ" modalTransitionStyle="coverVertical" id="nh5-eW-e0O"/>
+                                    <segue destination="ssI-Yj-XjH" kind="modal" identifier="toMap" id="88b-7f-e2J"/>
                                 </connections>
                             </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="I4z-H9-XDd">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="188" id="Evr-19-dXl"/>
+                                    <constraint firstAttribute="width" constant="203" id="rXv-vh-AAC"/>
                                 </constraints>
                                 <segments>
                                     <segment title="Local"/>
@@ -104,9 +87,10 @@
                                     <action selector="updateWatchData:" destination="2" eventType="touchUpInside" id="Xf2-ns-l9B"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="auI-Kb-jPZ">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="auI-Kb-jPZ">
                                 <constraints>
                                     <constraint firstAttribute="height" constant="26" id="Frl-Vp-6P8"/>
+                                    <constraint firstAttribute="width" constant="239" id="VN2-bz-u5p"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -121,35 +105,61 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YIP-1c-Iyv">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="203" id="hxJ-W0-gto"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Watch Disconnected">
+                                    <color key="titleColor" red="0.875" green="0.063016399319999999" blue="0.1146325029" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="clearNumDisconnects:" destination="2" eventType="touchUpInside" id="kq0-K3-lZ1"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Track Location Changes" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="65Y-mX-MdX">
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="msO-sj-OmK">
+                                <connections>
+                                    <action selector="trackLocationChanges:" destination="2" eventType="valueChanged" id="F3O-6n-iAF"/>
+                                </connections>
+                            </switch>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="eqO-hz-GSd" firstAttribute="top" secondItem="16" secondAttribute="top" constant="98" id="0Eg-Qt-emj"/>
-                            <constraint firstItem="fGr-P1-Z20" firstAttribute="centerX" secondItem="PLK-02-Mrl" secondAttribute="centerX" type="default" id="2o5-JB-QTr"/>
-                            <constraint firstItem="QfD-2L-WH1" firstAttribute="leading" secondItem="eqO-hz-GSd" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="3Nc-LT-amQ"/>
-                            <constraint firstItem="ApT-jg-eLM" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="643-mS-1hi"/>
-                            <constraint firstItem="QfD-2L-WH1" firstAttribute="top" secondItem="16" secondAttribute="top" constant="99" id="7WN-3U-bUi"/>
-                            <constraint firstItem="fGr-P1-Z20" firstAttribute="baseline" secondItem="1DL-hY-YMp" secondAttribute="baseline" type="default" id="AX6-qG-7iN"/>
-                            <constraint firstItem="PLK-02-Mrl" firstAttribute="top" secondItem="16" secondAttribute="top" constant="41" id="BOo-WE-sAT"/>
-                            <constraint firstItem="3nS-Aw-x6F" firstAttribute="top" secondItem="auI-Kb-jPZ" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="BeJ-A0-UEj"/>
-                            <constraint firstAttribute="trailing" secondItem="c0h-fq-YDK" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="FkM-pg-7wb"/>
-                            <constraint firstItem="3nS-Aw-x6F" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="Glm-Aq-3nX"/>
-                            <constraint firstItem="eqO-hz-GSd" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="KhV-pH-id2"/>
-                            <constraint firstItem="auI-Kb-jPZ" firstAttribute="top" secondItem="eqO-hz-GSd" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="L2Q-wM-Jlh"/>
-                            <constraint firstItem="I4z-H9-XDd" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="QBc-Gu-exc"/>
-                            <constraint firstAttribute="bottom" secondItem="uI8-nx-acB" secondAttribute="bottom" constant="110" id="T9r-CH-w69"/>
-                            <constraint firstAttribute="trailing" secondItem="QfD-2L-WH1" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="URq-L2-JNo"/>
-                            <constraint firstAttribute="bottom" secondItem="ApT-jg-eLM" secondAttribute="bottom" constant="170" id="VIZ-JG-WLy"/>
-                            <constraint firstItem="fGr-P1-Z20" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="135" id="YSS-XP-XkS"/>
-                            <constraint firstItem="uI8-nx-acB" firstAttribute="trailing" secondItem="ApT-jg-eLM" secondAttribute="trailing" type="default" id="a6o-1H-Cuj"/>
-                            <constraint firstItem="I4z-H9-XDd" firstAttribute="top" secondItem="16" secondAttribute="top" constant="34" id="bB5-eN-cH6"/>
-                            <constraint firstItem="auI-Kb-jPZ" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="hKi-is-GIA"/>
-                            <constraint firstAttribute="trailing" secondItem="3nS-Aw-x6F" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="iam-DT-uPb"/>
-                            <constraint firstItem="c0h-fq-YDK" firstAttribute="centerY" secondItem="I4z-H9-XDd" secondAttribute="centerY" type="default" id="id9-39-dt4"/>
-                            <constraint firstItem="uI8-nx-acB" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="jpZ-28-T9s"/>
-                            <constraint firstItem="1DL-hY-YMp" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="lhg-X4-o8z"/>
-                            <constraint firstAttribute="trailing" secondItem="auI-Kb-jPZ" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="mfS-Lt-s3l"/>
-                            <constraint firstAttribute="bottom" secondItem="1DL-hY-YMp" secondAttribute="bottom" constant="15" id="vcG-jc-Aj1"/>
+                            <constraint firstItem="auI-Kb-jPZ" firstAttribute="baseline" secondItem="PLK-02-Mrl" secondAttribute="baseline" type="default" id="1ge-68-n9n"/>
+                            <constraint firstItem="QfD-2L-WH1" firstAttribute="top" secondItem="16" secondAttribute="top" constant="170" id="3hz-JQ-VS1"/>
+                            <constraint firstItem="PLK-02-Mrl" firstAttribute="top" secondItem="I4z-H9-XDd" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="73b-QF-UhK"/>
+                            <constraint firstItem="65Y-mX-MdX" firstAttribute="leading" secondItem="ApT-jg-eLM" secondAttribute="leading" type="default" id="7Gh-wD-kJC"/>
+                            <constraint firstItem="msO-sj-OmK" firstAttribute="top" secondItem="16" secondAttribute="top" constant="216" id="84p-oB-nOU"/>
+                            <constraint firstItem="YIP-1c-Iyv" firstAttribute="centerX" secondItem="16" secondAttribute="centerX" type="default" id="8Ur-9L-1mP"/>
+                            <constraint firstItem="PLK-02-Mrl" firstAttribute="trailing" secondItem="auI-Kb-jPZ" secondAttribute="trailing" type="default" id="98E-nX-3WF"/>
+                            <constraint firstAttribute="bottom" secondItem="fGr-P1-Z20" secondAttribute="bottom" constant="32" id="Ak3-Qb-63g"/>
+                            <constraint firstItem="fGr-P1-Z20" firstAttribute="top" secondItem="1DL-hY-YMp" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="G6y-lv-LT5"/>
+                            <constraint firstItem="1DL-hY-YMp" firstAttribute="top" secondItem="uI8-nx-acB" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="Glg-QI-59t"/>
+                            <constraint firstItem="ApT-jg-eLM" firstAttribute="trailing" secondItem="uI8-nx-acB" secondAttribute="trailing" type="default" id="GrD-1z-jTU"/>
+                            <constraint firstItem="msO-sj-OmK" firstAttribute="trailing" secondItem="ApT-jg-eLM" secondAttribute="trailing" type="default" id="MOR-Ax-734"/>
+                            <constraint firstItem="I4z-H9-XDd" firstAttribute="trailing" secondItem="65Y-mX-MdX" secondAttribute="trailing" type="default" id="NfY-LK-gSU"/>
+                            <constraint firstItem="c0h-fq-YDK" firstAttribute="centerY" secondItem="I4z-H9-XDd" secondAttribute="centerY" type="default" id="Qui-v6-jwB"/>
+                            <constraint firstItem="PLK-02-Mrl" firstAttribute="leading" secondItem="I4z-H9-XDd" secondAttribute="leading" type="default" id="SmZ-Tx-viq"/>
+                            <constraint firstItem="QfD-2L-WH1" firstAttribute="trailing" secondItem="c0h-fq-YDK" secondAttribute="trailing" type="default" id="W5o-Qy-yIP"/>
+                            <constraint firstItem="I4z-H9-XDd" firstAttribute="top" secondItem="16" secondAttribute="top" constant="114" id="YMK-f2-RJK"/>
+                            <constraint firstItem="uI8-nx-acB" firstAttribute="top" secondItem="ApT-jg-eLM" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="eJL-kZ-qfg"/>
+                            <constraint firstItem="YIP-1c-Iyv" firstAttribute="top" secondItem="16" secondAttribute="top" constant="31" id="hzr-ZD-NMX"/>
+                            <constraint firstItem="msO-sj-OmK" firstAttribute="leading" secondItem="c0h-fq-YDK" secondAttribute="leading" type="default" id="jvR-TX-MYe"/>
+                            <constraint firstItem="ApT-jg-eLM" firstAttribute="centerX" secondItem="YIP-1c-Iyv" secondAttribute="centerX" type="default" id="mle-6j-YPb"/>
+                            <constraint firstItem="1DL-hY-YMp" firstAttribute="centerX" secondItem="uI8-nx-acB" secondAttribute="centerX" type="default" id="nIl-dU-vJP"/>
+                            <constraint firstItem="ApT-jg-eLM" firstAttribute="leading" secondItem="uI8-nx-acB" secondAttribute="leading" type="default" id="pwD-Nk-FLd"/>
+                            <constraint firstItem="65Y-mX-MdX" firstAttribute="centerY" secondItem="msO-sj-OmK" secondAttribute="centerY" type="default" id="u24-f0-2z0"/>
+                            <constraint firstItem="1DL-hY-YMp" firstAttribute="centerX" secondItem="fGr-P1-Z20" secondAttribute="centerX" type="default" id="uia-2u-xLD"/>
+                            <constraint firstItem="65Y-mX-MdX" firstAttribute="leading" secondItem="PLK-02-Mrl" secondAttribute="leading" type="default" id="uq3-rA-wAf"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="TZ1" id="7"/>
@@ -157,99 +167,116 @@
                         <outlet property="clockBackground" destination="uI8-nx-acB" id="7PG-cK-cc4"/>
                         <outlet property="clockDisplay" destination="ApT-jg-eLM" id="cVZ-Rt-1mi"/>
                         <outlet property="clockEnabled" destination="c0h-fq-YDK" id="6wn-Vn-BdD"/>
+                        <outlet property="clockLocation" destination="auI-Kb-jPZ" id="2DG-eh-IWs"/>
                         <outlet property="clockSelect" destination="I4z-H9-XDd" id="rO6-MV-4mK"/>
-                        <outlet property="locality" destination="auI-Kb-jPZ" id="dIe-fn-1xB"/>
                         <outlet property="tempUpdateTime" destination="fGr-P1-Z20" id="iVP-9f-7I3"/>
-                        <outlet property="timeDisplay" destination="3nS-Aw-x6F" id="hdD-jV-VUI"/>
-                        <outlet property="tzDisplay" destination="eqO-hz-GSd" id="qMa-f8-1s0"/>
+                        <outlet property="trackGPSUpdates" destination="msO-sj-OmK" id="FHs-pb-qFc"/>
                         <outlet property="tzSelect" destination="QfD-2L-WH1" id="6a7-Yp-tOf"/>
                         <outlet property="view" destination="16" id="NbJ-D4-z7F"/>
+                        <outlet property="watchConnectIndicator" destination="YIP-1c-Iyv" id="GjO-XV-kpg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="10" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="465" y="-193"/>
+            <point key="canvasLocation" x="88" y="-121"/>
         </scene>
-        <!--TimeTZ Search View Controller-->
-        <scene sceneID="4f8-eq-IbS">
+        <!--Map View Controller-->
+        <scene sceneID="WZQ-OG-bBf">
             <objects>
-                <viewController id="mMr-UV-GEK" customClass="PWTimeTZSearchViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="qdX-y3-LAt">
+                <viewController id="ssI-Yj-XjH" customClass="PWTZMapViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="fiG-gU-rdi">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="38" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="eTD-hO-7eW">
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TZCell" rowHeight="38" id="tju-i2-LCY">
-                                        <rect key="frame" x="0.0" y="22" width="320" height="38"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="37"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        </view>
-                                    </tableViewCell>
-                                </prototypes>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="8DD-ii-GJe">
                                 <connections>
-                                    <outlet property="dataSource" destination="mMr-UV-GEK" id="suu-ml-QS8"/>
-                                    <outlet property="delegate" destination="mMr-UV-GEK" id="3EE-vP-gQQ"/>
+                                    <outlet property="delegate" destination="ssI-Yj-XjH" id="wlw-en-kh4"/>
                                 </connections>
-                            </tableView>
-                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="9rs-nT-HZX">
-                                <textInputTraits key="textInputTraits"/>
+                            </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KpH-Pl-T4t">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="25" id="Fb5-kd-viq"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Back">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
-                                    <outlet property="delegate" destination="mMr-UV-GEK" id="DPX-iG-5AZ"/>
+                                    <action selector="goBack:" destination="ssI-Yj-XjH" eventType="touchUpInside" id="nLJ-XZ-4Wx"/>
                                 </connections>
-                            </searchBar>
+                            </button>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="QzZ-Tj-65u">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="161" id="THM-zg-dhH"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="Current"/>
+                                    <segment title="TZ"/>
+                                </segments>
+                                <connections>
+                                    <action selector="centerLocation:" destination="ssI-Yj-XjH" eventType="valueChanged" id="gIs-cE-fsh"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="eTD-hO-7eW" firstAttribute="top" secondItem="9rs-nT-HZX" secondAttribute="bottom" type="default" id="5o5-Bv-tDX"/>
-                            <constraint firstItem="9rs-nT-HZX" firstAttribute="trailing" secondItem="qdX-y3-LAt" secondAttribute="trailing" type="default" id="Bpk-Bo-CJh"/>
-                            <constraint firstItem="9rs-nT-HZX" firstAttribute="top" secondItem="qdX-y3-LAt" secondAttribute="top" type="default" id="VDP-1R-yiF"/>
-                            <constraint firstItem="9rs-nT-HZX" firstAttribute="leading" secondItem="qdX-y3-LAt" secondAttribute="leading" type="default" id="VWt-9n-MTg"/>
-                            <constraint firstItem="eTD-hO-7eW" firstAttribute="bottom" secondItem="qdX-y3-LAt" secondAttribute="bottom" type="default" id="beS-A3-KRr"/>
-                            <constraint firstItem="eTD-hO-7eW" firstAttribute="trailing" secondItem="qdX-y3-LAt" secondAttribute="trailing" type="default" id="sIO-MW-Kq1"/>
-                            <constraint firstItem="eTD-hO-7eW" firstAttribute="leading" secondItem="qdX-y3-LAt" secondAttribute="leading" type="default" id="x3u-nd-ni0"/>
+                            <constraint firstItem="8DD-ii-GJe" firstAttribute="leading" secondItem="fiG-gU-rdi" secondAttribute="leading" type="default" id="7hv-cZ-Jg1"/>
+                            <constraint firstItem="8DD-ii-GJe" firstAttribute="top" secondItem="fiG-gU-rdi" secondAttribute="top" type="default" id="I8K-iV-Wrc"/>
+                            <constraint firstItem="8DD-ii-GJe" firstAttribute="trailing" secondItem="fiG-gU-rdi" secondAttribute="trailing" type="default" id="NXN-yX-40x"/>
+                            <constraint firstItem="QzZ-Tj-65u" firstAttribute="centerY" secondItem="KpH-Pl-T4t" secondAttribute="centerY" type="default" id="QKY-ek-LrH"/>
+                            <constraint firstItem="QzZ-Tj-65u" firstAttribute="leading" secondItem="fiG-gU-rdi" secondAttribute="leading" constant="98" id="Zed-ZI-aYn"/>
+                            <constraint firstItem="8DD-ii-GJe" firstAttribute="bottom" secondItem="fiG-gU-rdi" secondAttribute="bottom" type="default" id="jR9-3S-aWa"/>
+                            <constraint firstItem="KpH-Pl-T4t" firstAttribute="leading" secondItem="fiG-gU-rdi" secondAttribute="leading" constant="6" id="sYq-eA-s7r"/>
+                            <constraint firstItem="QzZ-Tj-65u" firstAttribute="top" secondItem="fiG-gU-rdi" secondAttribute="top" constant="419" id="x3H-1O-zgK"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="g4M-PM-pJk"/>
+                    <navigationItem key="navigationItem" id="JHb-zx-7mO"/>
                     <connections>
-                        <outlet property="tzSearchBar" destination="9rs-nT-HZX" id="rR8-y1-r0R"/>
-                        <outlet property="tzTable" destination="eTD-hO-7eW" id="vpF-Li-aUY"/>
+                        <outlet property="centerPoint" destination="QzZ-Tj-65u" id="Mkq-qv-RN9"/>
+                        <outlet property="mapView" destination="8DD-ii-GJe" id="d91-wl-q0O"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ANc-U2-80p" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EZj-un-CQ2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="979" y="-193"/>
+            <point key="canvasLocation" x="562" y="-121"/>
         </scene>
     </scenes>
     <classes>
-        <class className="CoreDataTableViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/CoreDataTableViewController.h"/>
-        </class>
         <class className="NSLayoutConstraint" superclassName="NSObject">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
         </class>
-        <class className="PWTimeTZSearchViewController" superclassName="CoreDataTableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/PWTimeTZSearchViewController.h"/>
+        <class className="PWTZMapViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PWTZMapViewController.h"/>
             <relationships>
-                <relationship kind="outlet" name="tzTable" candidateClass="UITableView"/>
+                <relationship kind="action" name="centerLocation:"/>
+                <relationship kind="action" name="goBack:"/>
+                <relationship kind="outlet" name="centerPoint" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
             </relationships>
         </class>
         <class className="PWTimeViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/PWTimeViewController.h"/>
             <relationships>
+                <relationship kind="action" name="clearNumDisconnects:"/>
+                <relationship kind="action" name="clockBackgroundSegmentSelected:"/>
+                <relationship kind="action" name="clockEnabledSwitchChanged:"/>
+                <relationship kind="action" name="clockSelected:"/>
+                <relationship kind="action" name="timeDisplayChanged:"/>
+                <relationship kind="action" name="trackLocationChanges:"/>
+                <relationship kind="action" name="updateWatchData:"/>
                 <relationship kind="outlet" name="clockBackground" candidateClass="UISegmentedControl"/>
                 <relationship kind="outlet" name="clockDisplay" candidateClass="UISegmentedControl"/>
                 <relationship kind="outlet" name="clockEnabled" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="clockLocation" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="clockSelect" candidateClass="UISegmentedControl"/>
-                <relationship kind="outlet" name="locality" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="tempUpdateTime" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="timeDisplay" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="tzDisplay" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="trackGPSUpdates" candidateClass="UISwitch"/>
                 <relationship kind="outlet" name="tzSelect" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="watchConnectIndicator" candidateClass="UIButton"/>
             </relationships>
         </class>
     </classes>
