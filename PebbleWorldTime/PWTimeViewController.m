@@ -8,35 +8,37 @@
 
 #import <PebbleKit/PebbleKit.h>
 #import <MapKit/MapKit.h>
-#import "PWTimeKeys.h"
-#import "PWTimeViewController.h"
-#import "PWTZMapViewController.h"
-#import "NSMutableArray+QueueAdditions.h"
+#import "PWTimeKeys.h"                          // Contstants for phone-watch communication
+#import "PWTimeViewController.h"                // Main view controller
+#import "PWTZMapViewController.h"               // View controller for selecting a timezone via mapview
+#import "NSMutableArray+QueueAdditions.h"       // Added queue functions to a NSMutableArray
+#import "NSString+USStateMap.h"                 // Converts from state name to abbreviation and vice-versa
 
 // Support classes, added via Pods
-#import "AFNetworking/AFNetworking.h"
-#import "Forecastr.h"
-#import "NSString+USStateMap.h"
+#import "AFNetworking/AFNetworking.h"           // Forecastr relies on AFNetworking
+#import "Forecastr.h"                           // To get weather on the watch
 
-@interface PWTimeViewController () <PBPebbleCentralDelegate, CLLocationManagerDelegate>
+@interface PWTimeViewController () <PBPebbleCentralDelegate, CLLocationManagerDelegate, MKMapViewDelegate>
 
 #pragma mark - Outlets for buttons/selectors, etc.
-@property (weak, nonatomic) IBOutlet UISegmentedControl *clockSelect;
-@property (weak, nonatomic) IBOutlet UISwitch           *clockEnabled;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *clockBackground;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *clockDisplay;
-@property (weak, nonatomic) IBOutlet UILabel            *clockLocation;
-@property (weak, nonatomic) IBOutlet UIButton           *tzSelect;
-@property (weak, nonatomic) IBOutlet UILabel            *tempUpdateTime;
-@property (weak, nonatomic) IBOutlet UIButton           *watchConnectIndicator;
-@property (weak, nonatomic) IBOutlet UISwitch           *trackGPSUpdates;
+@property (weak, nonatomic)   IBOutlet UISegmentedControl *clockSelect;
+@property (weak, nonatomic)   IBOutlet UISwitch           *clockEnabled;
+@property (weak, nonatomic)   IBOutlet UISegmentedControl *clockBackground;
+@property (weak, nonatomic)   IBOutlet UISegmentedControl *clockDisplay;
+@property (weak, nonatomic)   IBOutlet UISwitch           *trackGPSUpdates;
+@property (weak, nonatomic)   IBOutlet UILabel            *incomingMessages;
+@property (strong, nonatomic) IBOutlet MKMapView          *smallMap;
+@property (strong, nonatomic) IBOutlet UILabel            *mapNotation;
 
-@property (nonatomic) PBWatch        *targetWatch;
-@property (nonatomic) NSNumber       *numDisconnects;
-@property (nonatomic) id              watchUpdateHandler;
-@property (nonatomic) NSMutableArray *msgQueue;
-@property (nonatomic) NSLock         *queueLock;
-@property (nonatomic) NSMutableArray *clocks;
+@property (nonatomic) PBWatch           *targetWatch;
+@property (nonatomic) NSNumber          *numDisconnects;
+@property (nonatomic) id                 watchUpdateHandler;
+@property (nonatomic) NSNumber          *numIncomingWatchMessages;
+@property (nonatomic) NSMutableArray    *msgQueue;
+@property (nonatomic) NSLock            *queueLock;
+@property (nonatomic) NSMutableArray    *clocks;
+@property (nonatomic) MKPointAnnotation *annot;
+
 
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) Forecastr         *forecastr;
@@ -72,7 +74,8 @@ NSMutableDictionary *update;
     NSString *displayState;
     if (!([placemark.addressDictionary objectForKey:@"City"] == nil)) {
         if ([[placemark.addressDictionary objectForKey:@"CountryCode"] isEqualToString:@"US"])
-            displayState = [[placemark.addressDictionary objectForKey:@"State"] stateAbbreviationFromFullName];
+//            displayState = [[placemark.addressDictionary objectForKey:@"State"] stateAbbreviationFromFullName];
+            displayState = [placemark.addressDictionary objectForKey:@"State"];
         else
             displayState = [placemark.addressDictionary objectForKey:@"Country"];
     } else {
@@ -89,6 +92,14 @@ NSMutableDictionary *update;
         _numDisconnects = [[NSNumber alloc] initWithInt:0];
     }
     return _numDisconnects;
+}
+
+- (NSNumber *)numIncomingWatchMessages
+{
+    if (_numIncomingWatchMessages == nil) {
+        _numIncomingWatchMessages = [[NSNumber alloc] initWithInt:0];
+    }
+    return _numIncomingWatchMessages;
 }
 
 - (NSMutableArray *)msgQueue
@@ -141,11 +152,26 @@ NSMutableDictionary *update;
     return _conditions;    
 }
 
+- (MKPointAnnotation *)annot
+{
+    if (_annot == nil) {
+        _annot = [[MKPointAnnotation alloc] init];
+    }
+    return _annot;
+}
+
 #pragma mark - IBActions for associated buttons/selectors on screen
 
 - (IBAction)clockSelected:(id)sender
 {
     [self setViewElements:[self.clocks objectAtIndex:[sender selectedSegmentIndex]]];
+    [self showClockOnSmallMap:[self.clocks objectAtIndex:[self.clockSelect selectedSegmentIndex]]];
+    if ([self.clockSelect selectedSegmentIndex] == 0) {
+        self.mapNotation.text = @"Current location";
+    } else {
+        self.mapNotation.text = @"Touch map to change";
+    }
+
 }
 
 - (IBAction)clockEnabledSwitchChanged:(id)sender
@@ -158,6 +184,7 @@ NSMutableDictionary *update;
 //         @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY] forClocks:@[clock]];
 //    } else {
         [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY] forClocks:@[clock]];
+        [self updateWeather:clock];
 //    }
     
 }
@@ -180,7 +207,9 @@ NSMutableDictionary *update;
 - (IBAction)updateWatchData:(id)sender
 {    
     // Update the local watch with all of the current settings
-    [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY, @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY, @PBCOMM_HI_TEMP_KEY, @PBCOMM_LO_TEMP_KEY, @PBCOMM_SUNRISE_HOUR_KEY, @PBCOMM_SUNRISE_MIN_KEY, @PBCOMM_SUNSET_HOUR_KEY, @PBCOMM_SUNSET_MIN_KEY] forClocks:@[[self.clocks objectAtIndex:self.clockSelect.selectedSegmentIndex]]];
+//    [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_CITY_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_12_24_DISPLAY_KEY, @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY, @PBCOMM_HI_TEMP_KEY, @PBCOMM_LO_TEMP_KEY, @PBCOMM_SUNRISE_HOUR_KEY, @PBCOMM_SUNRISE_MIN_KEY, @PBCOMM_SUNSET_HOUR_KEY, @PBCOMM_SUNSET_MIN_KEY] forClocks:@[[self.clocks objectAtIndex:self.clockSelect.selectedSegmentIndex]]];
+    
+    [self updateWeather:[self.clocks objectAtIndex:self.clockSelect.selectedSegmentIndex]];
     
 }
 
@@ -434,7 +463,6 @@ NSMutableDictionary *update;
 //            NSLog(@"JSON:\n %@\n\n", JSON);
 #endif
             // Print the time in the selected time zone
-            NSDate *date = [[NSDate alloc] init];   // Get the current date and time
             NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
             formatter.dateFormat = @"HH:mm";
             [formatter setTimeZone:[NSTimeZone timeZoneWithName:clock.currentTZ]];
@@ -442,19 +470,15 @@ NSMutableDictionary *update;
             clock.currentTZ = [JSON objectForKey:@"timezone"];
             clock.currentTemp =[NSNumber numberWithInt:(int)([[[JSON objectForKey:@"currently"] objectForKey:@"temperature"] doubleValue] + 0.5)];
             clock.currentCondition = [[JSON objectForKey:@"currently"] objectForKey:@"icon"];
-//            if ([clock.currentCondition isEqualToString:@""])
-//                clock.currentCondition = @"unknown";
             clock.dailyHiTemp = [NSNumber numberWithInt:(int)([[[[[JSON objectForKey:@"daily"] objectForKey:@"data"] firstObject] objectForKey:@"temperatureMax"] doubleValue] + 0.5)];
             clock.dailyLoTemp = [NSNumber numberWithInt:(int)([[[[[JSON objectForKey:@"daily"] objectForKey:@"data"]  firstObject]objectForKey:@"temperatureMin"] doubleValue] + 0.5)];
             NSDate *sunriseDate = [[NSDate alloc] initWithTimeIntervalSince1970:[[[[[JSON objectForKey:@"daily"] objectForKey:@"data"]  firstObject]objectForKey:@"sunriseTime"] doubleValue]];
             NSDate *sunsetDate = [[NSDate alloc] initWithTimeIntervalSince1970:[[[[[JSON objectForKey:@"daily"] objectForKey:@"data"] firstObject] objectForKey:@"sunsetTime"] doubleValue]];
             clock.sunriseTime = [formatter stringFromDate:sunriseDate];
             clock.sunsetTime = [formatter stringFromDate:sunsetDate];
-            [self updateWatch:@[@PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY, @PBCOMM_HI_TEMP_KEY, @PBCOMM_LO_TEMP_KEY, @PBCOMM_SUNRISE_HOUR_KEY, @PBCOMM_SUNRISE_MIN_KEY, @PBCOMM_SUNSET_HOUR_KEY, @PBCOMM_SUNSET_MIN_KEY] forClocks:@[clock]];
+            [self updateWatch:@[@PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY, @PBCOMM_HI_TEMP_KEY, @PBCOMM_LO_TEMP_KEY, @PBCOMM_SUNRISE_HOUR_KEY, @PBCOMM_SUNRISE_MIN_KEY, @PBCOMM_SUNSET_HOUR_KEY, @PBCOMM_SUNSET_MIN_KEY] forClocks:@[clock]];
             
-            // Display the time on the phone in the selected time zone
-            self.tempUpdateTime.text = [formatter stringFromDate:date];            
-        } failure:^(NSError *error, id response) {            
+        } failure:^(NSError *error, id response) {
             clock.currentTemp = [NSNumber numberWithInt:-99];
             clock.dailyHiTemp = [NSNumber numberWithInt:-99];
             clock.dailyLoTemp = [NSNumber numberWithInt:-99];
@@ -506,14 +530,12 @@ NSMutableDictionary *update;
         clock.city = [PWTimeViewController getDisplayCity:placemark];
         clock.state = [PWTimeViewController getDisplayState:placemark];
         clock.country = [placemark.addressDictionary objectForKey:@"CountryCode"];
-        if ([clock.name isEqualToString:[[self.clocks objectAtIndex:self.clockSelect.selectedSegmentIndex] name]]) {
-            [self.clockLocation setText:[[clock.city stringByAppendingString:@", "] stringByAppendingString:clock.state]];
-        }
         
 #ifdef PWDEBUG
         NSLog(@"setTzLocation: latitude: %3.8f, longitude: %3.8f\n", [clock.latitude floatValue], [clock.longitude floatValue]);
 #endif
         [self updateWatch:@[@PBCOMM_CITY_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY] forClocks:@[clock]];
+        [self showClockOnSmallMap:[self.clocks objectAtIndex:[self.clockSelect selectedSegmentIndex]]];
         
         //
         // Since location changed, update weather as well
@@ -534,6 +556,8 @@ NSMutableDictionary *update;
     if (location == nil) return;
     PWClock *clock = [self.clocks objectAtIndex:0];  // Index 0 is always the local watch, which is the only watch that tracks the GPS
     [self setTzLocation:location forClock:clock];
+    [self showClockOnSmallMap:[self.clocks objectAtIndex:[self.clockSelect selectedSegmentIndex]]];
+
 }
 
 #pragma mark - UIViewController delegate methods and support methods
@@ -549,14 +573,38 @@ NSMutableDictionary *update;
     }
     
     if ([self.clockSelect selectedSegmentIndex] == 0) {
-        self.clockEnabled.on = TRUE;
+//        self.clockEnabled.on = TRUE;
         self.clockEnabled.hidden = TRUE;
-        self.tzSelect.hidden = TRUE;
     } else {
         self.clockEnabled.hidden = FALSE;
-        self.tzSelect.hidden = FALSE;
     }
-    [self.clockLocation setText:[[clock.city stringByAppendingString:@", "] stringByAppendingString:clock.state]];
+}
+
+- (void)showClockOnSmallMap:(PWClock *)clock
+{
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([clock.latitude floatValue], [clock.longitude floatValue]);
+    MKCoordinateRegion mapRegion;
+    mapRegion.center = coordinate;
+    mapRegion.span = MKCoordinateSpanMake(0.2, 0.2);
+    [self.smallMap setRegion:mapRegion animated:NO];
+    
+    // Set up the small map view on the main screen
+    self.smallMap.showsUserLocation = NO;
+    if ([clock.latitude floatValue] != 1000.0) {
+        MKCoordinateRegion mapRegion;
+        mapRegion.center = coordinate;
+        mapRegion.span = MKCoordinateSpanMake(0.2, 0.2);
+        self.annot.coordinate = coordinate;
+        [self.smallMap addAnnotation:self.annot];
+    }
+    
+}
+
+- (void)handleSingleTap:(UITapGestureRecognizer *)recognizer {
+    
+    if ([self.clockSelect selectedSegmentIndex] == 1)
+        [self performSegueWithIdentifier:@"toMap" sender:self];
+    
 }
 
 - (void)viewDidLoad
@@ -576,6 +624,19 @@ NSMutableDictionary *update;
     }
     [self setViewElements:[self.clocks objectAtIndex:0]];
     
+    // Tapping the small map segues to a full screen map for selecting the alternate time zone
+    UITapGestureRecognizer *singleFingerTap =
+    [[UITapGestureRecognizer alloc] initWithTarget:self
+                                            action:@selector(handleSingleTap:)];
+    self.smallMap.zoomEnabled = NO;
+    self.smallMap.scrollEnabled = NO;
+    self.smallMap.pitchEnabled = NO;
+    self.smallMap.rotateEnabled = NO;
+    [self.smallMap addGestureRecognizer:singleFingerTap];
+
+    
+    [self showClockOnSmallMap:[self.clocks objectAtIndex:[self.clockSelect selectedSegmentIndex]]];
+
     // This queue manages the messaging between the phone and the watch. It sequences messages to make sure one is complete and acknowledged
     // before the next is sent.
     watchQueue = dispatch_queue_create("com.dkkrause.PebbleWorldTime", NULL);
@@ -652,11 +713,9 @@ NSMutableDictionary *update;
 - (void)updateDisconnectIndicator
 {
     if ([[[PBPebbleCentral defaultCentral] connectedWatches] containsObject:self.targetWatch]) {
-        [self.watchConnectIndicator setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
-        [self.watchConnectIndicator setTitle:[self discTitle:@"Watch Connected"] forState:UIControlStateNormal];
+        self.view.backgroundColor = [UIColor whiteColor];
     } else {
-        [self.watchConnectIndicator setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-        [self.watchConnectIndicator setTitle:[self discTitle:@"Watch Disconnected"] forState:UIControlStateNormal];
+        self.view.backgroundColor = [UIColor redColor];
     }
 }
 
@@ -666,6 +725,8 @@ NSMutableDictionary *update;
     NSLog(@"Entering addReceiveHandler\n");
 #endif
     self.watchUpdateHandler = [watch appMessagesAddReceiveUpdateHandler:^BOOL(PBWatch *watch, NSDictionary *update) {
+        self.numIncomingWatchMessages = [NSNumber numberWithInt:[self.numIncomingWatchMessages intValue] + 1];
+        self.incomingMessages.text = [NSString stringWithFormat:@"%d", [self.numIncomingWatchMessages intValue]];
         [update enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
 #ifdef PWDEBUG
             NSLog(@"receivehandler block: key: %@, obj: %@\n", key, obj);

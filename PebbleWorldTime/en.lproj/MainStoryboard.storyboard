@@ -1,165 +1,161 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12E55" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4510" systemVersion="12F37" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
     <dependencies>
-        <development version="4600" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
+        <deployment defaultVersion="1552" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
     </dependencies>
     <scenes>
         <!--Time View Controller - TZ1-->
         <scene sceneID="11">
             <objects>
                 <viewController id="2" customClass="PWTimeViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Zbx-Xn-0Pw"/>
+                        <viewControllerLayoutGuide type="bottom" id="rVR-IZ-s8n"/>
+                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="16">
-                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="c0h-fq-YDK">
+                                <rect key="frame" x="263" y="67" width="51" height="31"/>
                                 <connections>
                                     <action selector="clockEnabledSwitchChanged:" destination="2" eventType="valueChanged" id="LMI-hx-akr"/>
                                 </connections>
                             </switch>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bordered" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="uI8-nx-acB">
+                                <rect key="frame" x="9" y="141" width="303" height="29"/>
                                 <segments>
-                                    <segment title="Dark"/>
-                                    <segment title="Light"/>
-                                    <segment title="Suns"/>
+                                    <segment title="Dark" width="100.33333333333333"/>
+                                    <segment title="Light" width="100.33333333333333"/>
+                                    <segment title="Suns" width="100.33333333333333"/>
                                 </segments>
                                 <connections>
                                     <action selector="clockBackgroundSegmentSelected:" destination="2" eventType="valueChanged" id="hUh-fW-whH"/>
                                 </connections>
                             </segmentedControl>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PLK-02-Mrl">
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="254" id="QNE-Rr-ROx"/>
-                                    <constraint firstAttribute="height" constant="30" id="jKe-sd-Y73"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="2" translatesAutoresizingMaskIntoConstraints="NO" id="ApT-jg-eLM">
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="303" id="zF9-mY-snB"/>
-                                </constraints>
+                                <rect key="frame" x="9" y="105" width="303" height="29"/>
                                 <segments>
-                                    <segment title="Watch"/>
-                                    <segment title="12-hour"/>
-                                    <segment title="24-hour"/>
+                                    <segment title="Watch" width="100"/>
+                                    <segment title="12-hour" width="100.33333333333333"/>
+                                    <segment title="24-hour" width="100.33333333333333"/>
                                 </segments>
                                 <connections>
                                     <action selector="timeDisplayChanged:" destination="2" eventType="valueChanged" id="Q08-uG-Jqj"/>
                                 </connections>
                             </segmentedControl>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QfD-2L-WH1">
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="ssI-Yj-XjH" kind="modal" identifier="toMap" id="88b-7f-e2J"/>
-                                </connections>
-                            </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="I4z-H9-XDd">
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="203" id="rXv-vh-AAC"/>
-                                </constraints>
+                                <rect key="frame" x="9" y="69" width="201" height="29"/>
                                 <segments>
-                                    <segment title="Local"/>
-                                    <segment title="TZ"/>
+                                    <segment title="Local" width="100"/>
+                                    <segment title="TZ" width="100"/>
                                 </segments>
                                 <connections>
                                     <action selector="clockSelected:" destination="2" eventType="valueChanged" id="BKa-l4-5iz"/>
                                 </connections>
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1DL-hY-YMp">
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <rect key="frame" x="9" y="536" width="51" height="30"/>
                                 <state key="normal" title="Update">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="updateWatchData:" destination="2" eventType="touchUpInside" id="Xf2-ns-l9B"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="auI-Kb-jPZ">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="26" id="Frl-Vp-6P8"/>
-                                    <constraint firstAttribute="width" constant="239" id="VN2-bz-u5p"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fGr-P1-Z20">
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="42" id="xA9-sr-SgO"/>
-                                    <constraint firstAttribute="height" constant="21" id="z8e-kX-een"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YIP-1c-Iyv">
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="203" id="hxJ-W0-gto"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Watch Disconnected">
-                                    <color key="titleColor" red="0.875" green="0.063016399319999999" blue="0.1146325029" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="clearNumDisconnects:" destination="2" eventType="touchUpInside" id="kq0-K3-lZ1"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Track Location Changes" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="65Y-mX-MdX">
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <rect key="frame" x="9" y="519" width="186" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="186" id="d2q-4e-uT4"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="msO-sj-OmK">
+                                <rect key="frame" x="263" y="514" width="51" height="31"/>
                                 <connections>
                                     <action selector="trackLocationChanges:" destination="2" eventType="valueChanged" id="F3O-6n-iAF"/>
                                 </connections>
                             </switch>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Db0-4b-VqD">
+                                <rect key="frame" x="139" y="543" width="42" height="17"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="42" id="O1k-Uf-NlF"/>
+                                    <constraint firstAttribute="height" constant="17" id="wC1-cl-45b"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="jZ6-yk-uKK">
+                                <rect key="frame" x="0.0" y="177" width="320" height="329"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            </mapView>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fcy-d5-eah">
+                                <rect key="frame" x="228" y="72" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <state key="normal">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="ssI-Yj-XjH" kind="modal" identifier="toMap" modalTransitionStyle="flipHorizontal" id="CEe-TM-eUh"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Pebble World Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MmU-ty-AZa">
+                                <rect key="frame" x="54" y="30" width="213" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
+                                <color key="textColor" red="0.875" green="0.063016399319999999" blue="0.1146325029" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current Location" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wtf-c4-tSv">
+                                <rect key="frame" x="67" y="177" width="186" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="186" id="aJu-Tv-tWi"/>
+                                    <constraint firstAttribute="height" constant="21" id="gds-z4-mjk"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="auI-Kb-jPZ" firstAttribute="baseline" secondItem="PLK-02-Mrl" secondAttribute="baseline" type="default" id="1ge-68-n9n"/>
-                            <constraint firstItem="QfD-2L-WH1" firstAttribute="top" secondItem="16" secondAttribute="top" constant="170" id="3hz-JQ-VS1"/>
-                            <constraint firstItem="PLK-02-Mrl" firstAttribute="top" secondItem="I4z-H9-XDd" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="73b-QF-UhK"/>
-                            <constraint firstItem="65Y-mX-MdX" firstAttribute="leading" secondItem="ApT-jg-eLM" secondAttribute="leading" type="default" id="7Gh-wD-kJC"/>
-                            <constraint firstItem="msO-sj-OmK" firstAttribute="top" secondItem="16" secondAttribute="top" constant="216" id="84p-oB-nOU"/>
-                            <constraint firstItem="YIP-1c-Iyv" firstAttribute="centerX" secondItem="16" secondAttribute="centerX" type="default" id="8Ur-9L-1mP"/>
-                            <constraint firstItem="PLK-02-Mrl" firstAttribute="trailing" secondItem="auI-Kb-jPZ" secondAttribute="trailing" type="default" id="98E-nX-3WF"/>
-                            <constraint firstAttribute="bottom" secondItem="fGr-P1-Z20" secondAttribute="bottom" constant="32" id="Ak3-Qb-63g"/>
-                            <constraint firstItem="fGr-P1-Z20" firstAttribute="top" secondItem="1DL-hY-YMp" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="G6y-lv-LT5"/>
-                            <constraint firstItem="1DL-hY-YMp" firstAttribute="top" secondItem="uI8-nx-acB" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="Glg-QI-59t"/>
-                            <constraint firstItem="ApT-jg-eLM" firstAttribute="trailing" secondItem="uI8-nx-acB" secondAttribute="trailing" type="default" id="GrD-1z-jTU"/>
-                            <constraint firstItem="msO-sj-OmK" firstAttribute="trailing" secondItem="ApT-jg-eLM" secondAttribute="trailing" type="default" id="MOR-Ax-734"/>
-                            <constraint firstItem="I4z-H9-XDd" firstAttribute="trailing" secondItem="65Y-mX-MdX" secondAttribute="trailing" type="default" id="NfY-LK-gSU"/>
-                            <constraint firstItem="c0h-fq-YDK" firstAttribute="centerY" secondItem="I4z-H9-XDd" secondAttribute="centerY" type="default" id="Qui-v6-jwB"/>
-                            <constraint firstItem="PLK-02-Mrl" firstAttribute="leading" secondItem="I4z-H9-XDd" secondAttribute="leading" type="default" id="SmZ-Tx-viq"/>
-                            <constraint firstItem="QfD-2L-WH1" firstAttribute="trailing" secondItem="c0h-fq-YDK" secondAttribute="trailing" type="default" id="W5o-Qy-yIP"/>
-                            <constraint firstItem="I4z-H9-XDd" firstAttribute="top" secondItem="16" secondAttribute="top" constant="114" id="YMK-f2-RJK"/>
-                            <constraint firstItem="uI8-nx-acB" firstAttribute="top" secondItem="ApT-jg-eLM" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="eJL-kZ-qfg"/>
-                            <constraint firstItem="YIP-1c-Iyv" firstAttribute="top" secondItem="16" secondAttribute="top" constant="31" id="hzr-ZD-NMX"/>
-                            <constraint firstItem="msO-sj-OmK" firstAttribute="leading" secondItem="c0h-fq-YDK" secondAttribute="leading" type="default" id="jvR-TX-MYe"/>
-                            <constraint firstItem="ApT-jg-eLM" firstAttribute="centerX" secondItem="YIP-1c-Iyv" secondAttribute="centerX" type="default" id="mle-6j-YPb"/>
-                            <constraint firstItem="1DL-hY-YMp" firstAttribute="centerX" secondItem="uI8-nx-acB" secondAttribute="centerX" type="default" id="nIl-dU-vJP"/>
-                            <constraint firstItem="ApT-jg-eLM" firstAttribute="leading" secondItem="uI8-nx-acB" secondAttribute="leading" type="default" id="pwD-Nk-FLd"/>
-                            <constraint firstItem="65Y-mX-MdX" firstAttribute="centerY" secondItem="msO-sj-OmK" secondAttribute="centerY" type="default" id="u24-f0-2z0"/>
-                            <constraint firstItem="1DL-hY-YMp" firstAttribute="centerX" secondItem="fGr-P1-Z20" secondAttribute="centerX" type="default" id="uia-2u-xLD"/>
-                            <constraint firstItem="65Y-mX-MdX" firstAttribute="leading" secondItem="PLK-02-Mrl" secondAttribute="leading" type="default" id="uq3-rA-wAf"/>
+                            <constraint firstAttribute="centerX" secondItem="Wtf-c4-tSv" secondAttribute="centerX" id="2bV-6M-mj4"/>
+                            <constraint firstItem="rVR-IZ-s8n" firstAttribute="top" secondItem="65Y-mX-MdX" secondAttribute="bottom" constant="28" id="5QE-yK-NaV"/>
+                            <constraint firstItem="uI8-nx-acB" firstAttribute="top" secondItem="Zbx-Xn-0Pw" secondAttribute="bottom" constant="121" id="6Kv-ev-Omw"/>
+                            <constraint firstItem="ApT-jg-eLM" firstAttribute="trailing" secondItem="msO-sj-OmK" secondAttribute="trailing" id="8gz-fY-4mQ"/>
+                            <constraint firstItem="rVR-IZ-s8n" firstAttribute="top" secondItem="Db0-4b-VqD" secondAttribute="bottom" constant="8" id="BC1-ba-opF"/>
+                            <constraint firstItem="65Y-mX-MdX" firstAttribute="leading" secondItem="uI8-nx-acB" secondAttribute="leading" id="Bei-7M-PFL"/>
+                            <constraint firstItem="uI8-nx-acB" firstAttribute="leading" secondItem="1DL-hY-YMp" secondAttribute="leading" id="CmG-Ji-2N3"/>
+                            <constraint firstItem="ApT-jg-eLM" firstAttribute="leading" secondItem="uI8-nx-acB" secondAttribute="leading" id="EHq-jL-3EK"/>
+                            <constraint firstItem="65Y-mX-MdX" firstAttribute="leading" secondItem="I4z-H9-XDd" secondAttribute="leading" id="FSO-WU-Yv3"/>
+                            <constraint firstAttribute="centerX" secondItem="Db0-4b-VqD" secondAttribute="centerX" id="Jex-4L-eip"/>
+                            <constraint firstItem="jZ6-yk-uKK" firstAttribute="leading" secondItem="16" secondAttribute="leading" id="MhT-Dz-TBt"/>
+                            <constraint firstItem="rVR-IZ-s8n" firstAttribute="top" secondItem="msO-sj-OmK" secondAttribute="bottom" constant="23" id="N5Q-la-NLp"/>
+                            <constraint firstItem="Wtf-c4-tSv" firstAttribute="top" secondItem="uI8-nx-acB" secondAttribute="bottom" constant="8" id="O5M-Bj-CaD"/>
+                            <constraint firstItem="ApT-jg-eLM" firstAttribute="trailing" secondItem="uI8-nx-acB" secondAttribute="trailing" id="PW8-P6-u4j"/>
+                            <constraint firstItem="ApT-jg-eLM" firstAttribute="trailing" secondItem="uI8-nx-acB" secondAttribute="trailing" id="Pbm-zl-GjM"/>
+                            <constraint firstItem="ApT-jg-eLM" firstAttribute="leading" secondItem="I4z-H9-XDd" secondAttribute="leading" id="TBj-ZM-LIB"/>
+                            <constraint firstItem="I4z-H9-XDd" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="9" id="Wrr-Pg-X59"/>
+                            <constraint firstItem="65Y-mX-MdX" firstAttribute="top" secondItem="jZ6-yk-uKK" secondAttribute="bottom" constant="13" id="Ywp-vK-LtR"/>
+                            <constraint firstItem="65Y-mX-MdX" firstAttribute="leading" secondItem="ApT-jg-eLM" secondAttribute="leading" id="cAa-TW-bJE"/>
+                            <constraint firstAttribute="trailing" secondItem="c0h-fq-YDK" secondAttribute="trailing" constant="8" id="dlY-6d-aID"/>
+                            <constraint firstItem="65Y-mX-MdX" firstAttribute="leading" secondItem="1DL-hY-YMp" secondAttribute="leading" id="g3O-Oj-wlj"/>
+                            <constraint firstItem="c0h-fq-YDK" firstAttribute="top" secondItem="Zbx-Xn-0Pw" secondAttribute="bottom" constant="47" id="gHH-qe-hWa"/>
+                            <constraint firstItem="msO-sj-OmK" firstAttribute="leading" secondItem="c0h-fq-YDK" secondAttribute="leading" id="hfj-px-96u"/>
+                            <constraint firstAttribute="trailing" secondItem="jZ6-yk-uKK" secondAttribute="trailing" id="j7D-2h-6ud"/>
+                            <constraint firstItem="ApT-jg-eLM" firstAttribute="leading" secondItem="65Y-mX-MdX" secondAttribute="leading" id="j9k-wl-Ygg"/>
+                            <constraint firstItem="rVR-IZ-s8n" firstAttribute="top" secondItem="1DL-hY-YMp" secondAttribute="bottom" constant="2" id="ktX-tn-Ifn"/>
+                            <constraint firstItem="jZ6-yk-uKK" firstAttribute="top" secondItem="uI8-nx-acB" secondAttribute="bottom" constant="8" id="lBa-Ee-Eia"/>
+                            <constraint firstItem="ApT-jg-eLM" firstAttribute="top" secondItem="Zbx-Xn-0Pw" secondAttribute="bottom" constant="85" id="lU0-rm-Plo"/>
+                            <constraint firstItem="I4z-H9-XDd" firstAttribute="top" secondItem="16" secondAttribute="top" constant="69" id="r9h-Yo-k9D"/>
+                            <constraint firstItem="ApT-jg-eLM" firstAttribute="leading" secondItem="65Y-mX-MdX" secondAttribute="leading" id="zJz-fe-JSk"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="TZ1" id="7"/>
@@ -167,13 +163,12 @@
                         <outlet property="clockBackground" destination="uI8-nx-acB" id="7PG-cK-cc4"/>
                         <outlet property="clockDisplay" destination="ApT-jg-eLM" id="cVZ-Rt-1mi"/>
                         <outlet property="clockEnabled" destination="c0h-fq-YDK" id="6wn-Vn-BdD"/>
-                        <outlet property="clockLocation" destination="auI-Kb-jPZ" id="2DG-eh-IWs"/>
                         <outlet property="clockSelect" destination="I4z-H9-XDd" id="rO6-MV-4mK"/>
-                        <outlet property="tempUpdateTime" destination="fGr-P1-Z20" id="iVP-9f-7I3"/>
+                        <outlet property="incomingMessages" destination="Db0-4b-VqD" id="IjA-ju-zb2"/>
+                        <outlet property="mapNotation" destination="Wtf-c4-tSv" id="9dC-kk-Pvv"/>
+                        <outlet property="smallMap" destination="jZ6-yk-uKK" id="Mns-D7-Mh9"/>
                         <outlet property="trackGPSUpdates" destination="msO-sj-OmK" id="FHs-pb-qFc"/>
-                        <outlet property="tzSelect" destination="QfD-2L-WH1" id="6a7-Yp-tOf"/>
                         <outlet property="view" destination="16" id="NbJ-D4-z7F"/>
-                        <outlet property="watchConnectIndicator" destination="YIP-1c-Iyv" id="GjO-XV-kpg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="10" sceneMemberID="firstResponder"/>
@@ -184,38 +179,32 @@
         <scene sceneID="WZQ-OG-bBf">
             <objects>
                 <viewController id="ssI-Yj-XjH" customClass="PWTZMapViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="WxQ-Br-jAk"/>
+                        <viewControllerLayoutGuide type="bottom" id="hfQ-SZ-N69"/>
+                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="fiG-gU-rdi">
-                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="8DD-ii-GJe">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <connections>
                                     <outlet property="delegate" destination="ssI-Yj-XjH" id="wlw-en-kh4"/>
                                 </connections>
                             </mapView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KpH-Pl-T4t">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="25" id="Fb5-kd-viq"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="Back">
-                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
+                                <rect key="frame" x="20" y="506" width="35" height="30"/>
+                                <state key="normal" title="Back"/>
                                 <connections>
                                     <action selector="goBack:" destination="ssI-Yj-XjH" eventType="touchUpInside" id="nLJ-XZ-4Wx"/>
                                 </connections>
                             </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="QzZ-Tj-65u">
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="161" id="THM-zg-dhH"/>
-                                </constraints>
+                                <rect key="frame" x="85" y="507" width="151" height="29"/>
                                 <segments>
-                                    <segment title="Current"/>
-                                    <segment title="TZ"/>
+                                    <segment title="Current" width="75"/>
+                                    <segment title="TZ" width="75"/>
                                 </segments>
                                 <connections>
                                     <action selector="centerLocation:" destination="ssI-Yj-XjH" eventType="valueChanged" id="gIs-cE-fsh"/>
@@ -224,14 +213,14 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="8DD-ii-GJe" firstAttribute="leading" secondItem="fiG-gU-rdi" secondAttribute="leading" type="default" id="7hv-cZ-Jg1"/>
-                            <constraint firstItem="8DD-ii-GJe" firstAttribute="top" secondItem="fiG-gU-rdi" secondAttribute="top" type="default" id="I8K-iV-Wrc"/>
-                            <constraint firstItem="8DD-ii-GJe" firstAttribute="trailing" secondItem="fiG-gU-rdi" secondAttribute="trailing" type="default" id="NXN-yX-40x"/>
-                            <constraint firstItem="QzZ-Tj-65u" firstAttribute="centerY" secondItem="KpH-Pl-T4t" secondAttribute="centerY" type="default" id="QKY-ek-LrH"/>
-                            <constraint firstItem="QzZ-Tj-65u" firstAttribute="leading" secondItem="fiG-gU-rdi" secondAttribute="leading" constant="98" id="Zed-ZI-aYn"/>
-                            <constraint firstItem="8DD-ii-GJe" firstAttribute="bottom" secondItem="fiG-gU-rdi" secondAttribute="bottom" type="default" id="jR9-3S-aWa"/>
-                            <constraint firstItem="KpH-Pl-T4t" firstAttribute="leading" secondItem="fiG-gU-rdi" secondAttribute="leading" constant="6" id="sYq-eA-s7r"/>
-                            <constraint firstItem="QzZ-Tj-65u" firstAttribute="top" secondItem="fiG-gU-rdi" secondAttribute="top" constant="419" id="x3H-1O-zgK"/>
+                            <constraint firstItem="8DD-ii-GJe" firstAttribute="leading" secondItem="fiG-gU-rdi" secondAttribute="leading" id="0lm-nv-g2F"/>
+                            <constraint firstAttribute="bottom" secondItem="8DD-ii-GJe" secondAttribute="bottom" id="FB5-fs-kgc"/>
+                            <constraint firstAttribute="centerX" secondItem="QzZ-Tj-65u" secondAttribute="centerX" id="GXC-fe-X99"/>
+                            <constraint firstItem="8DD-ii-GJe" firstAttribute="top" secondItem="fiG-gU-rdi" secondAttribute="top" id="Jj1-Ln-PS9"/>
+                            <constraint firstItem="hfQ-SZ-N69" firstAttribute="top" secondItem="QzZ-Tj-65u" secondAttribute="bottom" constant="33" id="R4B-mq-I0T"/>
+                            <constraint firstAttribute="trailing" secondItem="8DD-ii-GJe" secondAttribute="trailing" id="hvV-bh-6Aq"/>
+                            <constraint firstItem="KpH-Pl-T4t" firstAttribute="leading" secondItem="fiG-gU-rdi" secondAttribute="leading" constant="20" id="n33-BX-NG2"/>
+                            <constraint firstItem="hfQ-SZ-N69" firstAttribute="top" secondItem="KpH-Pl-T4t" secondAttribute="bottom" constant="32" id="tUI-28-WkJ"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="JHb-zx-7mO"/>
@@ -242,47 +231,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EZj-un-CQ2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="562" y="-121"/>
+            <point key="canvasLocation" x="560" y="-121"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="NSLayoutConstraint" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
-        </class>
-        <class className="PWTZMapViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/PWTZMapViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="centerLocation:"/>
-                <relationship kind="action" name="goBack:"/>
-                <relationship kind="outlet" name="centerPoint" candidateClass="UISegmentedControl"/>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-            </relationships>
-        </class>
-        <class className="PWTimeViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/PWTimeViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="clearNumDisconnects:"/>
-                <relationship kind="action" name="clockBackgroundSegmentSelected:"/>
-                <relationship kind="action" name="clockEnabledSwitchChanged:"/>
-                <relationship kind="action" name="clockSelected:"/>
-                <relationship kind="action" name="timeDisplayChanged:"/>
-                <relationship kind="action" name="trackLocationChanges:"/>
-                <relationship kind="action" name="updateWatchData:"/>
-                <relationship kind="outlet" name="clockBackground" candidateClass="UISegmentedControl"/>
-                <relationship kind="outlet" name="clockDisplay" candidateClass="UISegmentedControl"/>
-                <relationship kind="outlet" name="clockEnabled" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="clockLocation" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="clockSelect" candidateClass="UISegmentedControl"/>
-                <relationship kind="outlet" name="tempUpdateTime" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="trackGPSUpdates" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="tzSelect" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="watchConnectIndicator" candidateClass="UIButton"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
 </document>

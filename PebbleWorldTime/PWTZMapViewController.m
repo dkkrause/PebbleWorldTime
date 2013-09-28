@@ -57,6 +57,8 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.mapView.showsUserLocation = YES;
+    self.mapView.pitchEnabled = NO;
+    self.mapView.rotateEnabled = NO;
     if ([self.clock.latitude floatValue] != 1000.0) {
         CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([self.clock.latitude floatValue], [self.clock.longitude floatValue]);
         [self centerMap:coordinate];
