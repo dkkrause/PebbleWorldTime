@@ -10,7 +10,6 @@
 #import <MapKit/MapKit.h>
 #import "PWTimeKeys.h"                          // Contstants for phone-watch communication
 #import "PWTimeViewController.h"                // Main view controller
-#import "PWTZMapViewController.h"               // View controller for selecting a timezone via mapview
 #import "NSMutableArray+QueueAdditions.h"       // Added queue functions to a NSMutableArray
 #import "NSString+USStateMap.h"                 // Converts from state name to abbreviation and vice-versa
 
@@ -26,14 +25,11 @@
 @property (weak, nonatomic)   IBOutlet UISegmentedControl *clockBackground;
 @property (weak, nonatomic)   IBOutlet UISegmentedControl *clockDisplay;
 @property (weak, nonatomic)   IBOutlet UISwitch           *trackGPSUpdates;
-@property (weak, nonatomic)   IBOutlet UILabel            *incomingMessages;
 @property (strong, nonatomic) IBOutlet MKMapView          *smallMap;
-@property (strong, nonatomic) IBOutlet UILabel            *mapNotation;
 
 @property (nonatomic) PBWatch           *targetWatch;
 @property (nonatomic) NSNumber          *numDisconnects;
 @property (nonatomic) id                 watchUpdateHandler;
-@property (nonatomic) NSNumber          *numIncomingWatchMessages;
 @property (nonatomic) NSMutableArray    *msgQueue;
 @property (nonatomic) NSLock            *queueLock;
 @property (nonatomic) NSMutableArray    *clocks;
@@ -44,6 +40,7 @@
 @property (nonatomic) Forecastr         *forecastr;
 @property (nonatomic) NSTimer           *weatherTimer;
 @property (nonatomic) NSArray           *conditions;
+@property (copy)      void               (^completionHandler)();
 
 @end
 
@@ -51,6 +48,8 @@
 {
     dispatch_queue_t watchQueue;
 }
+
+#define AppDelegate ((PWTimeAppDelegate *)[UIApplication sharedApplication].delegate)
 
 NSMutableDictionary *update;
 
@@ -74,7 +73,6 @@ NSMutableDictionary *update;
     NSString *displayState;
     if (!([placemark.addressDictionary objectForKey:@"City"] == nil)) {
         if ([[placemark.addressDictionary objectForKey:@"CountryCode"] isEqualToString:@"US"])
-//            displayState = [[placemark.addressDictionary objectForKey:@"State"] stateAbbreviationFromFullName];
             displayState = [placemark.addressDictionary objectForKey:@"State"];
         else
             displayState = [placemark.addressDictionary objectForKey:@"Country"];
@@ -92,14 +90,6 @@ NSMutableDictionary *update;
         _numDisconnects = [[NSNumber alloc] initWithInt:0];
     }
     return _numDisconnects;
-}
-
-- (NSNumber *)numIncomingWatchMessages
-{
-    if (_numIncomingWatchMessages == nil) {
-        _numIncomingWatchMessages = [[NSNumber alloc] initWithInt:0];
-    }
-    return _numIncomingWatchMessages;
 }
 
 - (NSMutableArray *)msgQueue
@@ -164,14 +154,12 @@ NSMutableDictionary *update;
 
 - (IBAction)clockSelected:(id)sender
 {
-    [self setViewElements:[self.clocks objectAtIndex:[sender selectedSegmentIndex]]];
+    [self setViewElements:[self.clocks objectAtIndex:[sender selectedSegmentIndex]]];    // Set up the small map view on the main screen
     [self showClockOnSmallMap:[self.clocks objectAtIndex:[self.clockSelect selectedSegmentIndex]]];
-    if ([self.clockSelect selectedSegmentIndex] == 0) {
-        self.mapNotation.text = @"Current location";
-    } else {
-        self.mapNotation.text = @"Touch map to change";
-    }
+}
 
+- (IBAction)redrawMap:(id)sender {
+    [self showClockOnSmallMap:[self.clocks objectAtIndex:[self.clockSelect selectedSegmentIndex]]];
 }
 
 - (IBAction)clockEnabledSwitchChanged:(id)sender
@@ -179,13 +167,13 @@ NSMutableDictionary *update;
     
     PWClock *clock = [self.clocks objectAtIndex:self.clockSelect.selectedSegmentIndex];
     clock.enabled = [NSNumber numberWithBool:[sender isOn]];
-//    if ([clock.enabled boolValue]) {
-//        [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_CITY_KEY, @PBCOMM_12_24_DISPLAY_KEY,
-//         @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY] forClocks:@[clock]];
-//    } else {
+    if ([clock.enabled boolValue]) {
+        [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_CITY_KEY, @PBCOMM_12_24_DISPLAY_KEY,
+         @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY] forClocks:@[clock]];
+    } else {
         [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY] forClocks:@[clock]];
-        [self updateWeather:clock];
-//    }
+//        [self updateWeather:clock];
+    }
     
 }
 
@@ -225,8 +213,10 @@ NSMutableDictionary *update;
         UISwitch *locSwitch = (UISwitch *)sender;
         if (locSwitch.on) {
             [self startSignificantLocationChangeUpdates];
+            [AppDelegate enableBackgroundFetch];
         } else {
             [self stopSignificantLocationChangeUpdates];
+            [AppDelegate disableBackgroundFetch];
         }
     }
 }
@@ -271,6 +261,11 @@ NSMutableDictionary *update;
  * updateWatch:forClocks - sends the data associated with the key parameter to the specified clock to update the information
  */
 - (void)updateWatch:(NSArray *)keys forClocks:(NSArray *)clocks
+{
+    [self updateWatch:keys forClocks:clocks withCompletionHandler:nil];
+}
+
+- (void)updateWatch:(NSArray *)keys forClocks:(NSArray *)clocks withCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
 
     // We  communicate with the watch when we call -appMessagesGetIsSupported: which implicitely opens the communication session.
@@ -414,6 +409,8 @@ NSMutableDictionary *update;
                 [self.msgQueue NSMAEnqueue:update];
                 [self.queueLock unlock];
                 dispatch_async(watchQueue, ^{[self sendMsgToPebble];});
+                if (completionHandler!= nil)
+                    dispatch_async(watchQueue, ^{completionHandler(UIBackgroundFetchResultNewData);});
                 return;
             }
             @catch (NSException *exception) {
@@ -431,6 +428,12 @@ NSMutableDictionary *update;
 //
 // Methods to handle weather, both getting info and handling timers to refresh information
 //
+
+- (void)backgroundUpdateWeather:(void (^)(UIBackgroundFetchResult))completionHandler
+{
+    [self updateWeather:[self.clocks objectAtIndex:0] withCompletionHandler:nil];
+    [self updateWeather:[self.clocks objectAtIndex:1] withCompletionHandler:completionHandler];
+}
 
 - (void)startWeatherTimer:(int)interval
 {
@@ -452,7 +455,14 @@ NSMutableDictionary *update;
 }
 
 - (void)updateWeather:(PWClock *)clock
-{        
+{
+    [self updateWeather:clock withCompletionHandler:nil];
+}
+
+- (void)updateWeather:(PWClock *)clock withCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+{
+    
+    if (completionHandler != nil) self.completionHandler = completionHandler;
     if ([clock.latitude floatValue] != 1000.0) {
         
 #ifdef PWDEBUG
@@ -476,21 +486,25 @@ NSMutableDictionary *update;
             NSDate *sunsetDate = [[NSDate alloc] initWithTimeIntervalSince1970:[[[[[JSON objectForKey:@"daily"] objectForKey:@"data"] firstObject] objectForKey:@"sunsetTime"] doubleValue]];
             clock.sunriseTime = [formatter stringFromDate:sunriseDate];
             clock.sunsetTime = [formatter stringFromDate:sunsetDate];
-            [self updateWatch:@[@PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY, @PBCOMM_HI_TEMP_KEY, @PBCOMM_LO_TEMP_KEY, @PBCOMM_SUNRISE_HOUR_KEY, @PBCOMM_SUNRISE_MIN_KEY, @PBCOMM_SUNSET_HOUR_KEY, @PBCOMM_SUNSET_MIN_KEY] forClocks:@[clock]];
+            [self updateWatch:@[@PBCOMM_CITY_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY, @PBCOMM_HI_TEMP_KEY, @PBCOMM_LO_TEMP_KEY, @PBCOMM_SUNRISE_HOUR_KEY, @PBCOMM_SUNRISE_MIN_KEY, @PBCOMM_SUNSET_HOUR_KEY, @PBCOMM_SUNSET_MIN_KEY] forClocks:@[clock]];
+            if (self.completionHandler != nil) self.completionHandler();
             
         } failure:^(NSError *error, id response) {
-            clock.currentTemp = [NSNumber numberWithInt:-99];
-            clock.dailyHiTemp = [NSNumber numberWithInt:-99];
-            clock.dailyLoTemp = [NSNumber numberWithInt:-99];
+            clock.currentTemp = [NSNumber numberWithInt:-98];
+            clock.dailyHiTemp = [NSNumber numberWithInt:-98];
+            clock.dailyLoTemp = [NSNumber numberWithInt:-98];
             clock.currentCondition = @"unknown";
             clock.sunriseTime = @"00:00";
             clock.sunsetTime = @"12:00";
 #ifdef PWDEBUG
             NSLog(@"Error while retrieving forecast: %@", [self.forecastr messageForError:error withResponse:response]);
 #endif
-            [self updateWatch:@[@PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY, @PBCOMM_HI_TEMP_KEY, @PBCOMM_LO_TEMP_KEY, @PBCOMM_SUNRISE_HOUR_KEY, @PBCOMM_SUNRISE_MIN_KEY, @PBCOMM_SUNSET_HOUR_KEY, @PBCOMM_SUNSET_MIN_KEY] forClocks:@[clock]];            
+            [self updateWatch:@[@PBCOMM_CITY_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY, @PBCOMM_HI_TEMP_KEY, @PBCOMM_LO_TEMP_KEY, @PBCOMM_SUNRISE_HOUR_KEY, @PBCOMM_SUNRISE_MIN_KEY, @PBCOMM_SUNSET_HOUR_KEY, @PBCOMM_SUNSET_MIN_KEY] forClocks:@[clock]];
+            if (self.completionHandler != nil) self.completionHandler();
         }];        
-    }    
+    } else {
+        if (self.completionHandler != nil) self.completionHandler();
+    }
 }
 
 #pragma mark - Location methods
@@ -534,7 +548,16 @@ NSMutableDictionary *update;
 #ifdef PWDEBUG
         NSLog(@"setTzLocation: latitude: %3.8f, longitude: %3.8f\n", [clock.latitude floatValue], [clock.longitude floatValue]);
 #endif
-        [self updateWatch:@[@PBCOMM_CITY_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY] forClocks:@[clock]];
+        [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_CITY_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY] forClocks:@[clock]];
+        if (([clock.latitude floatValue] != 1000.0) && ([self.clocks objectAtIndex:1] == clock)) {
+            CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([clock.latitude floatValue], [clock.longitude floatValue]);
+            MKCoordinateRegion mapRegion;
+            mapRegion.center = coordinate;
+            mapRegion.span = MKCoordinateSpanMake(0.2, 0.2);
+            self.annot.coordinate = coordinate;
+            [self.smallMap addAnnotation:self.annot];
+        }
+
         [self showClockOnSmallMap:[self.clocks objectAtIndex:[self.clockSelect selectedSegmentIndex]]];
         
         //
@@ -582,22 +605,14 @@ NSMutableDictionary *update;
 
 - (void)showClockOnSmallMap:(PWClock *)clock
 {
-    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([clock.latitude floatValue], [clock.longitude floatValue]);
-    MKCoordinateRegion mapRegion;
-    mapRegion.center = coordinate;
-    mapRegion.span = MKCoordinateSpanMake(0.2, 0.2);
-    [self.smallMap setRegion:mapRegion animated:NO];
-    
-    // Set up the small map view on the main screen
-    self.smallMap.showsUserLocation = NO;
+    // Show the selected time zone (clock) on the screen
     if ([clock.latitude floatValue] != 1000.0) {
+        CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([clock.latitude floatValue], [clock.longitude floatValue]);
         MKCoordinateRegion mapRegion;
         mapRegion.center = coordinate;
-        mapRegion.span = MKCoordinateSpanMake(0.2, 0.2);
-        self.annot.coordinate = coordinate;
-        [self.smallMap addAnnotation:self.annot];
+        mapRegion.span = MKCoordinateSpanMake(0.1, 0.1);
+        [self.smallMap setRegion:mapRegion animated:YES];
     }
-    
 }
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)recognizer {
@@ -605,6 +620,33 @@ NSMutableDictionary *update;
     if ([self.clockSelect selectedSegmentIndex] == 1)
         [self performSegueWithIdentifier:@"toMap" sender:self];
     
+}
+
+- (void)handleLongPress:(UIGestureRecognizer *)gestureRecognizer
+{
+    if (gestureRecognizer.state != UIGestureRecognizerStateBegan)
+        return;
+    
+    if ([self.clockSelect selectedSegmentIndex] == 0){
+        [[[UIAlertView alloc] initWithTitle:@"Local Clock Selected"
+                                    message:@"Select TZ above to change clock time zone location."
+                                   delegate:nil
+                          cancelButtonTitle:@"OK"
+                          otherButtonTitles:nil]
+         show];
+    } else {
+        
+        CGPoint touchPoint = [gestureRecognizer locationInView:self.smallMap];
+        CLLocationCoordinate2D touchMapCoordinate =
+        [self.smallMap convertPoint:touchPoint toCoordinateFromView:self.smallMap];
+        
+        //    MKPointAnnotation *annot = [[MKPointAnnotation alloc] init];
+        //    annot.coordinate = touchMapCoordinate;
+        //    [self.mapView addAnnotation:annot];
+        
+        CLLocation *newTZlocation = [[CLLocation alloc] initWithCoordinate:touchMapCoordinate altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:0 timestamp:[NSDate date]];
+        [self setTzLocation:newTZlocation forClock:[self.clocks objectAtIndex:1]];
+    }
 }
 
 - (void)viewDidLoad
@@ -624,16 +666,17 @@ NSMutableDictionary *update;
     }
     [self setViewElements:[self.clocks objectAtIndex:0]];
     
-    // Tapping the small map segues to a full screen map for selecting the alternate time zone
-    UITapGestureRecognizer *singleFingerTap =
-    [[UITapGestureRecognizer alloc] initWithTarget:self
-                                            action:@selector(handleSingleTap:)];
-    self.smallMap.zoomEnabled = NO;
-    self.smallMap.scrollEnabled = NO;
+    // Long press selects timezone, when that watch is selected
+    UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc]
+                                          initWithTarget:self action:@selector(handleLongPress:)];
+    lpgr.minimumPressDuration = 2.0; //user needs to press for 2 seconds
+
+    self.smallMap.zoomEnabled = YES;
+    self.smallMap.scrollEnabled = YES;
     self.smallMap.pitchEnabled = NO;
     self.smallMap.rotateEnabled = NO;
-    [self.smallMap addGestureRecognizer:singleFingerTap];
-
+    self.smallMap.showsUserLocation = YES;
+    [self.smallMap addGestureRecognizer:lpgr];
     
     [self showClockOnSmallMap:[self.clocks objectAtIndex:[self.clockSelect selectedSegmentIndex]]];
 
@@ -653,11 +696,7 @@ NSMutableDictionary *update;
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.destinationViewController isKindOfClass:[PWTZMapViewController class]]) {
-        PWTZMapViewController *mapVC = (PWTZMapViewController *)segue.destinationViewController;
-        mapVC.delegate = self;
-        mapVC.clock = [self.clocks objectAtIndex:1];
-    }
+
 }
 
 #pragma mark - PBPebbleCentral delegate methods
@@ -694,6 +733,7 @@ NSMutableDictionary *update;
     // Since we have a connected watch start tracking the GPS, if configured to do so
     if (self.trackGPSUpdates.isOn) {
         [self startSignificantLocationChangeUpdates];
+        [AppDelegate enableBackgroundFetch];
     }
 }
 
@@ -725,8 +765,6 @@ NSMutableDictionary *update;
     NSLog(@"Entering addReceiveHandler\n");
 #endif
     self.watchUpdateHandler = [watch appMessagesAddReceiveUpdateHandler:^BOOL(PBWatch *watch, NSDictionary *update) {
-        self.numIncomingWatchMessages = [NSNumber numberWithInt:[self.numIncomingWatchMessages intValue] + 1];
-        self.incomingMessages.text = [NSString stringWithFormat:@"%d", [self.numIncomingWatchMessages intValue]];
         [update enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
 #ifdef PWDEBUG
             NSLog(@"receivehandler block: key: %@, obj: %@\n", key, obj);
@@ -771,6 +809,7 @@ NSMutableDictionary *update;
         self.numDisconnects = [NSNumber numberWithInt:[self.numDisconnects intValue] + 1];
         [self updateDisconnectIndicator];
         [self stopSignificantLocationChangeUpdates];    // Turn off GPS tracking since no watch is connected
+        [AppDelegate disableBackgroundFetch];
     }
 }
 

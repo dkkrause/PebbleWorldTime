@@ -51,9 +51,9 @@
     clock.city              = [name stringByAppendingString:@" City"];
     clock.state             = [name stringByAppendingString:@" State"];
     clock.country           = [name stringByAppendingString:@" Country"];
-    clock.currentTemp       = [NSNumber numberWithInt:0];
-    clock.dailyHiTemp       = [NSNumber numberWithInt:0];
-    clock.dailyLoTemp       = [NSNumber numberWithInt:0];
+    clock.currentTemp       = [NSNumber numberWithInt:-97];
+    clock.dailyHiTemp       = [NSNumber numberWithInt:-97];
+    clock.dailyLoTemp       = [NSNumber numberWithInt:-97];
     clock.sunriseTime       = @"00:00";
     clock.sunsetTime        = @"12:00";
     [defaults setObject:[NSNumber numberWithBool:YES] forKey:[PWClock makeKey:CLOCK_DEFAULTS_WRITTEN_KEY forWatch:name]];

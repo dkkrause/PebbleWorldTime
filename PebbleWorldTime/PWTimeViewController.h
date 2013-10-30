@@ -29,5 +29,6 @@
 - (void)stopSignificantLocationChangeUpdates;
 - (void)startWeatherTimer:(int)interval;
 - (void)stopWeatherTimer;
+- (void)backgroundUpdateWeather:(void (^)(UIBackgroundFetchResult))completionHandler;
 
 @end

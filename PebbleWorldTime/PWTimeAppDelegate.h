@@ -12,5 +12,8 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
+- (void)enableBackgroundFetch;
+- (void)disableBackgroundFetch;
+
 @end
 
