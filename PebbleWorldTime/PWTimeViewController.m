@@ -40,7 +40,6 @@
 @property (nonatomic) Forecastr         *forecastr;
 @property (nonatomic) NSTimer           *weatherTimer;
 @property (nonatomic) NSArray           *conditions;
-@property (copy)      void               (^completionHandler)();
 
 @end
 
@@ -48,8 +47,6 @@
 {
     dispatch_queue_t watchQueue;
 }
-
-#define AppDelegate ((PWTimeAppDelegate *)[UIApplication sharedApplication].delegate)
 
 NSMutableDictionary *update;
 
@@ -213,10 +210,8 @@ NSMutableDictionary *update;
         UISwitch *locSwitch = (UISwitch *)sender;
         if (locSwitch.on) {
             [self startSignificantLocationChangeUpdates];
-            [AppDelegate enableBackgroundFetch];
         } else {
             [self stopSignificantLocationChangeUpdates];
-            [AppDelegate disableBackgroundFetch];
         }
     }
 }
@@ -429,12 +424,6 @@ NSMutableDictionary *update;
 // Methods to handle weather, both getting info and handling timers to refresh information
 //
 
-- (void)backgroundUpdateWeather:(void (^)(UIBackgroundFetchResult))completionHandler
-{
-    [self updateWeather:[self.clocks objectAtIndex:0] withCompletionHandler:nil];
-    [self updateWeather:[self.clocks objectAtIndex:1] withCompletionHandler:completionHandler];
-}
-
 - (void)startWeatherTimer:(int)interval
 {
     [self stopWeatherTimer];        // in case one is running
@@ -456,13 +445,7 @@ NSMutableDictionary *update;
 
 - (void)updateWeather:(PWClock *)clock
 {
-    [self updateWeather:clock withCompletionHandler:nil];
-}
 
-- (void)updateWeather:(PWClock *)clock withCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
-{
-    
-    if (completionHandler != nil) self.completionHandler = completionHandler;
     if ([clock.latitude floatValue] != 1000.0) {
         
 #ifdef PWDEBUG
@@ -487,7 +470,6 @@ NSMutableDictionary *update;
             clock.sunriseTime = [formatter stringFromDate:sunriseDate];
             clock.sunsetTime = [formatter stringFromDate:sunsetDate];
             [self updateWatch:@[@PBCOMM_CITY_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY, @PBCOMM_HI_TEMP_KEY, @PBCOMM_LO_TEMP_KEY, @PBCOMM_SUNRISE_HOUR_KEY, @PBCOMM_SUNRISE_MIN_KEY, @PBCOMM_SUNSET_HOUR_KEY, @PBCOMM_SUNSET_MIN_KEY] forClocks:@[clock]];
-            if (self.completionHandler != nil) self.completionHandler();
             
         } failure:^(NSError *error, id response) {
             clock.currentTemp = [NSNumber numberWithInt:-98];
@@ -500,10 +482,8 @@ NSMutableDictionary *update;
             NSLog(@"Error while retrieving forecast: %@", [self.forecastr messageForError:error withResponse:response]);
 #endif
             [self updateWatch:@[@PBCOMM_CITY_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY, @PBCOMM_HI_TEMP_KEY, @PBCOMM_LO_TEMP_KEY, @PBCOMM_SUNRISE_HOUR_KEY, @PBCOMM_SUNRISE_MIN_KEY, @PBCOMM_SUNSET_HOUR_KEY, @PBCOMM_SUNSET_MIN_KEY] forClocks:@[clock]];
-            if (self.completionHandler != nil) self.completionHandler();
-        }];        
+        }];
     } else {
-        if (self.completionHandler != nil) self.completionHandler();
     }
 }
 
@@ -726,14 +706,12 @@ NSMutableDictionary *update;
     uint8_t bytes[] = {0xC5, 0x5D, 0x88, 0x75, 0x56, 0x09, 0x43, 0x9D, 0xA5, 0x2F, 0x0A, 0x97, 0x73, 0x50, 0xB9, 0x55};
     NSData *uuid = [NSData dataWithBytes:bytes length:sizeof(bytes)];
     [_targetWatch appMessagesSetUUID:uuid];
-    [self addReceiveHandler:_targetWatch];          // So we can receive messages from the watch
     
     [self sendConfigToWatch];                       // Send the configuration to the newly connected watch
     
     // Since we have a connected watch start tracking the GPS, if configured to do so
     if (self.trackGPSUpdates.isOn) {
         [self startSignificantLocationChangeUpdates];
-        [AppDelegate enableBackgroundFetch];
     }
 }
 
@@ -759,41 +737,6 @@ NSMutableDictionary *update;
     }
 }
 
-- (void)addReceiveHandler:(PBWatch *)watch
-{
-#ifdef PWDEBUG
-    NSLog(@"Entering addReceiveHandler\n");
-#endif
-    self.watchUpdateHandler = [watch appMessagesAddReceiveUpdateHandler:^BOOL(PBWatch *watch, NSDictionary *update) {
-        [update enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-#ifdef PWDEBUG
-            NSLog(@"receivehandler block: key: %@, obj: %@\n", key, obj);
-#endif
-            switch ([key intValue]) {
-                case IOS_UPDATE_WEATHER:
-                    switch ([obj intValue]) {
-                        case LOCAL_WEATHER:
-                            [self updateWeather:[self.clocks objectAtIndex:0]];
-                            break;
-                        case TZ_WEATHER:
-                            [self updateWeather:[self.clocks objectAtIndex:1]];
-                            break;
-                        case BOTH_WEATHER:
-                            [self updateWeather:[self.clocks objectAtIndex:0]];
-                            [self updateWeather:[self.clocks objectAtIndex:1]];
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }];
-        return TRUE;            // No matter what we'll go on from here ...
-    }];
-}
-
 - (void)pebbleCentral:(PBPebbleCentral*)central watchDidConnect:(PBWatch*)watch isNew:(BOOL)isNew
 {
     [self setTargetWatch:watch];
@@ -809,7 +752,6 @@ NSMutableDictionary *update;
         self.numDisconnects = [NSNumber numberWithInt:[self.numDisconnects intValue] + 1];
         [self updateDisconnectIndicator];
         [self stopSignificantLocationChangeUpdates];    // Turn off GPS tracking since no watch is connected
-        [AppDelegate disableBackgroundFetch];
     }
 }
 
