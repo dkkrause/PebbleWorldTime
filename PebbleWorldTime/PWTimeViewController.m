@@ -28,13 +28,12 @@
 @property (strong, nonatomic) IBOutlet MKMapView          *smallMap;
 
 @property (nonatomic) PBWatch           *targetWatch;
-@property (nonatomic) NSNumber          *numDisconnects;
+@property (nonatomic) BOOL               watchAppRunning;
 @property (nonatomic) id                 watchUpdateHandler;
 @property (nonatomic) NSMutableArray    *msgQueue;
 @property (nonatomic) NSLock            *queueLock;
 @property (nonatomic) NSMutableArray    *clocks;
 @property (nonatomic) MKPointAnnotation *annot;
-
 
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) Forecastr         *forecastr;
@@ -80,14 +79,6 @@ NSMutableDictionary *update;
 }
 
 #pragma mark - getters with lazy initialization
-
-- (NSNumber *)numDisconnects
-{
-    if (_numDisconnects == nil) {
-        _numDisconnects = [[NSNumber alloc] initWithInt:0];
-    }
-    return _numDisconnects;
-}
 
 - (NSMutableArray *)msgQueue
 {
@@ -198,12 +189,6 @@ NSMutableDictionary *update;
     
 }
 
-- (IBAction)clearNumDisconnects:(id)sender
-{
-    self.numDisconnects = [[NSNumber alloc] initWithInt:0];
-    [self updateDisconnectIndicator];
-}
-
 - (IBAction)trackLocationChanges:(id)sender
 {    
     if ([sender isKindOfClass:[UISwitch class]]) {
@@ -240,12 +225,19 @@ NSMutableDictionary *update;
         [self.queueLock lock];
         update = [self.msgQueue NSMADequeue];
         [self.queueLock unlock];
-        [_targetWatch appMessagesPushUpdate:update onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
-            NSString *message = error ? [error localizedDescription] : @"Update sent!";
-            if (![message isEqualToString:@"Update sent!"]) {
+#ifdef PWDEBUG
+        NSLog(@"Sending watch: %@, message: %@", self.targetWatch, update);
+#endif
+        [self.targetWatch appMessagesPushUpdate:update onSent:^(PBWatch *watch, NSDictionary *update, NSError *error) {
+            NSLog(@"sendMsgToPebble:onSent hit");
+            if (!error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    NSString *full_message = [NSString stringWithFormat:@"Error: %@, Update: %@", message, update];
+                    NSString *full_message = [NSString stringWithFormat:@"Error: %@, Update: %@", [error localizedDescription], update];
                     [[[UIAlertView alloc] initWithTitle:nil message:full_message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];});
+            } else {
+#ifdef PWDEBUG
+                NSLog(@"Message %@ sent successfully!", update);
+#endif
             }
         }];
         
@@ -257,165 +249,147 @@ NSMutableDictionary *update;
  */
 - (void)updateWatch:(NSArray *)keys forClocks:(NSArray *)clocks
 {
-    [self updateWatch:keys forClocks:clocks withCompletionHandler:nil];
-}
-
-- (void)updateWatch:(NSArray *)keys forClocks:(NSArray *)clocks withCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
-{
 
     // We  communicate with the watch when we call -appMessagesGetIsSupported: which implicitely opens the communication session.
     // Test if the Pebble's firmware supports AppMessages:
-    [_targetWatch appMessagesGetIsSupported:^(PBWatch *watch, BOOL isAppMessagesSupported) {        
-        if (isAppMessagesSupported) {            
-            // Configure our communications channel to target the worldtime app:
-            uint8_t bytes[] = {0xC5, 0x5D, 0x88, 0x75, 0x56, 0x09, 0x43, 0x9D, 0xA5, 0x2F, 0x0A, 0x97, 0x73, 0x50, 0xB9, 0x55};
-            NSData *uuid = [NSData dataWithBytes:bytes length:sizeof(bytes)];
-            [watch appMessagesSetUUID:uuid];
-            [self runWatchApp];
-            @try {
-
-                int clockOffset;
-                int clockNum;
-                update = [[NSMutableDictionary alloc] init];
-                NSString *timeZoneName;
-                NSString *displayCity;
-                int32_t gmtOffset;
-                
-                for (PWClock *clock in clocks) {
-                    
-                    // There are two possible watchfaces, local time and time zone 1. Which face are we updating?
-                    if ([clock.name isEqualToString:@"Local"]) {
-                        clockOffset = LOCAL_WATCH_OFFSET;
-                        clockNum = 0;
-                    } else if ([clock.name isEqualToString:@"TZ"]) {
-                        clockOffset = TZ_OFFSET;
-                        clockNum = 1;
-                    } else {
-                        return;
-                    }
-#ifdef PWDEBUG
-                    NSLog(@"Updating Watch: %@, clockOffset: %2d\n", clock.name, clockOffset);
-#endif
-                    for (NSNumber *key in keys) {                        
-#ifdef PWDEBUG
-                        NSLog(@"Updating key: %2d\n", [key intValue] + clockOffset);
-#endif
-                        // Now we need to put together the tuples to be sent to the Pebble watch
-                        switch ([key intValue]) {
-                                
-                            case PBCOMM_WATCH_ENABLED_KEY:
-                                // Is the clock enabled?
-#ifdef PWDEBUG
-                                NSLog(@"Enabled: %2d\n", (uint8_t)[clock.enabled boolValue]);
-#endif
-                                [update setObject:[NSNumber numberWithUint8:(uint8_t)[clock.enabled boolValue]] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
-                                break;
-                            case PBCOMM_GMT_SEC_OFFSET_KEY:
-                                // GMT Offset
-                                timeZoneName = clock.currentTZ;
-                                if ([timeZoneName isEqualToString:@""]) {
-                                    timeZoneName = [[NSTimeZone systemTimeZone] name];
-                                }
-                                gmtOffset = [[NSTimeZone timeZoneWithName:timeZoneName] secondsFromGMT];
-#ifdef PWDEBUG
-                                NSLog(@"GMT Offset: %8d\n", gmtOffset);
-#endif
-                                [update setObject:[NSNumber numberWithInt32:gmtOffset] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
-                                break;
-                            case PBCOMM_CITY_KEY:
-                                displayCity = [[clock.city stringByAppendingString:@", "] stringByAppendingString:clock.state];
-#ifdef PWDEBUG
-                                NSLog(@"City: %@", displayCity);
-#endif
-                                [update setObject:displayCity forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
-                                break;
-                            case PBCOMM_BACKGROUND_KEY:
-#ifdef PWDEBUG
-                                NSLog(@"Background: %@\n", [NSNumber numberWithUint8:(uint8_t)[clock.backgroundMode intValue]]);
-#endif
-                                [update setObject:[NSNumber numberWithUint8:(uint8_t)[clock.backgroundMode intValue]] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
-                                break;
-                            case PBCOMM_12_24_DISPLAY_KEY:
-#ifdef PWDEBUG
-                                NSLog(@"12/24 hour: %@\n", [NSNumber numberWithUint8:(uint8_t)[clock.displayFormat intValue]]);
-#endif
-                                [update setObject:[NSNumber numberWithUint8:(uint8_t)[clock.displayFormat intValue]] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
-                                break;
-                            case PBCOMM_WEATHER_KEY:
-#ifdef PWDEBUG
-                                NSLog(@"Condition: %@, CondVal: %2d\n", clock.currentCondition, (uint8_t)[self.conditions indexOfObject:clock.currentCondition]);
-#endif
-                                [update setObject:[NSNumber numberWithUint8:(uint8_t)[self.conditions indexOfObject:clock.currentCondition]] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
-                                break;
-                            case PBCOMM_TEMPERATURE_KEY:
-#ifdef PWDEBUG
-                                NSLog(@"Temp: %4d\n", (int8_t)[clock.currentTemp intValue]);
-#endif
-                                [update setObject:[NSNumber numberWithInt8:(int8_t)[clock.currentTemp intValue]] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
-                                break;
-                            case PBCOMM_HI_TEMP_KEY:
-#ifdef PWDEBUG
-                                NSLog(@"Hi Temp: %4d\n", [clock.dailyHiTemp intValue]);
-#endif
-                                [update setObject:[NSNumber numberWithInt8:(int8_t)[clock.dailyHiTemp intValue]] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
-                                break;
-                            case PBCOMM_LO_TEMP_KEY:
-#ifdef PWDEBUG
-                                NSLog(@"Lo Temp: %4d\n", [clock.dailyLoTemp intValue]);
-#endif
-                                [update setObject:[NSNumber numberWithInt8:(int8_t)[clock.dailyLoTemp intValue]] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
-                                break;
-                            case PBCOMM_SUNRISE_HOUR_KEY:
-#ifdef PWDEBUG
-                                NSLog(@"Sunrise Hour: %@", [NSNumber numberWithUint8:[[clock.sunriseTime substringWithRange:NSMakeRange(0,2)] intValue]]);
-#endif
-                                [update setObject:[NSNumber numberWithUint8:[[clock.sunriseTime substringWithRange:NSMakeRange(0,2)] intValue]] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
-                                break;
-                            case PBCOMM_SUNRISE_MIN_KEY:
-#ifdef PWDEBUG
-                                NSLog(@"Sunrise Min: %@", [NSNumber numberWithUint8:[[clock.sunriseTime substringWithRange:NSMakeRange(3,2)] intValue]]);
-#endif
-                                [update setObject:[NSNumber numberWithUint8:[[clock.sunriseTime substringWithRange:NSMakeRange(3,2)] intValue]]  forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
-                                break;
-                            case PBCOMM_SUNSET_HOUR_KEY:
-#ifdef PWDEBUG
-                                NSLog(@"Sunset Hour: %@", [NSNumber numberWithUint8:[[clock.sunsetTime substringWithRange:NSMakeRange(0,2)] intValue]]);
-#endif
-                                [update setObject:[NSNumber numberWithUint8:[[clock.sunsetTime substringWithRange:NSMakeRange(0,2)] intValue]] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
-                                break;
-                            case PBCOMM_SUNSET_MIN_KEY:
-#ifdef PWDEBUG
-                                NSLog(@"Sunset Min: %@", [NSNumber numberWithUint8:[[clock.sunsetTime substringWithRange:NSMakeRange(3,2)] intValue]]);
-#endif
-                                [update setObject:[NSNumber numberWithUint8:[[clock.sunsetTime substringWithRange:NSMakeRange(3,2)] intValue]] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
-                                break;
-                            default:
-                                return;                                
-                        }                        
-                    }                
-                }
-                
-                // Send data to watch:
-                // See demos/feature_app_messages/weather.c in the native watch app SDK for the same definitions on the watch's end:
-#ifdef PWDEBUG
-                NSLog(@"Full Update:\n%@\n\n", update);
-#endif
-                [self.queueLock lock];
-                [self.msgQueue NSMAEnqueue:update];
-                [self.queueLock unlock];
-                dispatch_async(watchQueue, ^{[self sendMsgToPebble];});
-                if (completionHandler!= nil)
-                    dispatch_async(watchQueue, ^{completionHandler(UIBackgroundFetchResultNewData);});
+    [self runWatchApp];
+    @try {
+        
+        int clockOffset;
+        int clockNum;
+        update = [[NSMutableDictionary alloc] init];
+        NSString *timeZoneName;
+        NSString *displayCity;
+        int32_t gmtOffset;
+        
+        for (PWClock *clock in clocks) {
+            
+            // There are two possible watchfaces, local time and time zone 1. Which face are we updating?
+            if ([clock.name isEqualToString:@"Local"]) {
+                clockOffset = LOCAL_WATCH_OFFSET;
+                clockNum = 0;
+            } else if ([clock.name isEqualToString:@"TZ"]) {
+                clockOffset = TZ_OFFSET;
+                clockNum = 1;
+            } else {
                 return;
             }
-            @catch (NSException *exception) {
+#ifdef PWDEBUG
+            NSLog(@"Updating Watch: %@, clockOffset: %2d\n", clock.name, clockOffset);
+#endif
+            for (NSNumber *key in keys) {
+#ifdef PWDEBUG
+                NSLog(@"Updating key: %2d\n", [key intValue] + clockOffset);
+#endif
+                // Now we need to put together the tuples to be sent to the Pebble watch
+                switch ([key intValue]) {
+                        
+                    case PBCOMM_WATCH_ENABLED_KEY:
+                        // Is the clock enabled?
+#ifdef PWDEBUG
+                        NSLog(@"Enabled: %2d\n", (uint8_t)[clock.enabled boolValue]);
+#endif
+                        [update setObject:[NSNumber numberWithUint8:(uint8_t)[clock.enabled boolValue]] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
+                        break;
+                    case PBCOMM_GMT_SEC_OFFSET_KEY:
+                        // GMT Offset
+                        timeZoneName = clock.currentTZ;
+                        if ([timeZoneName isEqualToString:@""]) {
+                            timeZoneName = [[NSTimeZone systemTimeZone] name];
+                        }
+                        gmtOffset = [[NSTimeZone timeZoneWithName:timeZoneName] secondsFromGMT];
+#ifdef PWDEBUG
+                        NSLog(@"GMT Offset: %8d\n", gmtOffset);
+#endif
+                        [update setObject:[NSNumber numberWithInt32:gmtOffset] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
+                        break;
+                    case PBCOMM_CITY_KEY:
+                        displayCity = [[clock.city stringByAppendingString:@", "] stringByAppendingString:clock.state];
+#ifdef PWDEBUG
+                        NSLog(@"City: %@", displayCity);
+#endif
+                        [update setObject:displayCity forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
+                        break;
+                    case PBCOMM_BACKGROUND_KEY:
+#ifdef PWDEBUG
+                        NSLog(@"Background: %@\n", [NSNumber numberWithUint8:(uint8_t)[clock.backgroundMode intValue]]);
+#endif
+                        [update setObject:[NSNumber numberWithUint8:(uint8_t)[clock.backgroundMode intValue]] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
+                        break;
+                    case PBCOMM_12_24_DISPLAY_KEY:
+#ifdef PWDEBUG
+                        NSLog(@"12/24 hour: %@\n", [NSNumber numberWithUint8:(uint8_t)[clock.displayFormat intValue]]);
+#endif
+                        [update setObject:[NSNumber numberWithUint8:(uint8_t)[clock.displayFormat intValue]] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
+                        break;
+                    case PBCOMM_WEATHER_KEY:
+#ifdef PWDEBUG
+                        NSLog(@"Condition: %@, CondVal: %2d\n", clock.currentCondition, (uint8_t)[self.conditions indexOfObject:clock.currentCondition]);
+#endif
+                        [update setObject:[NSNumber numberWithUint8:(uint8_t)[self.conditions indexOfObject:clock.currentCondition]] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
+                        break;
+                    case PBCOMM_TEMPERATURE_KEY:
+#ifdef PWDEBUG
+                        NSLog(@"Temp: %4d\n", (int8_t)[clock.currentTemp intValue]);
+#endif
+                        [update setObject:[NSNumber numberWithInt8:(int8_t)[clock.currentTemp intValue]] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
+                        break;
+                    case PBCOMM_HI_TEMP_KEY:
+#ifdef PWDEBUG
+                        NSLog(@"Hi Temp: %4d\n", [clock.dailyHiTemp intValue]);
+#endif
+                        [update setObject:[NSNumber numberWithInt8:(int8_t)[clock.dailyHiTemp intValue]] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
+                        break;
+                    case PBCOMM_LO_TEMP_KEY:
+#ifdef PWDEBUG
+                        NSLog(@"Lo Temp: %4d\n", [clock.dailyLoTemp intValue]);
+#endif
+                        [update setObject:[NSNumber numberWithInt8:(int8_t)[clock.dailyLoTemp intValue]] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
+                        break;
+                    case PBCOMM_SUNRISE_HOUR_KEY:
+#ifdef PWDEBUG
+                        NSLog(@"Sunrise Hour: %@", [NSNumber numberWithUint8:[[clock.sunriseTime substringWithRange:NSMakeRange(0,2)] intValue]]);
+#endif
+                        [update setObject:[NSNumber numberWithUint8:[[clock.sunriseTime substringWithRange:NSMakeRange(0,2)] intValue]] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
+                        break;
+                    case PBCOMM_SUNRISE_MIN_KEY:
+#ifdef PWDEBUG
+                        NSLog(@"Sunrise Min: %@", [NSNumber numberWithUint8:[[clock.sunriseTime substringWithRange:NSMakeRange(3,2)] intValue]]);
+#endif
+                        [update setObject:[NSNumber numberWithUint8:[[clock.sunriseTime substringWithRange:NSMakeRange(3,2)] intValue]]  forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
+                        break;
+                    case PBCOMM_SUNSET_HOUR_KEY:
+#ifdef PWDEBUG
+                        NSLog(@"Sunset Hour: %@", [NSNumber numberWithUint8:[[clock.sunsetTime substringWithRange:NSMakeRange(0,2)] intValue]]);
+#endif
+                        [update setObject:[NSNumber numberWithUint8:[[clock.sunsetTime substringWithRange:NSMakeRange(0,2)] intValue]] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
+                        break;
+                    case PBCOMM_SUNSET_MIN_KEY:
+#ifdef PWDEBUG
+                        NSLog(@"Sunset Min: %@", [NSNumber numberWithUint8:[[clock.sunsetTime substringWithRange:NSMakeRange(3,2)] intValue]]);
+#endif
+                        [update setObject:[NSNumber numberWithUint8:[[clock.sunsetTime substringWithRange:NSMakeRange(3,2)] intValue]] forKey:[NSNumber numberWithInt:(clockOffset + [key intValue])]];
+                        break;
+                    default:
+                        return;
+                }
             }
-            [[[UIAlertView alloc] initWithTitle:nil message:@"Error parsing response" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-        } else {            
-            NSString *message = [NSString stringWithFormat:@"Blegh... %@ does NOT support AppMessages :'(", [watch name]];
-            [[[UIAlertView alloc] initWithTitle:@"Connected..." message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];            
-        }        
-    }];    
+        }
+        
+        // Send data to watch:
+        // See demos/feature_app_messages/weather.c in the native watch app SDK for the same definitions on the watch's end:
+#ifdef PWDEBUG
+        NSLog(@"Full Update:\n%@\n\n", update);
+#endif
+        [self.queueLock lock];
+        [self.msgQueue NSMAEnqueue:update];
+        [self.queueLock unlock];
+        dispatch_async(watchQueue, ^{[self sendMsgToPebble];});
+        return;
+    }
+    @catch (NSException *exception) {
+    }
+    [[[UIAlertView alloc] initWithTitle:nil message:@"Error parsing response" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
 }
 
 #pragma mark - Weather methods
@@ -429,7 +403,7 @@ NSMutableDictionary *update;
     [self stopWeatherTimer];        // in case one is running
     self.weatherTimer = [NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(updateAllWeather:) userInfo:nil repeats:NO];
 }
-                         
+
 - (void)stopWeatherTimer
 {
     if (self.weatherTimer != nil)
@@ -469,6 +443,7 @@ NSMutableDictionary *update;
             NSDate *sunsetDate = [[NSDate alloc] initWithTimeIntervalSince1970:[[[[[JSON objectForKey:@"daily"] objectForKey:@"data"] firstObject] objectForKey:@"sunsetTime"] doubleValue]];
             clock.sunriseTime = [formatter stringFromDate:sunriseDate];
             clock.sunsetTime = [formatter stringFromDate:sunsetDate];
+            clock.lastWeatherUpdate = [NSDate date];
             [self updateWatch:@[@PBCOMM_CITY_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY, @PBCOMM_HI_TEMP_KEY, @PBCOMM_LO_TEMP_KEY, @PBCOMM_SUNRISE_HOUR_KEY, @PBCOMM_SUNRISE_MIN_KEY, @PBCOMM_SUNSET_HOUR_KEY, @PBCOMM_SUNSET_MIN_KEY] forClocks:@[clock]];
             
         } failure:^(NSError *error, id response) {
@@ -478,6 +453,7 @@ NSMutableDictionary *update;
             clock.currentCondition = @"unknown";
             clock.sunriseTime = @"00:00";
             clock.sunsetTime = @"12:00";
+            clock.lastWeatherUpdate = [NSDate dateWithTimeIntervalSince1970:0];
 #ifdef PWDEBUG
             NSLog(@"Error while retrieving forecast: %@", [self.forecastr messageForError:error withResponse:response]);
 #endif
@@ -676,7 +652,6 @@ NSMutableDictionary *update;
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-
 }
 
 #pragma mark - PBPebbleCentral delegate methods
@@ -684,17 +659,19 @@ NSMutableDictionary *update;
 #pragma mark - Watch management methods
 
 - (void)runWatchApp
-{    
+{
     // Attempt to launch the app on the Pebble
-    [self.targetWatch appMessagesLaunch:^(PBWatch *watch, NSError *error) {
-        if (!error) {
-            NSString *message = error ? [error localizedDescription] : @"Update sent!";
-            if (![message isEqualToString:@"Update sent!"]) {
-                NSString *full_message = [NSString stringWithFormat:@"Cannot launch app on Pebble: %@ ", message];
+    if (!self.watchAppRunning) {
+        [self.targetWatch appMessagesLaunch:^(PBWatch *watch, NSError *error) {
+            if (error) {
+                NSString *full_message = [NSString stringWithFormat:@"Cannot launch app on Pebble: %@ ", [error localizedDescription]];
                 [[[UIAlertView alloc] initWithTitle:nil message:full_message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            } else {
+                NSLog(@"Watch app started successfully");
             }
-        }
-    }];    
+        }];
+        self.watchAppRunning = YES;
+    }
 }
 
 - (void)setTargetWatch:(PBWatch *)targetWatch
@@ -703,10 +680,11 @@ NSMutableDictionary *update;
 
     // Assume that appMessages are supported, only very early versions of PebbleOS did not support this.
     // Configure our communications channel to target the worldtime app: (watchface must have same UUID)
-    uint8_t bytes[] = {0xC5, 0x5D, 0x88, 0x75, 0x56, 0x09, 0x43, 0x9D, 0xA5, 0x2F, 0x0A, 0x97, 0x73, 0x50, 0xB9, 0x55};
-    NSData *uuid = [NSData dataWithBytes:bytes length:sizeof(bytes)];
-    [_targetWatch appMessagesSetUUID:uuid];
+    uuid_t myAppUUIDbytes;
+    NSUUID *myAppUUID = [[NSUUID alloc] initWithUUIDString:@"3aa2778a-5609-439d-a52f-0a977350b955"];
+    [myAppUUID getUUIDBytes:myAppUUIDbytes];
     
+    [self.targetWatch appMessagesSetUUID:[NSData dataWithBytes:myAppUUIDbytes length:16]];
     [self sendConfigToWatch];                       // Send the configuration to the newly connected watch
     
     // Since we have a connected watch start tracking the GPS, if configured to do so
@@ -718,15 +696,6 @@ NSMutableDictionary *update;
 /*
  *  PBPebbleCentral delegate methods
  */
-
-- (NSString *)discTitle:(NSString *)text
-{
-    if ([self.numDisconnects intValue] != 0) {
-       return [text stringByAppendingFormat:@" (%@)", self.numDisconnects];
-    } else {
-        return text;
-    }
-}
 
 - (void)updateDisconnectIndicator
 {
@@ -749,7 +718,6 @@ NSMutableDictionary *update;
         [watch appMessagesRemoveUpdateHandler:self.watchUpdateHandler];
         [self setWatchUpdateHandler:nil];
         [self setTargetWatch:nil];
-        self.numDisconnects = [NSNumber numberWithInt:[self.numDisconnects intValue] + 1];
         [self updateDisconnectIndicator];
         [self stopSignificantLocationChangeUpdates];    // Turn off GPS tracking since no watch is connected
     }

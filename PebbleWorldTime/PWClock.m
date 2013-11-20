@@ -56,6 +56,7 @@
     clock.dailyLoTemp       = [NSNumber numberWithInt:-97];
     clock.sunriseTime       = @"00:00";
     clock.sunsetTime        = @"12:00";
+    clock.lastWeatherUpdate = [NSDate dateWithTimeIntervalSince1970:0];
     [defaults setObject:[NSNumber numberWithBool:YES] forKey:[PWClock makeKey:CLOCK_DEFAULTS_WRITTEN_KEY forWatch:name]];
     [defaults synchronize];    
     return clock;

@@ -30,5 +30,6 @@
 @property (nonatomic) NSNumber *dailyLoTemp;
 @property (nonatomic) NSString *sunriseTime;
 @property (nonatomic) NSString *sunsetTime;
+@property (nonatomic) NSDate   *lastWeatherUpdate;
 
 @end
