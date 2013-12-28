@@ -155,13 +155,7 @@ NSMutableDictionary *update;
     
     PWClock *clock = [self.clocks objectAtIndex:self.clockSelect.selectedSegmentIndex];
     clock.enabled = [NSNumber numberWithBool:[sender isOn]];
-    if ([clock.enabled boolValue]) {
-        [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_CITY_KEY, @PBCOMM_12_24_DISPLAY_KEY,
-         @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY] forClocks:@[clock]];
-    } else {
-        [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY] forClocks:@[clock]];
-//        [self updateWeather:clock];
-    }
+    [self updateWatch:@[@PBCOMM_WATCH_ENABLED_KEY, @PBCOMM_GMT_SEC_OFFSET_KEY, @PBCOMM_BACKGROUND_KEY, @PBCOMM_CITY_KEY, @PBCOMM_12_24_DISPLAY_KEY, @PBCOMM_WEATHER_KEY, @PBCOMM_TEMPERATURE_KEY] forClocks:@[clock]];
     
 }
 
@@ -684,7 +678,9 @@ NSMutableDictionary *update;
     NSUUID *myAppUUID = [[NSUUID alloc] initWithUUIDString:@"3aa2778a-5609-439d-a52f-0a977350b955"];
     [myAppUUID getUUIDBytes:myAppUUIDbytes];
     
-    [self.targetWatch appMessagesSetUUID:[NSData dataWithBytes:myAppUUIDbytes length:16]];
+    [[PBPebbleCentral defaultCentral] setAppUUID:[NSData dataWithBytes:myAppUUIDbytes length:16]];
+    
+//    [self.targetWatch appMessagesSetUUID:[NSData dataWithBytes:myAppUUIDbytes length:16]];
     [self sendConfigToWatch];                       // Send the configuration to the newly connected watch
     
     // Since we have a connected watch start tracking the GPS, if configured to do so

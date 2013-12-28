@@ -40,10 +40,10 @@
 		F6727B8B175C0D5A00452635 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6727B8A175C0D5A00452635 /* CoreMotion.framework */; };
 		F6C31ECB17B983B00087F4DB /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6C31EC817B982CA0087F4DB /* MapKit.framework */; };
 		F6CBFE69183434E8004E762B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6CBFE68183434E8004E762B /* CFNetwork.framework */; };
-		F6CBFE6F1835BF9E004E762B /* PebbleKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6CBFE6E1835BF9E004E762B /* PebbleKit.framework */; };
-		F6CBFE711835BFB2004E762B /* PebbleVendor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6CBFE701835BFB2004E762B /* PebbleVendor.framework */; };
 		F6DEC83F1806015300F41109 /* PebbleWorldTimeIconx58.png in Resources */ = {isa = PBXBuildFile; fileRef = F6DEC83C1806015300F41109 /* PebbleWorldTimeIconx58.png */; };
 		F6DEC8401806015300F41109 /* PebbleWorldTimeIconx80.png in Resources */ = {isa = PBXBuildFile; fileRef = F6DEC83D1806015300F41109 /* PebbleWorldTimeIconx80.png */; };
+		F6F462A6186E91AF00862ABC /* PebbleKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6F462A5186E91AF00862ABC /* PebbleKit.framework */; };
+		F6F462A8186E91BF00862ABC /* PebbleVendor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6F462A7186E91BF00862ABC /* PebbleVendor.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -88,10 +88,10 @@
 		F6A15A5C175D962400B57E71 /* PWTimeKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PWTimeKeys.h; sourceTree = "<group>"; };
 		F6C31EC817B982CA0087F4DB /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		F6CBFE68183434E8004E762B /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
-		F6CBFE6E1835BF9E004E762B /* PebbleKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PebbleKit.framework; sourceTree = "<group>"; };
-		F6CBFE701835BFB2004E762B /* PebbleVendor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PebbleVendor.framework; sourceTree = "<group>"; };
 		F6DEC83C1806015300F41109 /* PebbleWorldTimeIconx58.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PebbleWorldTimeIconx58.png; sourceTree = "<group>"; };
 		F6DEC83D1806015300F41109 /* PebbleWorldTimeIconx80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PebbleWorldTimeIconx80.png; sourceTree = "<group>"; };
+		F6F462A5186E91AF00862ABC /* PebbleKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PebbleKit.framework; path = "../../../../pebble-dev/PebbleSDK-2.0-BETA4/PebbleKit-iOS/PebbleKit.framework"; sourceTree = "<group>"; };
+		F6F462A7186E91BF00862ABC /* PebbleVendor.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PebbleVendor.framework; sourceTree = "<group>"; };
 		F9FF9FE98F314933B10858AC /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -100,10 +100,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6F462A8186E91BF00862ABC /* PebbleVendor.framework in Frameworks */,
+				F6F462A6186E91AF00862ABC /* PebbleKit.framework in Frameworks */,
 				F6CBFE69183434E8004E762B /* CFNetwork.framework in Frameworks */,
-				F6CBFE6F1835BF9E004E762B /* PebbleKit.framework in Frameworks */,
 				F6C31ECB17B983B00087F4DB /* MapKit.framework in Frameworks */,
-				F6CBFE711835BFB2004E762B /* PebbleVendor.framework in Frameworks */,
 				F60AE2111795FB57005A88C2 /* CoreData.framework in Frameworks */,
 				F6391343178CC78C000322D6 /* MobileCoreServices.framework in Frameworks */,
 				F6391341178CC77E000322D6 /* SystemConfiguration.framework in Frameworks */,
@@ -156,8 +156,8 @@
 				F6C31EC817B982CA0087F4DB /* MapKit.framework */,
 				F6727B7E175C0BD300452635 /* MessageUI.framework */,
 				F6391342178CC78C000322D6 /* MobileCoreServices.framework */,
-				F6CBFE6E1835BF9E004E762B /* PebbleKit.framework */,
-				F6CBFE701835BFB2004E762B /* PebbleVendor.framework */,
+				F6F462A5186E91AF00862ABC /* PebbleKit.framework */,
+				F6F462A7186E91BF00862ABC /* PebbleVendor.framework */,
 				F6391340178CC77E000322D6 /* SystemConfiguration.framework */,
 				F600CD1A175BA75900D2CABC /* UIKit.framework */,
 				5996ABA572994EDEBA147A44 /* libPods.a */,
@@ -413,8 +413,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/don/pebble-dev/PebbleSDK-2.0-BETA1/PebbleKit-iOS",
-					/Users/don/Dropbox/Documents/iOS/PebbleWorldTime,
+					"/Users/don/pebble-dev/PebbleSDK-2.0-BETA4/PebbleKit-iOS",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PebbleWorldTime/PebbleWorldTime-Prefix.pch";
@@ -432,8 +431,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/don/pebble-dev/PebbleSDK-2.0-BETA1/PebbleKit-iOS",
-					/Users/don/Dropbox/Documents/iOS/PebbleWorldTime,
+					"/Users/don/pebble-dev/PebbleSDK-2.0-BETA4/PebbleKit-iOS",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PebbleWorldTime/PebbleWorldTime-Prefix.pch";
