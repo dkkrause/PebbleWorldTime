@@ -17,5 +17,7 @@
     #import "PWTimeAppDelegate.h"
 #endif
 
-#define PWDEBUG
-#define BGDEBUG
+// Debugging literals
+// #define PWDEBUG      // For debugging PWTimeViewController
+// #define BGDEBUG      // For debugging Background operation of PWTimeAppDelegate
+// #define MAPDEBUG     // For debugging PWMapViewController

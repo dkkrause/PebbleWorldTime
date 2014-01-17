@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="zur-h3-1l4">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3746"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
     </dependencies>
     <scenes>
-        <!--Time View Controller - TZ1-->
+        <!--Navigation Controller-->
+        <scene sceneID="lww-Ub-2Vj">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="zur-h3-1l4" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="0yv-QY-hZj">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="2" kind="relationship" relationship="rootViewController" id="z2R-Rj-CRQ"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SL8-YA-pf2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-725" y="-129"/>
+        </scene>
+        <!--Time View Controller - Pebble World Time-->
         <scene sceneID="11">
             <objects>
                 <viewController id="2" customClass="PWTimeViewController" sceneMemberID="viewController">
@@ -18,69 +33,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="jZ6-yk-uKK">
-                                <rect key="frame" x="0.0" y="20" width="320" height="503"/>
+                                <rect key="frame" x="9" y="200" width="303" height="323"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </mapView>
-                            <view userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uRy-ed-5np">
-                                <rect key="frame" x="0.0" y="39" width="320" height="134"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                            </view>
-                            <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="c0h-fq-YDK">
-                                <rect key="frame" x="263" y="47" width="51" height="31"/>
-                                <connections>
-                                    <action selector="clockEnabledSwitchChanged:" destination="2" eventType="valueChanged" id="LMI-hx-akr"/>
-                                </connections>
-                            </switch>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bordered" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="uI8-nx-acB">
-                                <rect key="frame" x="9" y="136" width="303" height="29"/>
-                                <color key="backgroundColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
-                                <segments>
-                                    <segment title="Dark" width="100.33333333333333"/>
-                                    <segment title="Light" width="100.33333333333333"/>
-                                    <segment title="Suns" width="100.33333333333333"/>
-                                </segments>
-                                <connections>
-                                    <action selector="clockBackgroundSegmentSelected:" destination="2" eventType="valueChanged" id="hUh-fW-whH"/>
-                                </connections>
-                            </segmentedControl>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="2" translatesAutoresizingMaskIntoConstraints="NO" id="ApT-jg-eLM">
-                                <rect key="frame" x="9" y="91" width="303" height="29"/>
-                                <color key="backgroundColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
-                                <segments>
-                                    <segment title="Watch" width="100"/>
-                                    <segment title="12-hour" width="100.33333333333333"/>
-                                    <segment title="24-hour" width="100.33333333333333"/>
-                                </segments>
-                                <connections>
-                                    <action selector="timeDisplayChanged:" destination="2" eventType="valueChanged" id="Q08-uG-Jqj"/>
-                                </connections>
-                            </segmentedControl>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="I4z-H9-XDd">
-                                <rect key="frame" x="9" y="49" width="201" height="29"/>
-                                <color key="backgroundColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
-                                <segments>
-                                    <segment title="Local" width="100"/>
-                                    <segment title="TZ" width="100"/>
-                                </segments>
-                                <connections>
-                                    <action selector="clockSelected:" destination="2" eventType="valueChanged" id="BKa-l4-5iz"/>
-                                </connections>
-                            </segmentedControl>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fcy-d5-eah">
-                                <rect key="frame" x="231" y="52" width="22" height="22"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <state key="normal">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1DL-hY-YMp">
                                 <rect key="frame" x="242" y="532" width="70" height="30"/>
-                                <color key="backgroundColor" red="0.21485419410000001" green="0.84642493210000003" blue="0.064295253139999994" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <state key="normal" title="Update">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -100,49 +57,110 @@
                                 <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vzp-eg-9Bp">
-                                <rect key="frame" x="137" y="532" width="71" height="30"/>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="uI8-nx-acB">
+                                <rect key="frame" x="9" y="157" width="303" height="29"/>
+                                <color key="backgroundColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <segments>
+                                    <segment title="Dark" width="100.33333333333333"/>
+                                    <segment title="Light" width="100.33333333333333"/>
+                                    <segment title="Suns" width="100.33333333333333"/>
+                                </segments>
+                                <connections>
+                                    <action selector="clockBackgroundSegmentSelected:" destination="2" eventType="valueChanged" id="hUh-fW-whH"/>
+                                </connections>
+                            </segmentedControl>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="LYF-jY-y9p">
+                                <rect key="frame" x="9" y="116" width="303" height="29"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Re-Center">
+                                <color key="backgroundColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <segments>
+                                    <segment title="Watch Config"/>
+                                    <segment title="12-Hour"/>
+                                    <segment title="24-Hour"/>
+                                </segments>
+                                <connections>
+                                    <action selector="timeDisplayChanged:" destination="2" eventType="valueChanged" id="Cyr-bc-GyT"/>
+                                </connections>
+                            </segmentedControl>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="kr2-IQ-sqP">
+                                <rect key="frame" x="9" y="75" width="303" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <segments>
+                                    <segment title="Local"/>
+                                    <segment title="TZ 1"/>
+                                    <segment title="TZ 2"/>
+                                </segments>
+                                <connections>
+                                    <action selector="clockSelected:" destination="2" eventType="valueChanged" id="rr6-fd-hf7"/>
+                                </connections>
+                            </segmentedControl>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="TZ1" id="7"/>
+                    <navigationItem key="navigationItem" title="Pebble World Time" id="fRE-qW-KzK"/>
+                    <connections>
+                        <outlet property="clockBackground" destination="uI8-nx-acB" id="7PG-cK-cc4"/>
+                        <outlet property="clockDisplay" destination="LYF-jY-y9p" id="BEF-Zf-eyp"/>
+                        <outlet property="clockSelect" destination="kr2-IQ-sqP" id="YTe-me-eNn"/>
+                        <outlet property="smallMap" destination="jZ6-yk-uKK" id="Mns-D7-Mh9"/>
+                        <outlet property="trackGPSUpdates" destination="msO-sj-OmK" id="FHs-pb-qFc"/>
+                        <outlet property="view" destination="16" id="NbJ-D4-z7F"/>
+                        <segue destination="cvO-8d-wAC" kind="push" identifier="toMap" id="7F8-CE-iyJ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="10" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-359" y="-129"/>
+        </scene>
+        <!--Map View Controller - Select TZ Location-->
+        <scene sceneID="yFk-eb-wJT">
+            <objects>
+                <viewController id="cvO-8d-wAC" customClass="PWMapViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="bJ7-bU-aR9"/>
+                        <viewControllerLayoutGuide type="bottom" id="6U3-cN-TRX"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="wKb-sh-aaW">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="top" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="d1a-fb-AGd">
+                                <rect key="frame" x="0.0" y="65" width="320" height="459"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Frf-1t-qVp">
+                                <rect key="frame" x="120" y="532" width="81" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Center Map">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="redrawMap:" destination="2" eventType="touchUpInside" id="RL3-Hv-6Sp"/>
+                                    <action selector="centerMap:" destination="cvO-8d-wAC" eventType="touchUpInside" id="1xf-YE-Nsa"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="uI8-nx-acB" firstAttribute="top" secondItem="Zbx-Xn-0Pw" secondAttribute="bottom" constant="116" id="6Kv-ev-Omw"/>
-                            <constraint firstItem="ApT-jg-eLM" firstAttribute="leading" secondItem="uI8-nx-acB" secondAttribute="leading" id="EHq-jL-3EK"/>
-                            <constraint firstItem="ApT-jg-eLM" firstAttribute="trailing" secondItem="uI8-nx-acB" secondAttribute="trailing" id="PW8-P6-u4j"/>
-                            <constraint firstItem="ApT-jg-eLM" firstAttribute="trailing" secondItem="uI8-nx-acB" secondAttribute="trailing" id="Pbm-zl-GjM"/>
-                            <constraint firstItem="ApT-jg-eLM" firstAttribute="leading" secondItem="I4z-H9-XDd" secondAttribute="leading" id="TBj-ZM-LIB"/>
-                            <constraint firstItem="I4z-H9-XDd" firstAttribute="leading" secondItem="16" secondAttribute="leading" constant="9" id="Wrr-Pg-X59"/>
-                            <constraint firstItem="I4z-H9-XDd" firstAttribute="leading" secondItem="ApT-jg-eLM" secondAttribute="leading" id="aZq-UJ-HGg"/>
-                            <constraint firstItem="I4z-H9-XDd" firstAttribute="leading" secondItem="uI8-nx-acB" secondAttribute="leading" id="bFM-EZ-bW8"/>
-                            <constraint firstAttribute="trailing" secondItem="c0h-fq-YDK" secondAttribute="trailing" constant="8" id="dlY-6d-aID"/>
-                            <constraint firstItem="c0h-fq-YDK" firstAttribute="top" secondItem="Zbx-Xn-0Pw" secondAttribute="bottom" constant="27" id="gHH-qe-hWa"/>
-                            <constraint firstItem="ApT-jg-eLM" firstAttribute="top" secondItem="Zbx-Xn-0Pw" secondAttribute="bottom" constant="71" id="lU0-rm-Plo"/>
-                            <constraint firstItem="I4z-H9-XDd" firstAttribute="leading" secondItem="uI8-nx-acB" secondAttribute="leading" id="nXU-c9-WLS"/>
-                            <constraint firstItem="I4z-H9-XDd" firstAttribute="top" secondItem="16" secondAttribute="top" constant="49" id="r9h-Yo-k9D"/>
-                            <constraint firstItem="I4z-H9-XDd" firstAttribute="leading" secondItem="ApT-jg-eLM" secondAttribute="leading" id="sN7-ge-UE2"/>
+                            <constraint firstItem="6U3-cN-TRX" firstAttribute="top" secondItem="Frf-1t-qVp" secondAttribute="bottom" constant="6" id="MG8-mO-xVY"/>
+                            <constraint firstAttribute="trailing" secondItem="d1a-fb-AGd" secondAttribute="trailing" id="NRd-Xa-GNh"/>
+                            <constraint firstItem="d1a-fb-AGd" firstAttribute="leading" secondItem="wKb-sh-aaW" secondAttribute="leading" id="SoG-sJ-WB4"/>
+                            <constraint firstItem="Frf-1t-qVp" firstAttribute="top" secondItem="d1a-fb-AGd" secondAttribute="bottom" constant="8" symbolic="YES" id="aLb-oi-SVq"/>
+                            <constraint firstItem="d1a-fb-AGd" firstAttribute="centerX" secondItem="Frf-1t-qVp" secondAttribute="centerX" id="jmX-uf-JbY"/>
+                            <constraint firstItem="d1a-fb-AGd" firstAttribute="top" secondItem="bJ7-bU-aR9" secondAttribute="bottom" constant="1" id="k9x-N2-LD6"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="TZ1" id="7"/>
+                    <navigationItem key="navigationItem" title="Select TZ Location" id="uhx-iK-GeP">
+                        <barButtonItem key="backBarButtonItem" title="Return" id="h3f-ag-kH3"/>
+                    </navigationItem>
                     <connections>
-                        <outlet property="clockBackground" destination="uI8-nx-acB" id="7PG-cK-cc4"/>
-                        <outlet property="clockDisplay" destination="ApT-jg-eLM" id="cVZ-Rt-1mi"/>
-                        <outlet property="clockEnabled" destination="c0h-fq-YDK" id="6wn-Vn-BdD"/>
-                        <outlet property="clockSelect" destination="I4z-H9-XDd" id="rO6-MV-4mK"/>
-                        <outlet property="smallMap" destination="jZ6-yk-uKK" id="Mns-D7-Mh9"/>
-                        <outlet property="trackGPSUpdates" destination="msO-sj-OmK" id="FHs-pb-qFc"/>
-                        <outlet property="view" destination="16" id="NbJ-D4-z7F"/>
+                        <outlet property="bigMap" destination="d1a-fb-AGd" id="aeX-1a-V0c"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="10" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gnW-Sf-d1t" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-216" y="-129"/>
+            <point key="canvasLocation" x="13" y="-129"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

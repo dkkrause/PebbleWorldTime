@@ -21,7 +21,16 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
     return YES;
+}
+
+- (void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+{
+#ifdef BGDEBUG
+    NSLog(@"Entering application:performFetchWithCompletionHandler:\n");
+#endif
+    completionHandler(UIBackgroundFetchResultNoData);
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -31,8 +40,10 @@
 #endif
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-    PWTimeViewController *rootViewController = (PWTimeViewController*)self.window.rootViewController;
-    [rootViewController stopWeatherTimer];
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
+    PWTimeViewController *vc = (PWTimeViewController *)[navigationController.viewControllers objectAtIndex: 0];
+    [vc stopWeatherTimer];
     
 }
 
@@ -52,8 +63,10 @@
 #endif
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     
-    PWTimeViewController *rootViewController = (PWTimeViewController*)self.window.rootViewController;
-    [rootViewController startWeatherTimer:1];
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
+    PWTimeViewController *vc = (PWTimeViewController *)[navigationController.viewControllers objectAtIndex: 0];
+    [vc startWeatherTimer:1000];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -70,9 +83,10 @@
     NSLog(@"Entering applicationWillTerminate:\n");
 #endif
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    PWTimeViewController *rootViewController = (PWTimeViewController*)self.window.rootViewController;
-    [rootViewController stopSignificantLocationChangeUpdates];
-
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
+    PWTimeViewController *vc = (PWTimeViewController *)[navigationController.viewControllers objectAtIndex: 0];
+    [vc stopTrackingUser];
 }
 
 @end

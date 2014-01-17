@@ -14,26 +14,16 @@
 // Factors, the keys are actually grouped by 16, depending on the watch to update
 // Add these to the KEYs to get the actual value
 #define LOCAL_WATCH_OFFSET                  0x00
-#define TZ_OFFSET                           0x10
+#define TZ1_WATCH_OFFSET                    0x10
+#define TZ2_WATCH_OFFSET                    0x20
 
 // Keys for local time data, maximum of 16, including 0x00
-#define PBCOMM_WATCH_ENABLED_KEY            0x01    // boolean
 #define PBCOMM_GMT_SEC_OFFSET_KEY           0x02    // number of seconds before or after GMT
-#define PBCOMM_CITY_KEY                     0x03    // string with city name and GMT offset
-#define PBCOMM_BACKGROUND_KEY               0x04    // light, dark or AM/PM background
-#define PBCOMM_12_24_DISPLAY_KEY            0x05    // display in watch configured-, 12- or 24-hour time
-#define PBCOMM_WEATHER_KEY                  0x06    // weather conditions
-#define PBCOMM_TEMPERATURE_KEY              0x07    // temperature
-#define PBCOMM_HI_TEMP_KEY                  0x08    // daily high temperature
-#define PBCOMM_LO_TEMP_KEY                  0x09    // daily low temperature
-#define PBCOMM_SUNRISE_HOUR_KEY				0x0A	// time of sunrise
-#define PBCOMM_SUNRISE_MIN_KEY				0x0B	// time of sunrise
-#define PBCOMM_SUNSET_HOUR_KEY				0x0C	// time of sunset
-#define PBCOMM_SUNSET_MIN_KEY				0x0D	// time of sunset
-
-// Values for PBCOMM_WATCH_ENABLED_KEY
-#define WATCH_DISABLED						0x00
-#define WATCH_ENABLED						0x01
+#define PBCOMM_CITY_KEY                     0x03    // string with city name
+#define PBCOMM_BACKGROUND_KEY               0x04    // light, dark or Sunrise/Sunset (AM/PM) background
+#define PBCOMM_12_24_DISPLAY_KEY            0x05    // display in watch-configured-, 12- or 24-hour time
+#define PBCOMM_WEATHER_KEY                  0x06    // weather conditions icon, temps, suns times
+#define KEYS_PER_WATCH                      0x10    // maximum number of keys/watch
 
 // Values for PBCOMMM_BACKGROUND_KEY
 #define BACKGROUND_DARK                     0x00    // Dark background
@@ -44,6 +34,19 @@
 #define DISPLAY_WATCH_CONFIG_TIME           0x00    // Show 12- or 24-hour time as configured on watch
 #define DISPLAY_12_HOUR_TIME                0x01    // Show 12-hour time
 #define DISPLAY_24_HOUR_TIME                0x02    // Show 24-hour time
+
+#define MAX_WEATHER_DAYS                    3       // Number of days of weather to show
+
+// Offsets in PBCOMM_WEATHER_KEY data
+#define WEATHER_ICONS                       0       // Three icons (today-2 days from now)
+#define CURRENT_TEMP                        3       // Current temperature
+#define MAX_TEMPS                           4       // Three highs (today-2 days from now)
+#define MIN_TEMPS                           7       // Three lows (today-2 days from now)
+#define SUNRISE_HOUR                        10      // Sunrise hour (today, used for background)
+#define SUNRISE_MINUTE                      11      // Sunrise minute (today, used for background)
+#define SUNSET_HOUR                         12      // Sunset hour (today, used for background)
+#define SUNSET_MINUTE                       13      // Sunset minute (today, used for background)
+#define WEATHER_KEY_LEN                     14      // Number of bytes in PBCOMM_WEATHER_KEY data
 
 // Values for PBCOMM_WEATHER_KEY
 // Map directly to forecast.io weather icon values
@@ -59,13 +62,5 @@
 #define WEATHER_PARTLY_CLOUDY_DAY           0x09
 #define WEATHER_PARTLY_CLOUDY_NIGHT         0x0A
 #define MAX_WEATHER_CONDITIONS              0x0B    // Number of weather conditions
-
-// Keys and values for messages from the Pebble to iOS
-
-#define IOS_UPDATE_WEATHER                  0x81
-
-#define LOCAL_WEATHER                       0x01
-#define TZ_WEATHER                          0x02
-#define BOTH_WEATHER                        0x03
 
 #endif
