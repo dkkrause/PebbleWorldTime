@@ -48,7 +48,7 @@
             clock.latitude       = [NSNumber numberWithFloat:(float)51.507200];
             clock.longitude      = [NSNumber numberWithFloat:(float)0.127500];
             clock.city           = @"London";
-            clock.state          = nil;
+            clock.state          = @"England";
             clock.country        = @"United Kingdom";
         } else if ([name isEqualToString:@"TZ 2"] ) {
             clock.latitude       = [NSNumber numberWithFloat:(float)35.689500];

@@ -20,6 +20,7 @@
     PWTimeAnnotation *annotation = [[PWTimeAnnotation alloc] init];
     annotation.annotTitle = title;
     annotation.annotCoordinate = coordinate;
+    NSLog(@"PWTimeAnnotation, annotation=%@", annotation);
     return annotation;
 }
 

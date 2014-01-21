@@ -55,11 +55,12 @@
         CLPlacemark *placemark = [placemarks lastObject];
         NSArray *lines = placemark.addressDictionary[ @"FormattedAddressLines"];
         NSString *addressString = [lines componentsJoinedByString:@", "];
-#ifdef MAPDEBUG
-        NSLog(@"PWMapViewController:handleSingleTap, Address: %@", addressString);
-#endif
-        self.annot = [PWTimeAnnotation annotationWithTitle:addressString forLocation:self.coordinate];
+        PWTimeAnnotation *newAnnot = [PWTimeAnnotation annotationWithTitle:addressString forLocation:self.coordinate];
+        self.annot = newAnnot;
         [self.bigMap addAnnotation:self.annot];
+#ifdef MAPDEBUG
+        NSLog(@"PWMapViewController:handleSingleTap, Address: %@, annot: %@", addressString, self.annot);
+#endif
     }];
     [self.bigMap setRegion:mapRegion animated:YES];
     CLLocation *location = [[CLLocation alloc] initWithLatitude:self.coordinate.latitude longitude:self.coordinate.longitude];
@@ -80,15 +81,14 @@
     }
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
+- (void)viewWillAppear:(BOOL)animated {
     
-	// Do any additional setup after loading the view.
+    [super viewWillAppear:animated];
+    
     // Long press selects timezone, when that watch is selected
     self.tpgr = [[UITapGestureRecognizer alloc]
-                                    initWithTarget:self
-                                            action:@selector(handleSingleTap:)];
+                 initWithTarget:self
+                 action:@selector(handleSingleTap:)];
     self.tpgr.delegate = self;
     viewingAnnotation = NO;
     
@@ -109,15 +109,28 @@
     [geoCoder reverseGeocodeLocation:tzLocation completionHandler:^(NSArray *placemarks, NSError *error) {
         CLPlacemark *placemark = [placemarks lastObject];
         NSArray *lines = placemark.addressDictionary[ @"FormattedAddressLines"];
-        NSString *addressString = [lines componentsJoinedByString:@"\n"];
-#ifdef MAPDEBUG
-        NSLog(@"Address: %@", addressString);
-#endif
-        self.annot = [PWTimeAnnotation annotationWithTitle:addressString forLocation:self.coordinate];
+        NSString *addressString = [lines componentsJoinedByString:@", "];
+        PWTimeAnnotation *newAnnot = [PWTimeAnnotation annotationWithTitle:addressString forLocation:self.coordinate];
+        self.annot = newAnnot;
         [self.bigMap addAnnotation:self.annot];
+#ifdef MAPDEBUG
+        NSLog(@"PWMapViewController:viewWillAppear, Address: %@, newAnnot: %@, self.annot: %@", addressString, newAnnot, self.annot);
+#endif
     }];
     [self.bigMap setRegion:mapRegion animated:YES];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
     
+	// Do any additional setup after loading the view.
+    
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    self.annot = nil;
+    [super viewWillDisappear:animated];
 }
 
 - (void)didReceiveMemoryWarning

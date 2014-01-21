@@ -25,6 +25,7 @@
     return YES;
 }
 
+/*
 - (void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
 #ifdef BGDEBUG
@@ -32,6 +33,7 @@
 #endif
     completionHandler(UIBackgroundFetchResultNoData);
 }
+*/
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
@@ -62,11 +64,10 @@
     NSLog(@"Entering applicationWillEnterForeground:\n");
 #endif
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-    
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
     UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
     PWTimeViewController *vc = (PWTimeViewController *)[navigationController.viewControllers objectAtIndex: 0];
-    [vc startWeatherTimer:1000];
+    [vc startWeatherTimer:1];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

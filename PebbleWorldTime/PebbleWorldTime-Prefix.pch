@@ -18,6 +18,8 @@
 #endif
 
 // Debugging literals
-// #define PWDEBUG      // For debugging PWTimeViewController
-// #define BGDEBUG      // For debugging Background operation of PWTimeAppDelegate
-// #define MAPDEBUG     // For debugging PWMapViewController
+// #define PWDEBUG                 // For debugging PWTimeViewController
+// #define PWDEBUGCOMM             // For debugging watch communication issues
+// #define PWDEBUGWEATHERDETAIL    // To see the detailed weather JSON
+// #define BGDEBUG              // For debugging Background operation of PWTimeAppDelegate
+// #define MAPDEBUG             // For debugging PWMapViewController
